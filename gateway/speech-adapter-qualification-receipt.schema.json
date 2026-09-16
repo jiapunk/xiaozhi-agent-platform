@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/speech-adapter-qualification-v1.json",
+  "title": "XiaoZhi signed speech-adapter qualification receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "run_id",
+    "candidate_id",
+    "candidate_config_sha256",
+    "adapter_endpoint_set_sha256",
+    "qualification_tool_sha256",
+    "transport_trust_sha256",
+    "corpus_sha256",
+    "consent_class",
+    "reference_codec",
+    "started_at_unix_ms",
+    "completed_at_unix_ms",
+    "development_only",
+    "thresholds",
+    "readiness_ms",
+    "stt",
+    "tts",
+    "tts_cancel",
+    "qualification_status",
+    "production_ready",
+    "unresolved_production_gates",
+    "signing_key_id",
+    "signature_algorithm",
+    "signature_b64url"
+  ],
+  "properties": {
+    "schema": { "const": "xiaozhi-speech-adapter-qualification-v1" },
+    "run_id": { "$ref": "#/$defs/identifier" },
+    "candidate_id": { "$ref": "#/$defs/identifier" },
+    "candidate_config_sha256": { "$ref": "#/$defs/sha256" },
+    "adapter_endpoint_set_sha256": { "$ref": "#/$defs/sha256" },
+    "qualification_tool_sha256": { "$ref": "#/$defs/sha256" },
+    "transport_trust_sha256": { "$ref": "#/$defs/sha256" },
+    "corpus_sha256": { "$ref": "#/$defs/sha256" },
+    "consent_class": {
+      "enum": ["synthetic", "approved_nonprivate", "approved_private"]
+    },
+    "reference_codec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture_manifest_sha256", "ffmpeg_sha256", "ffmpeg_version"],
+      "properties": {
+        "fixture_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "ffmpeg_sha256": { "$ref": "#/$defs/sha256" },
+        "ffmpeg_version": { "type": "string", "minLength": 1, "maxLength": 256 }
+      }
+    },
+    "started_at_unix_ms": { "type": "integer", "minimum": 1577836800000 },
+    "completed_at_unix_ms": { "type": "integer", "minimum": 1577836800000 },
+    "development_only": { "type": "boolean" },
+    "thresholds": { "$ref": "#/$defs/thresholds" },
+    "readiness_ms": { "type": "integer", "minimum": 0 },
+    "stt": { "$ref": "#/$defs/stt" },
+    "tts": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/tts" }
+    },
+    "tts_cancel": { "$ref": "#/$defs/cancel" },
+    "qualification_status": { "enum": ["TEST_HARNESS_PASS", "PROTOCOL_PASS"] },
+    "production_ready": { "const": false },
+    "unresolved_production_gates": {
+      "type": "array",
+      "minItems": 5,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "signing_key_id": { "$ref": "#/$defs/identifier" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_stt_final_ms",
+        "max_tts_first_frame_ms",
+        "max_tts_complete_ms",
+        "max_cancel_return_ms"
+      ],
+      "properties": {
+        "max_stt_final_ms": { "type": "integer", "minimum": 1, "maximum": 60000 },
+        "max_tts_first_frame_ms": { "type": "integer", "minimum": 1, "maximum": 60000 },
+        "max_tts_complete_ms": { "type": "integer", "minimum": 1, "maximum": 120000 },
+        "max_cancel_return_ms": { "type": "integer", "minimum": 1, "maximum": 10000 }
+      }
+    },
+    "stt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "input_packets",
+        "input_duration_ms",
+        "input_packet_stream_sha256",
+        "decoded_pcm_set_sha256",
+        "transcript_exact_match",
+        "single_final_observed",
+        "final_after_stop_ms",
+        "abort_no_final_observed",
+        "abort_observation_ms"
+      ],
+      "properties": {
+        "case_id": { "$ref": "#/$defs/identifier" },
+        "input_packets": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "input_duration_ms": { "type": "integer", "minimum": 60 },
+        "input_packet_stream_sha256": { "$ref": "#/$defs/sha256" },
+        "decoded_pcm_set_sha256": { "$ref": "#/$defs/sha256" },
+        "transcript_exact_match": { "const": true },
+        "single_final_observed": { "const": true },
+        "final_after_stop_ms": { "type": "integer", "minimum": 0 },
+        "abort_no_final_observed": { "const": true },
+        "abort_observation_ms": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "tts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "request_id",
+        "frames",
+        "decoded_samples",
+        "packet_stream_sha256",
+        "decoded_pcm_set_sha256",
+        "first_frame_ms",
+        "complete_ms",
+        "every_frame_non_silent"
+      ],
+      "properties": {
+        "case_id": { "$ref": "#/$defs/identifier" },
+        "request_id": { "type": "integer", "minimum": 1 },
+        "frames": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "decoded_samples": { "type": "integer", "minimum": 1440 },
+        "packet_stream_sha256": { "$ref": "#/$defs/sha256" },
+        "decoded_pcm_set_sha256": { "$ref": "#/$defs/sha256" },
+        "first_frame_ms": { "type": "integer", "minimum": 0 },
+        "complete_ms": { "type": "integer", "minimum": 0 },
+        "every_frame_non_silent": { "const": true }
+      }
+    },
+    "cancel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "request_id",
+        "frames_before_cancel",
+        "cancel_to_return_ms",
+        "returned_context_cancel"
+      ],
+      "properties": {
+        "case_id": { "$ref": "#/$defs/identifier" },
+        "request_id": { "type": "integer", "minimum": 1 },
+        "frames_before_cancel": { "const": 1 },
+        "cancel_to_return_ms": { "type": "integer", "minimum": 0 },
+        "returned_context_cancel": { "const": true }
+      }
+    }
+  }
+}

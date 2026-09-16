@@ -1,0 +1,35 @@
+[Unit]
+Description=XiaoZhi on-demand Traditional Chinese glyph provider
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=xiaozhi-gateway
+Group=xiaozhi-gateway
+ExecStart=/usr/bin/python3 /opt/xiaozhi-glyphs/examples/glyph_push_server.py /opt/xiaozhi-glyphs/full/manifest.json --host 127.0.0.1 --port 8768
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=10s
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+UMask=0077
+MemoryMax=192M
+TasksMax=32
+
+[Install]
+WantedBy=multi-user.target

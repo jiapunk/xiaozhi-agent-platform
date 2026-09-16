@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/companion-app-supply-chain-receipt-v1.json",
+  "title": "XiaoZhi Companion App source supply-chain receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_type",
+    "release_id",
+    "policy_sha256",
+    "package_name",
+    "package_version",
+    "source_date",
+    "platforms",
+    "production_targets",
+    "package_resolved_sha256",
+    "upstream_lock_sha256",
+    "privacy_manifest_sha256",
+    "source_manifest_sha256",
+    "spdx_sha256",
+    "provenance_sha256",
+    "source_file_count",
+    "dependencies",
+    "license_files",
+    "result",
+    "production_ready",
+    "limitations",
+    "signing_key_id",
+    "signature_algorithm",
+    "signature_b64url"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "receipt_type": {"const": "COMPANION_APP_SOURCE_SUPPLY_CHAIN"},
+    "release_id": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/identifier"},
+    "policy_sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"},
+    "package_name": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/identifier"},
+    "package_version": {"type": "string"},
+    "source_date": {"type": "string", "format": "date-time", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+    "platforms": {"const": ["ios15", "macos13"]},
+    "production_targets": {"const": ["ProductActionConsentUI", "ProductOnboardingCore", "ProductOnboardingESPProvision"]},
+    "package_resolved_sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"},
+    "upstream_lock_sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"},
+    "privacy_manifest_sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"},
+    "source_manifest_sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"},
+    "spdx_sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"},
+    "provenance_sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"},
+    "source_file_count": {"type": "integer", "minimum": 4, "maximum": 256},
+    "dependencies": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/dependencySummary"}
+    },
+    "license_files": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/licenseFile"}
+    },
+    "result": {"const": "SOURCE_SUPPLY_CHAIN_PASS"},
+    "production_ready": {"const": false},
+    "limitations": {
+      "const": [
+        "not_a_source_review_or_functional_test",
+        "not_a_distribution_signed_app",
+        "not_an_app_store_or_testflight_receipt",
+        "not_apple_app_attest_or_device_evidence",
+        "not_android_implementation_or_play_integrity_evidence",
+        "not_a_release_day_vulnerability_or_legal_conclusion"
+      ]
+    },
+    "signing_key_id": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/identifier"},
+    "signature_algorithm": {"const": "Ed25519"},
+    "signature_b64url": {"type": "string", "pattern": "^[A-Za-z0-9_-]{86}$"}
+  },
+  "$defs": {
+    "dependencySummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity", "license", "license_sha256", "revision", "version"],
+      "properties": {
+        "identity": {"enum": ["esp-idf-provisioning-ios", "swift-protobuf"]},
+        "license": {"const": "Apache-2.0"},
+        "license_sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"},
+        "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "version": {"type": "string", "pattern": "^[0-9][A-Za-z0-9._+-]{0,63}$"}
+      }
+    },
+    "licenseFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^licenses/[A-Za-z0-9_.-]+\\.txt$"},
+        "sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"},
+        "size": {"type": "integer", "minimum": 1, "maximum": 1048576}
+      }
+    }
+  }
+}

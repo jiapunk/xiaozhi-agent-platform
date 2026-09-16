@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "objects": [
+    {
+      "release_id": "box3-development-0015",
+      "image_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "image_size": 1369584,
+      "url_path": "/firmware/esp32s3-box3/00000015/image.bin",
+      "image_file": "firmware/esp32s3-box3/00000015/image.bin"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# Bread Compact WiFi S3CAM development diagnostic, 16 MiB flash.
+# Name,       Type, SubType,  Offset,    Size,       Flags
+nvs_factory,  data, nvs,      0x9000,    0x6000,
+nvs,          data, nvs,      ,          0xA000,
+otadata,      data, ota,      ,          0x2000,
+phy_init,     data, phy,      ,          0x1000,
+coredump,     data, coredump, ,          0x13000,
+ota_0,        app,  ota_0,    0x30000,   0x580000,
+ota_1,        app,  ota_1,    ,          0x580000,
+system,       data, fat,      ,          0x200000,
+data,         data, fat,      ,          0x2D0000,

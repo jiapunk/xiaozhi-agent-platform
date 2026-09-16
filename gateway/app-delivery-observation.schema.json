@@ -1,0 +1,53 @@
+{
+  "$id": "https://xiaozhi-agent.local/schemas/app-delivery-observation-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": { "development_only": { "const": true } },
+        "required": ["development_only"]
+      },
+      "then": { "properties": { "environment": { "const": "staging" } } }
+    }
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "#/$defs/identifier64" },
+    "qualification_nonce": { "pattern": "^[A-Za-z0-9_-]{22}$", "type": "string" },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "platform": { "const": "ios" },
+    "application_id": { "$ref": "#/$defs/identifier128" },
+    "app_build_id": { "$ref": "#/$defs/identifier64" },
+    "app_binary_sha256": { "$ref": "#/$defs/sha256" },
+    "wake_contract": { "const": "xz-action-consent-wake-v1" },
+    "content_free_wake": { "const": true },
+    "background_network_request": { "const": false },
+    "background_wake_count": { "maximum": 8, "minimum": 1, "type": "integer" },
+    "wake_received_at_unix_ms": { "$ref": "#/$defs/unix_ms" },
+    "foreground_entered_at_unix_ms": { "$ref": "#/$defs/unix_ms" },
+    "authenticated_fetch_presented_at_unix_ms": { "$ref": "#/$defs/unix_ms" },
+    "wake_to_fetch_ms": { "maximum": 120000, "minimum": 0, "type": "integer" },
+    "challenge_binding_sha256": { "$ref": "#/$defs/sha256" },
+    "device_binding_sha256": { "$ref": "#/$defs/sha256" },
+    "decision_issued": { "const": false }
+  },
+  "required": [
+    "schema", "qualification_id", "qualification_nonce", "environment",
+    "development_only", "platform", "application_id", "app_build_id",
+    "app_binary_sha256",
+    "wake_contract", "content_free_wake", "background_network_request",
+    "background_wake_count", "wake_received_at_unix_ms",
+    "foreground_entered_at_unix_ms", "authenticated_fetch_presented_at_unix_ms",
+    "wake_to_fetch_ms", "challenge_binding_sha256", "device_binding_sha256",
+    "decision_issued"
+  ],
+  "type": "object",
+  "$defs": {
+    "identifier64": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+    "identifier128": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$", "type": "string" },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "unix_ms": { "maximum": 253402300799999, "minimum": 1, "type": "integer" }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "$id": "https://xiaozhi-agent.local/schemas/app-delivery-attestation-receipt-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": { "development_only": { "const": true } },
+        "required": ["development_only"]
+      },
+      "then": {
+        "properties": {
+          "attestation_provider": { "const": "fixture" },
+          "environment": { "const": "staging" },
+          "result": { "const": "FIXTURE_APP_ATTESTATION_PASS" },
+          "signed_artifact_verified": { "const": false },
+          "vendor_attestation_verified": { "const": false }
+        }
+      },
+      "else": {
+        "properties": {
+          "attestation_provider": { "const": "apple-app-attest" },
+          "result": { "const": "LIVE_APP_ATTESTATION_PASS" },
+          "signed_artifact_verified": { "const": true },
+          "vendor_attestation_verified": { "const": true }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "#/$defs/identifier64" },
+    "result": { "enum": ["FIXTURE_APP_ATTESTATION_PASS", "LIVE_APP_ATTESTATION_PASS"] },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "platform": { "const": "ios" },
+    "attestation_provider": { "enum": ["fixture", "apple-app-attest"] },
+    "application_id": { "$ref": "#/$defs/identifier128" },
+    "app_build_id": { "$ref": "#/$defs/identifier64" },
+    "app_binary_sha256": { "$ref": "#/$defs/sha256" },
+    "observation_sha256": { "$ref": "#/$defs/sha256" },
+    "provider_qualification_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "vendor_evidence_sha256": { "$ref": "#/$defs/sha256" },
+    "attested_key_sha256": { "$ref": "#/$defs/sha256" },
+    "signed_artifact_verified": { "type": "boolean" },
+    "vendor_attestation_verified": { "type": "boolean" },
+    "verified_at": { "$ref": "#/$defs/timestamp" },
+    "expires_at": { "$ref": "#/$defs/timestamp" },
+    "signing_key_id": { "$ref": "#/$defs/identifier64" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "pattern": "^[A-Za-z0-9_-]{86}$", "type": "string" }
+  },
+  "required": [
+    "schema", "qualification_id", "result", "environment", "development_only",
+    "platform", "attestation_provider", "application_id", "app_build_id",
+    "app_binary_sha256", "observation_sha256",
+    "provider_qualification_receipt_sha256", "vendor_evidence_sha256",
+    "attested_key_sha256", "signed_artifact_verified",
+    "vendor_attestation_verified", "verified_at", "expires_at",
+    "signing_key_id", "signature_algorithm", "signature_b64url"
+  ],
+  "type": "object",
+  "$defs": {
+    "identifier64": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+    "identifier128": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$", "type": "string" },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "timestamp": { "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$", "type": "string" }
+  }
+}

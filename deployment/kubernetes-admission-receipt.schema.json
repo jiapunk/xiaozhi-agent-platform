@@ -1,0 +1,24 @@
+{
+  "$id": "https://xiaozhi-agent.local/schemas/kubernetes-admission-receipt-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "admission_sha256": { "$ref": "#/$defs/sha256" },
+    "binding_count": { "const": 10 },
+    "deployment_id": { "maxLength": 32, "pattern": "^[a-z0-9](?:[-a-z0-9]{0,30}[a-z0-9])?$", "type": "string" },
+    "deployment_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "deployment_signing_key_id": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+    "namespace": { "maxLength": 63, "pattern": "^[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?$", "type": "string" },
+    "policy_count": { "const": 10 },
+    "resource_count": { "const": 20 },
+    "schema": { "const": 1 },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "pattern": "^[A-Za-z0-9_-]{86}$", "type": "string" },
+    "signing_key_id": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" }
+  },
+  "required": ["schema", "deployment_id", "namespace", "deployment_receipt_sha256", "deployment_signing_key_id", "admission_sha256", "policy_count", "binding_count", "resource_count", "signing_key_id", "signature_algorithm", "signature_b64url"],
+  "type": "object",
+  "$defs": {
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" }
+  }
+}

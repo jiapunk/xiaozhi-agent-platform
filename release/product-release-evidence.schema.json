@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/product-release-evidence-v2.json",
+  "title": "XiaoZhi Agent product release evidence attestation v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "evidence_type",
+    "subject",
+    "environment",
+    "region",
+    "observed_at",
+    "valid_until",
+    "evidence_uri",
+    "evidence_sha256",
+    "result",
+    "signing_key_id",
+    "signature_algorithm",
+    "signature_b64url"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "evidence_id": {"$ref": "product-release-policy.schema.json#/$defs/identifier"},
+    "evidence_type": {"$ref": "product-release-policy.schema.json#/$defs/evidenceType"},
+    "subject": {"$ref": "product-release-policy.schema.json#/$defs/subject"},
+    "environment": {"const": "PRODUCTION"},
+    "region": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,31}$"},
+    "observed_at": {"$ref": "product-release-policy.schema.json#/$defs/timestamp"},
+    "valid_until": {"$ref": "product-release-policy.schema.json#/$defs/timestamp"},
+    "evidence_uri": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "evidence_sha256": {"$ref": "product-release-policy.schema.json#/$defs/sha256"},
+    "result": {"const": "PASS"},
+    "signing_key_id": {"$ref": "product-release-policy.schema.json#/$defs/identifier"},
+    "signature_algorithm": {"const": "Ed25519"},
+    "signature_b64url": {"type": "string", "pattern": "^[A-Za-z0-9_-]{86}$"}
+  }
+}

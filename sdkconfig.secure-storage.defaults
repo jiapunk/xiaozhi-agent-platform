@@ -1,0 +1,8 @@
+# M13 factory-keyed credential storage profile.
+#
+# Keep ESP-IDF's automatic NVS initializer disabled: when its HMAC key is
+# absent it may generate and burn one. product_storage instead accepts only an
+# already-provisioned, fully protected HMAC_UP key in the reviewed slot.
+CONFIG_NVS_ENCRYPTION=n
+CONFIG_PRODUCT_STORAGE_REQUIRE_HMAC_NVS_ENCRYPTION=y
+CONFIG_PRODUCT_STORAGE_NVS_HMAC_KEY_ID=4

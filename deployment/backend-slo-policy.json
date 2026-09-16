@@ -1,0 +1,82 @@
+{
+  "attribute_policy": {
+    "allowed_span_attributes": [
+      "http.request.method",
+      "http.response.status_code",
+      "xiaozhi.operation",
+      "xiaozhi.result_class"
+    ],
+    "forbidden_propagation_headers": [
+      "baggage",
+      "tracestate"
+    ],
+    "internal_context_services": [
+      "accountauthorization",
+      "generationcoordinator"
+    ],
+    "public_edge_services": [
+      "agentproxy",
+      "controlplane",
+      "factorytimeauthority",
+      "firmwareorigin",
+      "gateway"
+    ],
+    "third_party_no_context_operations": [
+      "agent.provider",
+      "push.apns",
+      "push.fcm",
+      "push.oauth"
+    ]
+  },
+  "eligible_result_classes": [
+    "server_error",
+    "success"
+  ],
+  "maximum_observation_age_seconds": 172800,
+  "schema": 1,
+  "services": [
+    {
+      "availability_target_ppm": 999000,
+      "latency_p99_ms": 1000,
+      "minimum_eligible_requests": 1000,
+      "name": "gateway"
+    },
+    {
+      "availability_target_ppm": 999000,
+      "latency_p99_ms": 1500,
+      "minimum_eligible_requests": 1000,
+      "name": "controlplane"
+    },
+    {
+      "availability_target_ppm": 995000,
+      "latency_p99_ms": 30000,
+      "minimum_eligible_requests": 500,
+      "name": "agentproxy"
+    },
+    {
+      "availability_target_ppm": 999000,
+      "latency_p99_ms": 60000,
+      "minimum_eligible_requests": 500,
+      "name": "firmwareorigin"
+    },
+    {
+      "availability_target_ppm": 999900,
+      "latency_p99_ms": 1000,
+      "minimum_eligible_requests": 100,
+      "name": "generationcoordinator"
+    },
+    {
+      "availability_target_ppm": 999900,
+      "latency_p99_ms": 1000,
+      "minimum_eligible_requests": 500,
+      "name": "accountauthorization"
+    },
+    {
+      "availability_target_ppm": 999500,
+      "latency_p99_ms": 2500,
+      "minimum_eligible_requests": 100,
+      "name": "factorytimeauthority"
+    }
+  ],
+  "window_seconds": 2419200
+}

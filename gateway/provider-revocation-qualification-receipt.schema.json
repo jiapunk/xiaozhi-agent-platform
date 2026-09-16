@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/provider-revocation-qualification-receipt-v1.json",
+  "title": "M72 provider credential revocation qualification receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "provider-revocation-observation.schema.json#/$defs/identifier64" },
+    "result": { "enum": ["FIXTURE_PROVIDER_CREDENTIAL_REVOCATION_PASS", "LIVE_PROVIDER_CREDENTIAL_REVOCATION_PASS"] },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "deployment_id": { "$ref": "provider-revocation-observation.schema.json#/$defs/identifier64" },
+    "oci_release_id": { "$ref": "provider-revocation-observation.schema.json#/$defs/identifier64" },
+    "config_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+    "qualification_tool_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+    "providers": { "type": "array", "minItems": 1, "maxItems": 3, "items": { "$ref": "provider-revocation-observation.schema.json#/$defs/provider" } },
+    "started_at": { "$ref": "provider-revocation-observation.schema.json#/$defs/timestamp" },
+    "finished_at": { "$ref": "provider-revocation-observation.schema.json#/$defs/timestamp" },
+    "observation_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+    "provider_qualification_result": { "enum": ["FIXTURE_PROTOCOL_PASS", "LIVE_PROVIDER_API_PASS"] },
+    "provider_qualification_receipt_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+    "mtls_dispatch_result": { "enum": ["FIXTURE_MTLS_DISPATCH_PASS", "LIVE_MTLS_DISPATCH_PASS"] },
+    "mtls_dispatch_receipt_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+    "revocation_attestation_result": { "enum": ["FIXTURE_PROVIDER_REVOCATION_ATTESTATION_PASS", "LIVE_PROVIDER_CONSOLE_REVOCATION_PASS"] },
+    "revocation_attestation_receipt_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+    "attestation_provider": { "enum": ["fixture", "provider-credential-audit-authority"] },
+    "provider_audit_evidence_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+    "revocation_change_started_at": { "$ref": "provider-revocation-observation.schema.json#/$defs/timestamp" },
+    "revocation_change_completed_at": { "$ref": "provider-revocation-observation.schema.json#/$defs/timestamp" },
+    "provider_console_revocation_verified": { "type": "boolean" },
+    "revoked_credential_disabled_verified": { "type": "boolean" },
+    "active_credential_enabled_verified": { "type": "boolean" },
+    "worm_retention_verified": { "type": "boolean" },
+    "evaluated_at": { "$ref": "provider-revocation-observation.schema.json#/$defs/timestamp" },
+    "secret_free": { "const": true },
+    "production_ready": { "const": false },
+    "unresolved_production_gates": {
+      "type": "array", "minItems": 1, "maxItems": 4,
+      "items": { "enum": ["end_to_end_mtls_dispatch", "managed_database_failover", "provider_credential_revocation", "signed_app_delivery_receipt"] }
+    },
+    "signing_key_id": { "$ref": "provider-revocation-observation.schema.json#/$defs/identifier64" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  },
+  "required": [
+    "schema", "qualification_id", "result", "environment", "development_only",
+    "deployment_id", "oci_release_id", "config_sha256", "qualification_tool_sha256",
+    "providers", "started_at", "finished_at", "observation_sha256",
+    "provider_qualification_result", "provider_qualification_receipt_sha256",
+    "mtls_dispatch_result", "mtls_dispatch_receipt_sha256",
+    "revocation_attestation_result", "revocation_attestation_receipt_sha256",
+    "attestation_provider", "provider_audit_evidence_sha256",
+    "revocation_change_started_at", "revocation_change_completed_at",
+    "provider_console_revocation_verified", "revoked_credential_disabled_verified",
+    "active_credential_enabled_verified", "worm_retention_verified", "evaluated_at",
+    "secret_free", "production_ready", "unresolved_production_gates",
+    "signing_key_id", "signature_algorithm", "signature_b64url"
+  ],
+  "allOf": [
+    {
+      "if": { "properties": { "development_only": { "const": true } }, "required": ["development_only"] },
+      "then": {
+        "properties": {
+          "environment": { "const": "staging" },
+          "result": { "const": "FIXTURE_PROVIDER_CREDENTIAL_REVOCATION_PASS" },
+          "provider_qualification_result": { "const": "FIXTURE_PROTOCOL_PASS" },
+          "mtls_dispatch_result": { "const": "FIXTURE_MTLS_DISPATCH_PASS" },
+          "revocation_attestation_result": { "const": "FIXTURE_PROVIDER_REVOCATION_ATTESTATION_PASS" },
+          "attestation_provider": { "const": "fixture" },
+          "provider_console_revocation_verified": { "const": false },
+          "revoked_credential_disabled_verified": { "const": false },
+          "active_credential_enabled_verified": { "const": false },
+          "worm_retention_verified": { "const": false },
+          "unresolved_production_gates": {
+            "prefixItems": [
+              { "const": "end_to_end_mtls_dispatch" },
+              { "const": "managed_database_failover" },
+              { "const": "provider_credential_revocation" },
+              { "const": "signed_app_delivery_receipt" }
+            ],
+            "items": false, "minItems": 4, "maxItems": 4
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "result": { "const": "LIVE_PROVIDER_CREDENTIAL_REVOCATION_PASS" },
+          "provider_qualification_result": { "const": "LIVE_PROVIDER_API_PASS" },
+          "mtls_dispatch_result": { "const": "LIVE_MTLS_DISPATCH_PASS" },
+          "revocation_attestation_result": { "const": "LIVE_PROVIDER_CONSOLE_REVOCATION_PASS" },
+          "attestation_provider": { "const": "provider-credential-audit-authority" },
+          "provider_console_revocation_verified": { "const": true },
+          "revoked_credential_disabled_verified": { "const": true },
+          "active_credential_enabled_verified": { "const": true },
+          "worm_retention_verified": { "const": true },
+          "unresolved_production_gates": {
+            "prefixItems": [{ "const": "managed_database_failover" }],
+            "items": false, "minItems": 1, "maxItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+# Flashable development-only ESP32-S3-BOX-3 bring-up profile.
+#
+# This intentionally uses plaintext development NVS and skips factory identity
+# so it can run on an unmodified retail/development BOX-3. It starts no Wi-Fi,
+# remote command path, cloud credential flow, Secure Boot, or Flash Encryption.
+CONFIG_PRODUCT_BOX3_BRINGUP_ENABLE=y
+# CONFIG_PRODUCT_LIVE_RUNTIME_ENABLE is not set
+# CONFIG_PRODUCT_STORAGE_REQUIRE_HMAC_NVS_ENCRYPTION is not set
+# CONFIG_PRODUCT_PRODUCTION_SECURITY_PROFILE is not set
+CONFIG_APP_PROJECT_VER="0.15.0-box3-bringup"
+CONFIG_LOG_DEFAULT_LEVEL_INFO=y
+CONFIG_LOG_MAXIMUM_LEVEL_INFO=y

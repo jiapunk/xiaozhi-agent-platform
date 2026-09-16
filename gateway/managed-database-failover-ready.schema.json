@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/managed-database-failover-ready-v1.json",
+  "title": "M73 secret-free managed database failover ready signal",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "run_binding_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "config_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "roles": { "$ref": "managed-database-failover-observation.schema.json#/$defs/roles" },
+    "ready_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" }
+  },
+  "required": ["schema", "qualification_id", "run_binding_sha256", "config_sha256", "roles", "ready_at"]
+}

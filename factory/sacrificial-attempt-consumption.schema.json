@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://product.example/schemas/sacrificial-attempt-consumption-v2.json",
+  "title": "Sacrificial Attempt Consumption v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "environment",
+    "scope",
+    "attempt_key_sha256",
+    "ledger",
+    "authorization",
+    "transaction",
+    "release",
+    "station",
+    "trusted_time",
+    "consumed_at",
+    "safety",
+    "result"
+  ],
+  "properties": {
+    "schema": { "const": "xz-sacrificial-attempt-consumption-v2" },
+    "environment": { "const": "SACRIFICIAL_HARDWARE_AUTHORIZATION" },
+    "scope": { "const": "ONE_UNIT_ONE_ATTEMPT_DESTRUCTIVE_QUALIFICATION" },
+    "attempt_key_sha256": { "$ref": "#/$defs/sha256" },
+    "ledger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_sha256",
+        "policy_id",
+        "ledger_id",
+        "filesystem_device",
+        "directory_inode"
+      ],
+      "properties": {
+        "policy_sha256": { "$ref": "#/$defs/sha256" },
+        "policy_id": { "$ref": "#/$defs/identifier" },
+        "ledger_id": { "$ref": "#/$defs/identifier" },
+        "filesystem_device": { "type": "integer", "minimum": 0 },
+        "directory_inode": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plan_sha256",
+        "plan_id",
+        "authorization_key_id",
+        "issued_at",
+        "expires_at"
+      ],
+      "properties": {
+        "plan_sha256": { "$ref": "#/$defs/sha256" },
+        "plan_id": { "$ref": "#/$defs/identifier" },
+        "authorization_key_id": { "$ref": "#/$defs/identifier" },
+        "issued_at": { "$ref": "#/$defs/timestamp" },
+        "expires_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "transaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transaction_id",
+        "attempt_id",
+        "device_id",
+        "serial_number",
+        "base_mac"
+      ],
+      "properties": {
+        "transaction_id": { "$ref": "#/$defs/identifier" },
+        "attempt_id": { "$ref": "#/$defs/identifier" },
+        "device_id": { "type": "string", "pattern": "^xz-[0-9a-f]{12}$" },
+        "serial_number": { "$ref": "#/$defs/identifier" },
+        "base_mac": {
+          "type": "string",
+          "pattern": "^(?:[0-9A-F]{2}:){5}[0-9A-F]{2}$"
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "signing_request_sha256",
+        "signed_artifact_verification_sha256",
+        "anti_rollback_secure_version",
+        "signed_bootloader_sha256",
+        "signed_application_sha256",
+        "partition_table_sha256",
+        "ota_data_initial_sha256",
+        "secure_boot_digests"
+      ],
+      "properties": {
+        "profile": { "const": "box3-production-security-v1" },
+        "signing_request_sha256": { "$ref": "#/$defs/sha256" },
+        "signed_artifact_verification_sha256": { "$ref": "#/$defs/sha256" },
+        "anti_rollback_secure_version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "signed_bootloader_sha256": { "$ref": "#/$defs/sha256" },
+        "signed_application_sha256": { "$ref": "#/$defs/sha256" },
+        "partition_table_sha256": { "$ref": "#/$defs/sha256" },
+        "ota_data_initial_sha256": { "$ref": "#/$defs/sha256" },
+        "secure_boot_digests": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["slot", "purpose", "digest_sha256"],
+            "properties": {
+              "slot": { "type": "integer", "minimum": 0, "maximum": 2 },
+              "purpose": {
+                "enum": [
+                  "SECURE_BOOT_DIGEST0",
+                  "SECURE_BOOT_DIGEST1",
+                  "SECURE_BOOT_DIGEST2"
+                ]
+              },
+              "digest_sha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        }
+      }
+    },
+    "station": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operators", "fixture_id", "fixture_version"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "operators": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/identifier" }
+        },
+        "fixture_id": { "$ref": "#/$defs/identifier" },
+        "fixture_version": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "trusted_time": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["receipt", "https_round_trip_ms"],
+      "properties": {
+        "receipt": {
+          "$ref": "https://product.example/schemas/sacrificial-trusted-time-receipt-v1.json"
+        },
+        "https_round_trip_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5000
+        }
+      }
+    },
+    "consumed_at": { "$ref": "#/$defs/timestamp" },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "one_time_handoff",
+        "reusable",
+        "executor_included",
+        "executor_invoked",
+        "hardware_touched",
+        "production_inventory_eligible",
+        "deletion_api_included",
+        "failure_disposition"
+      ],
+      "properties": {
+        "one_time_handoff": { "const": true },
+        "reusable": { "const": false },
+        "executor_included": { "const": false },
+        "executor_invoked": { "const": false },
+        "hardware_touched": { "const": false },
+        "production_inventory_eligible": { "const": false },
+        "deletion_api_included": { "const": false },
+        "failure_disposition": { "const": "QUARANTINE_OR_DESTROY" }
+      }
+    },
+    "result": { "const": "SACRIFICIAL_ATTEMPT_CONSUMED" }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9:_.-]{1,128}$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    }
+  }
+}

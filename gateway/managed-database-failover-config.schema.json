@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/managed-database-failover-config-v1.json",
+  "title": "M73 private live managed database failover config",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "#/$defs/identifier64" },
+    "environment": { "enum": ["staging", "production"] },
+    "run_nonce_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{22}$" },
+    "acknowledge_managed_database_failover": { "const": true },
+    "databases": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "prefixItems": [
+        { "$ref": "#/$defs/ownership" },
+        { "$ref": "#/$defs/accountauthorization" },
+        { "$ref": "#/$defs/factorytimeauthority" }
+      ],
+      "items": false
+    }
+  },
+  "required": ["schema", "qualification_id", "environment", "run_nonce_b64url", "acknowledge_managed_database_failover", "databases"],
+  "$defs": {
+    "identifier64": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$" },
+    "identifier128": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$" },
+    "database": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "role": { "enum": ["ownership", "accountauthorization", "factorytimeauthority"] },
+        "managed_cluster_id": { "$ref": "#/$defs/identifier128" },
+        "database_url": { "type": "string", "pattern": "^postgres(ql)?://.*[?&]sslmode=verify-full(?:&|$)", "maxLength": 8192 }
+      },
+      "required": ["role", "managed_cluster_id", "database_url"]
+    },
+    "ownership": { "allOf": [{ "$ref": "#/$defs/database" }, { "properties": { "role": { "const": "ownership" } } }] },
+    "accountauthorization": { "allOf": [{ "$ref": "#/$defs/database" }, { "properties": { "role": { "const": "accountauthorization" } } }] },
+    "factorytimeauthority": { "allOf": [{ "$ref": "#/$defs/database" }, { "properties": { "role": { "const": "factorytimeauthority" } } }] }
+  }
+}

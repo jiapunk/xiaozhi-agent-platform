@@ -1,0 +1,49 @@
+{
+  "$id": "https://xiaozhi-agent.local/schemas/backend-slo-observation-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "collector_id": { "$ref": "#/$defs/identifier" },
+    "deployment_id": { "$ref": "#/$defs/identifier" },
+    "generated_at": { "$ref": "#/$defs/timestamp" },
+    "observation_id": { "$ref": "#/$defs/identifier" },
+    "policy_sha256": { "$ref": "#/$defs/sha256" },
+    "result": { "const": "PASS" },
+    "schema": { "const": 1 },
+    "services": {
+      "items": { "$ref": "#/$defs/service" },
+      "maxItems": 7,
+      "minItems": 7,
+      "type": "array"
+    },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "maxLength": 86, "minLength": 86, "pattern": "^[A-Za-z0-9_-]{86}$", "type": "string" },
+    "signing_key_id": { "$ref": "#/$defs/identifier" },
+    "window_end": { "$ref": "#/$defs/timestamp" },
+    "window_start": { "$ref": "#/$defs/timestamp" }
+  },
+  "required": ["schema", "observation_id", "deployment_id", "collector_id", "policy_sha256", "window_start", "window_end", "generated_at", "services", "result", "signing_key_id", "signature_algorithm", "signature_b64url"],
+  "type": "object",
+  "$defs": {
+    "identifier": { "maxLength": 64, "pattern": "^[a-z0-9](?:[-a-z0-9.]{0,62}[a-z0-9])?$", "type": "string" },
+    "service": {
+      "additionalProperties": false,
+      "properties": {
+        "attribute_violations": { "minimum": 0, "type": "integer" },
+        "availability_ppm": { "maximum": 1000000, "minimum": 0, "type": "integer" },
+        "eligible_requests": { "minimum": 1, "type": "integer" },
+        "latency_p99_ms": { "minimum": 0, "type": "integer" },
+        "name": { "enum": ["gateway", "controlplane", "agentproxy", "firmwareorigin", "generationcoordinator", "accountauthorization", "factorytimeauthority"] },
+        "result": { "const": "PASS" },
+        "server_errors": { "minimum": 0, "type": "integer" },
+        "successes": { "minimum": 0, "type": "integer" },
+        "telemetry_export_failures": { "minimum": 0, "type": "integer" },
+        "unknown_operations": { "minimum": 0, "type": "integer" }
+      },
+      "required": ["name", "eligible_requests", "successes", "server_errors", "availability_ppm", "latency_p99_ms", "telemetry_export_failures", "unknown_operations", "attribute_violations", "result"],
+      "type": "object"
+    },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "timestamp": { "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$", "type": "string" }
+  }
+}

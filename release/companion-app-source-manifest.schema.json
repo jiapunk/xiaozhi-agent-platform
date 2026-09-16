@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/companion-app-source-manifest-v1.json",
+  "title": "XiaoZhi Companion App source manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "release_id", "package_name", "package_version", "files"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "release_id": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/identifier"},
+    "package_name": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/identifier"},
+    "package_version": {"type": "string", "pattern": "^[0-9][A-Za-z0-9._+-]{0,63}$"},
+    "files": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "size", "sha1", "sha256"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1, "maxLength": 512},
+          "size": {"type": "integer", "minimum": 1, "maximum": 4194304},
+          "sha1": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "sha256": {"$ref": "companion-app-supply-chain-policy.schema.json#/$defs/sha256"}
+        }
+      }
+    }
+  }
+}

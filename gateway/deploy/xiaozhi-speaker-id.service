@@ -1,0 +1,29 @@
+[Unit]
+Description=XiaoZhi loopback speaker embedding service
+After=network.target
+Before=xiaozhi-gateway.service
+
+[Service]
+Type=simple
+User=xiaozhi-gateway
+Group=xiaozhi-gateway
+Environment=S3CAM_SPEAKER_MODEL=/opt/xiaozhi-speaker-id/model.onnx
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/xiaozhi-speaker-id/venv/bin/python /opt/xiaozhi-speaker-id/service.py --threads 1
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/opt/xiaozhi-speaker-id
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+MemoryMax=300M
+CPUQuota=100%
+
+[Install]
+WantedBy=multi-user.target

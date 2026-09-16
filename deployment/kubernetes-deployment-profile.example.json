@@ -1,0 +1,102 @@
+{
+  "agent_usage": {
+    "daily_budget_microusd": 1,
+    "input_microusd_per_million_tokens": 1,
+    "input_token_overhead": 8192,
+    "output_microusd_per_million_tokens": 1,
+    "pricing_profile_id": "example-replace-before-production",
+    "reservation_ttl_seconds": 120
+  },
+  "companion_push": {
+    "apns": true,
+    "enabled": true,
+    "fcm_credential_mode": "service-account"
+  },
+  "config_maps": {
+    "accountauthorization": "m49-accountauthorization-config",
+    "agentproxy": "m49-agentproxy-config",
+    "controlplane": "m49-controlplane-config",
+    "factorytimeauthority": "m62-factorytimeauthority-config",
+    "firmwareorigin": "m49-firmwareorigin-config",
+    "gateway": "m49-gateway-config",
+    "generationcoordinator": "m49-generationcoordinator-config"
+  },
+  "deployment_id": "m49-pilot",
+  "dns_namespace": "kube-system",
+  "dns_pod_selector": {
+    "k8s-app": "kube-dns"
+  },
+  "entitlement_update_trust": {
+    "authorization_ttl_seconds": 300,
+    "keyring_min_revision": 1
+  },
+  "external_egress": {
+    "database": [
+      "192.0.2.10/32"
+    ],
+    "identity": [
+      "192.0.2.20/32"
+    ],
+    "provider": [
+      "198.51.100.10/32"
+    ],
+    "signer": [
+      "198.51.100.20/32"
+    ],
+    "speech": [
+      "203.0.113.10/32"
+    ]
+  },
+  "image_pull_secret": "m49-registry-pull",
+  "ingress_namespace": "xiaozhi-ingress",
+  "monitoring_namespace": "xiaozhi-monitoring",
+  "namespace": "xiaozhi-agent",
+  "registry_repository": "registry.example.com/xiaozhi-agent",
+  "release_operator_namespace": "xiaozhi-release",
+  "schema": 7,
+  "secret_env": {
+    "accountauthorization": "m49-accountauthorization-env",
+    "agentproxy": "m49-agentproxy-env",
+    "controlplane": "m49-controlplane-env",
+    "factorytimeauthority": "m62-factorytimeauthority-env",
+    "firmwareorigin": "m49-firmwareorigin-env",
+    "gateway": "m49-gateway-env",
+    "generationcoordinator": "m49-generationcoordinator-env"
+  },
+  "secret_files": {
+    "accountauthorization": "m49-accountauthorization-files",
+    "agentproxy": "m49-agentproxy-files",
+    "controlplane": "m49-controlplane-files",
+    "factorytimeauthority": "m62-factorytimeauthority-files",
+    "firmwareorigin": "m49-firmwareorigin-files",
+    "gateway": "m49-gateway-files",
+    "generationcoordinator": "m49-generationcoordinator-files"
+  },
+  "service_entitlement": {
+    "agent_token_ttl_seconds": 240,
+    "voice_token_ttl_seconds": 300
+  },
+  "speech_usage": {
+    "daily_budget_microusd": 1,
+    "pricing_profile_id": "example-replace-before-production",
+    "reservation_ttl_seconds": 120,
+    "stt_microusd_per_million_audio_ms": 1,
+    "stt_reservation_chunk_audio_ms": 6000,
+    "tts_max_output_audio_ms": 120000,
+    "tts_microusd_per_million_characters": 1,
+    "tts_microusd_per_million_output_audio_ms": 0
+  },
+  "storage_claims": {
+    "controlplane_bundle": "m49-controlplane-bundle",
+    "firmwareorigin_bundle": "m49-firmwareorigin-bundle",
+    "generation_state": "m49-generation-state"
+  },
+  "telemetry": {
+    "collector_service": "otel-collector",
+    "pod_selector": {
+      "app.kubernetes.io/name": "otel-collector"
+    },
+    "sample_ratio_ppm": 1000000,
+    "timeout_ms": 2000
+  }
+}

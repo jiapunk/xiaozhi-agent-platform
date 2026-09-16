@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/speech-qualification-corpus-v1.json",
+  "title": "XiaoZhi speech qualification corpus v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "corpus_id",
+    "consent_class",
+    "stt_case",
+    "tts_cases",
+    "tts_cancel_case"
+  ],
+  "properties": {
+    "schema": { "const": "xiaozhi-speech-qualification-corpus-v1" },
+    "corpus_id": { "$ref": "#/$defs/identifier" },
+    "consent_class": {
+      "enum": ["synthetic", "approved_nonprivate", "approved_private"]
+    },
+    "stt_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "sample_rate_hz",
+        "channels",
+        "packet_duration_ms",
+        "packets_base64",
+        "expected_text"
+      ],
+      "properties": {
+        "case_id": { "$ref": "#/$defs/identifier" },
+        "sample_rate_hz": { "const": 16000 },
+        "channels": { "const": 1 },
+        "packet_duration_ms": { "const": 60 },
+        "packets_base64": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": { "type": "string", "minLength": 4, "maxLength": 5464 }
+        },
+        "expected_text": { "type": "string", "minLength": 1, "maxLength": 1024 }
+      }
+    },
+    "tts_cases": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "items": { "$ref": "#/$defs/ttsCase" }
+    },
+    "tts_cancel_case": { "$ref": "#/$defs/ttsCase" }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$"
+    },
+    "ttsCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["case_id", "text"],
+      "properties": {
+        "case_id": { "$ref": "#/$defs/identifier" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 1024 }
+      }
+    }
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.example/schemas/sacrificial-provisioning-plan-v1.json",
+  "title": "BOX3 sacrificial-board provisioning plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "plan_id",
+    "environment",
+    "scope",
+    "transaction",
+    "product",
+    "release",
+    "preflight",
+    "station",
+    "key_allocation",
+    "operation_plan",
+    "authorization",
+    "result",
+    "signature_algorithm",
+    "signature_b64url"
+  ],
+  "properties": {
+    "schema": { "const": "xz-sacrificial-provisioning-plan-v1" },
+    "plan_id": { "$ref": "#/$defs/identifier" },
+    "environment": { "const": "SACRIFICIAL_HARDWARE_AUTHORIZATION" },
+    "scope": { "const": "ONE_UNIT_ONE_ATTEMPT_DESTRUCTIVE_QUALIFICATION" },
+    "transaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transaction_id", "attempt_id", "device_id", "serial_number", "base_mac"],
+      "properties": {
+        "transaction_id": { "$ref": "#/$defs/identifier" },
+        "attempt_id": { "$ref": "#/$defs/identifier" },
+        "device_id": { "type": "string", "pattern": "^xz-[0-9a-f]{12}$" },
+        "serial_number": { "$ref": "#/$defs/identifier" },
+        "base_mac": { "$ref": "#/$defs/mac" }
+      }
+    },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sku", "board", "hardware_revision", "chip_model", "chip_revision", "flash_bytes"],
+      "properties": {
+        "sku": { "const": "VOICE_AGENT_KIT_BOX3" },
+        "board": { "const": "esp32s3-box3" },
+        "hardware_revision": { "const": 1 },
+        "chip_model": { "const": "ESP32-S3" },
+        "chip_revision": { "type": "integer", "minimum": 0, "maximum": 999 },
+        "flash_bytes": { "const": 16777216 }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "signing_request_sha256",
+        "signed_artifact_verification_sha256",
+        "anti_rollback_secure_version",
+        "signed_bootloader_sha256",
+        "signed_application_sha256",
+        "partition_table_sha256",
+        "ota_data_initial_sha256",
+        "secure_boot_digests"
+      ],
+      "properties": {
+        "profile": { "const": "box3-production-security-v1" },
+        "signing_request_sha256": { "$ref": "#/$defs/sha256" },
+        "signed_artifact_verification_sha256": { "$ref": "#/$defs/sha256" },
+        "anti_rollback_secure_version": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "signed_bootloader_sha256": { "$ref": "#/$defs/sha256" },
+        "signed_application_sha256": { "$ref": "#/$defs/sha256" },
+        "partition_table_sha256": { "$ref": "#/$defs/sha256" },
+        "ota_data_initial_sha256": { "$ref": "#/$defs/sha256" },
+        "secure_boot_digests": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["slot", "purpose", "digest_sha256"],
+            "properties": {
+              "slot": { "type": "integer", "minimum": 0, "maximum": 2 },
+              "purpose": { "enum": ["SECURE_BOOT_DIGEST0", "SECURE_BOOT_DIGEST1", "SECURE_BOOT_DIGEST2"] },
+              "digest_sha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        }
+      }
+    },
+    "preflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capture_format",
+        "transport",
+        "esptool_version",
+        "espefuse_version",
+        "port_fingerprint_sha256",
+        "chip_probe_sha256",
+        "flash_probe_sha256",
+        "efuse_summary_before_sha256",
+        "efuse_summary_after_sha256",
+        "efuse_check_error_sha256",
+        "blank_key_slots_pass",
+        "blank_security_fuses_pass",
+        "coding_error_check_pass",
+        "started_at",
+        "finished_at"
+      ],
+      "properties": {
+        "capture_format": { "const": "xz-sacrificial-blank-preflight-v1" },
+        "transport": { "const": "UART_ROM_DOWNLOAD" },
+        "esptool_version": { "const": "5.3.1" },
+        "espefuse_version": { "const": "5.3.1" },
+        "port_fingerprint_sha256": { "$ref": "#/$defs/sha256" },
+        "chip_probe_sha256": { "$ref": "#/$defs/sha256" },
+        "flash_probe_sha256": { "$ref": "#/$defs/sha256" },
+        "efuse_summary_before_sha256": { "$ref": "#/$defs/sha256" },
+        "efuse_summary_after_sha256": { "$ref": "#/$defs/sha256" },
+        "efuse_check_error_sha256": { "$ref": "#/$defs/sha256" },
+        "blank_key_slots_pass": { "const": true },
+        "blank_security_fuses_pass": { "const": true },
+        "coding_error_check_pass": { "const": true },
+        "started_at": { "$ref": "#/$defs/timestamp" },
+        "finished_at": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "station": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operators", "fixture_id", "fixture_version", "fixture_calibration_sha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "operators": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/identifier" }
+        },
+        "fixture_id": { "$ref": "#/$defs/identifier" },
+        "fixture_version": { "$ref": "#/$defs/identifier" },
+        "fixture_calibration_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "key_allocation": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["logical_slot", "physical_block", "block_name", "purpose", "product_role", "read_policy", "write_protected"],
+        "properties": {
+          "logical_slot": { "type": "integer", "minimum": 0, "maximum": 5 },
+          "physical_block": { "type": "integer", "minimum": 4, "maximum": 9 },
+          "block_name": { "enum": ["BLOCK_KEY0", "BLOCK_KEY1", "BLOCK_KEY2", "BLOCK_KEY3", "BLOCK_KEY4", "BLOCK_KEY5"] },
+          "purpose": { "enum": ["SECURE_BOOT_DIGEST0", "SECURE_BOOT_DIGEST1", "SECURE_BOOT_DIGEST2", "XTS_AES_128_KEY", "HMAC_UP"] },
+          "product_role": { "type": "string" },
+          "read_policy": { "enum": ["READABLE", "READ_PROTECTED"] },
+          "write_protected": { "const": true }
+        }
+      }
+    },
+    "operation_plan": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sequence", "phase", "irreversible", "required_evidence"],
+        "properties": {
+          "sequence": { "type": "integer", "minimum": 1, "maximum": 9 },
+          "phase": { "type": "string" },
+          "irreversible": { "type": "boolean" },
+          "required_evidence": { "type": "string" }
+        }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key_id", "issued_at", "expires_at", "two_person_approval", "production_inventory_eligible", "failure_disposition", "executor_included"],
+      "properties": {
+        "key_id": { "$ref": "#/$defs/identifier" },
+        "issued_at": { "$ref": "#/$defs/timestamp" },
+        "expires_at": { "$ref": "#/$defs/timestamp" },
+        "two_person_approval": { "const": true },
+        "production_inventory_eligible": { "const": false },
+        "failure_disposition": { "const": "QUARANTINE_OR_DESTROY" },
+        "executor_included": { "const": false }
+      }
+    },
+    "result": { "const": "SACRIFICIAL_EXECUTION_AUTHORIZED" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9:_.-]{1,128}$" },
+    "mac": { "type": "string", "pattern": "^(?:[0-9A-F]{2}:){5}[0-9A-F]{2}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/managed-database-provider-audit-v1.json",
+  "title": "M73 managed PostgreSQL provider and WORM audit evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "provider": { "enum": ["fixture", "managed-postgresql-audit-authority"] },
+    "worm_record_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+    "failover_started_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "failover_completed_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "restore_completed_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "rpo_target_seconds": { "$ref": "#/$defs/slo" },
+    "rto_target_seconds": { "$ref": "#/$defs/slo" },
+    "databases": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/$defs/database" } },
+    "managed_service_control_plane_verified": { "type": "boolean" },
+    "failover_operator_event_verified": { "type": "boolean" },
+    "automated_backups_verified": { "type": "boolean" },
+    "point_in_time_restore_verified": { "type": "boolean" },
+    "encryption_at_rest_verified": { "type": "boolean" },
+    "restore_isolation_verified": { "type": "boolean" },
+    "worm_retention_verified": { "type": "boolean" }
+  },
+  "required": ["schema", "qualification_id", "environment", "development_only", "provider", "worm_record_id", "failover_started_at", "failover_completed_at", "restore_completed_at", "rpo_target_seconds", "rto_target_seconds", "databases", "managed_service_control_plane_verified", "failover_operator_event_verified", "automated_backups_verified", "point_in_time_restore_verified", "encryption_at_rest_verified", "restore_isolation_verified", "worm_retention_verified"],
+  "allOf": [
+    {
+      "if": { "properties": { "development_only": { "const": true } }, "required": ["development_only"] },
+      "then": {
+        "properties": {
+          "environment": { "const": "staging" }, "provider": { "const": "fixture" },
+          "managed_service_control_plane_verified": { "const": false }, "failover_operator_event_verified": { "const": false },
+          "automated_backups_verified": { "const": false }, "point_in_time_restore_verified": { "const": false },
+          "encryption_at_rest_verified": { "const": false }, "restore_isolation_verified": { "const": false },
+          "worm_retention_verified": { "const": false }
+        }
+      },
+      "else": {
+        "properties": {
+          "provider": { "const": "managed-postgresql-audit-authority" },
+          "managed_service_control_plane_verified": { "const": true }, "failover_operator_event_verified": { "const": true },
+          "automated_backups_verified": { "const": true }, "point_in_time_restore_verified": { "const": true },
+          "encryption_at_rest_verified": { "const": true }, "restore_isolation_verified": { "const": true },
+          "worm_retention_verified": { "const": true }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "slo": { "type": "integer", "minimum": 1, "maximum": 3600 },
+    "observed": { "type": "integer", "minimum": 0, "maximum": 3600 },
+    "database": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "role": { "$ref": "managed-database-failover-observation.schema.json#/$defs/role" },
+        "managed_cluster_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+        "failover_operation_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+        "automated_backup_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+        "restore_operation_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+        "requested_recovery_target": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+        "observed_rpo_seconds": { "$ref": "#/$defs/observed" },
+        "failover_rto_seconds": { "$ref": "#/$defs/observed" },
+        "restore_rto_seconds": { "$ref": "#/$defs/observed" }
+      },
+      "required": ["role", "managed_cluster_id", "failover_operation_id", "automated_backup_id", "restore_operation_id", "requested_recovery_target", "observed_rpo_seconds", "failover_rto_seconds", "restore_rto_seconds"]
+    }
+  }
+}

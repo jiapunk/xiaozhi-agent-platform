@@ -1,0 +1,6 @@
+.git
+bin
+coverage*
+*.log
+*.tmp
+secrets

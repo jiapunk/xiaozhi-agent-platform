@@ -1,0 +1,9 @@
+{
+  "schema": "xiaozhi-speech-adapter-candidate-v1",
+  "candidate_id": "m28-local-test-double",
+  "provider": "controlled-local-harness",
+  "model": "no-model",
+  "voice": "no-voice",
+  "region": "local-only",
+  "source_or_image_digest": "not-a-production-adapter"
+}

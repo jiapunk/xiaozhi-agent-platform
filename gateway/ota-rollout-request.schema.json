@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/ota-rollout-request-v1.schema.json",
+  "title": "XiaoZhi Agent OTA rollout request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "generation_id", "generation_sequence",
+    "parent_generation_id", "parent_generation_sequence",
+    "parent_receipt_sha256", "parent_rollout_enabled",
+    "parent_rollout_basis_points", "release_id", "release_sequence",
+    "image_sha256", "promotion_action", "rollout_enabled",
+    "rollout_basis_points", "retry_after_seconds", "created_at", "expires_at",
+    "approval_keyring_sha256"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "generation_id": { "$ref": "#/$defs/identifier" },
+    "generation_sequence": {
+      "type": "integer", "minimum": 1, "maximum": 2147483647
+    },
+    "parent_generation_id": { "$ref": "#/$defs/identifier" },
+    "parent_generation_sequence": {
+      "type": "integer", "minimum": 0, "maximum": 2147483646
+    },
+    "parent_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "parent_rollout_enabled": { "type": "boolean" },
+    "parent_rollout_basis_points": {
+      "type": "integer", "minimum": 0, "maximum": 10000
+    },
+    "release_id": { "$ref": "#/$defs/identifier" },
+    "release_sequence": {
+      "type": "integer", "minimum": 1, "maximum": 2147483647
+    },
+    "image_sha256": { "$ref": "#/$defs/sha256" },
+    "promotion_action": {
+      "enum": ["EXPAND", "EMERGENCY_STOP", "RESUME"]
+    },
+    "rollout_enabled": { "type": "boolean" },
+    "rollout_basis_points": {
+      "type": "integer", "minimum": 0, "maximum": 10000
+    },
+    "retry_after_seconds": {
+      "type": "integer", "minimum": 60, "maximum": 86400
+    },
+    "created_at": {
+      "type": "integer", "minimum": 1609459200, "maximum": 4102444800
+    },
+    "expires_at": {
+      "type": "integer", "minimum": 1609459200, "maximum": 4102444800
+    },
+    "approval_keyring_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "promotion_action": { "const": "EXPAND" } } },
+      "then": {
+        "properties": {
+          "rollout_enabled": { "const": true },
+          "rollout_basis_points": { "minimum": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "promotion_action": { "const": "EMERGENCY_STOP" } }
+      },
+      "then": {
+        "properties": {
+          "rollout_enabled": { "const": false },
+          "rollout_basis_points": { "const": 0 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "promotion_action": { "const": "RESUME" } } },
+      "then": {
+        "properties": {
+          "rollout_enabled": { "const": true },
+          "rollout_basis_points": { "minimum": 1 }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string", "minLength": 1, "maxLength": 64,
+      "pattern": "^[A-Za-z0-9:_.-]+$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/factory-encrypted-flash-manifest-v2.schema.json",
+  "title": "ESP Agent per-unit encrypted-flash manifest v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version", "format", "profile", "complete", "transaction", "release",
+    "factory_material", "physical_flash_observation", "programmed_regions",
+    "partition_initial_state", "tools"
+  ],
+  "properties": {
+    "version": { "const": 2 },
+    "format": { "const": "xz-factory-encrypted-flash-manifest-v2" },
+    "profile": { "const": "box3-production-security-v1" },
+    "complete": { "const": true },
+    "transaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transaction_id", "attempt_id", "device_id", "serial_number", "base_mac",
+        "sku", "board", "hardware_revision", "chip_revision",
+        "factory_record_version", "factory_manifest_id", "factory_manifest_sha256"
+      ],
+      "properties": {
+        "transaction_id": { "$ref": "#/$defs/identifier" },
+        "attempt_id": { "$ref": "#/$defs/identifier" },
+        "device_id": { "type": "string", "pattern": "^xz-[0-9a-f]{12}$" },
+        "serial_number": { "$ref": "#/$defs/identifier" },
+        "base_mac": { "$ref": "#/$defs/mac" },
+        "sku": { "const": "VOICE_AGENT_KIT_BOX3" },
+        "board": { "const": "esp32s3-box3" },
+        "hardware_revision": { "const": 1 },
+        "chip_revision": { "type": "integer", "minimum": 0, "maximum": 999 },
+        "factory_record_version": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+        "factory_manifest_id": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+        "factory_manifest_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signing_request_sha256", "signed_artifact_verification_sha256",
+        "anti_rollback_secure_version", "application_unsigned_sha256",
+        "application_signed_sha256", "bootloader_signed_sha256",
+        "secure_boot_digests", "application_signing_slot"
+      ],
+      "properties": {
+        "signing_request_sha256": { "$ref": "#/$defs/sha256" },
+        "signed_artifact_verification_sha256": { "$ref": "#/$defs/sha256" },
+        "anti_rollback_secure_version": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "application_unsigned_sha256": { "$ref": "#/$defs/sha256" },
+        "application_signed_sha256": { "$ref": "#/$defs/sha256" },
+        "bootloader_signed_sha256": { "$ref": "#/$defs/sha256" },
+        "secure_boot_digests": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "prefixItems": [
+            { "$ref": "#/$defs/digest0" },
+            { "$ref": "#/$defs/digest1" },
+            { "$ref": "#/$defs/digest2" }
+          ],
+          "items": false
+        },
+        "application_signing_slot": { "type": "integer", "minimum": 0, "maximum": 2 }
+      }
+    },
+    "factory_material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "onboarding_material_sha256", "factory_sku_manifest_sha256",
+        "nvs_factory_image_sha256", "nvs_factory_readback_sha256",
+        "nvs_factory_size", "exact_public_entries"
+      ],
+      "properties": {
+        "onboarding_material_sha256": { "$ref": "#/$defs/sha256" },
+        "factory_sku_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "nvs_factory_image_sha256": { "$ref": "#/$defs/sha256" },
+        "nvs_factory_readback_sha256": { "$ref": "#/$defs/sha256" },
+        "nvs_factory_size": { "const": 24576 },
+        "exact_public_entries": {
+          "const": ["prod_prov/sec2", "prod_sku/manifest"]
+        }
+      }
+    },
+    "physical_flash_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema", "observation_id", "environment", "phase", "station_id",
+        "signing_key_id", "receipt_sha256"
+      ],
+      "properties": {
+        "schema": { "const": "xz-factory-physical-flash-observation-v1" },
+        "observation_id": { "$ref": "#/$defs/identifier" },
+        "environment": { "const": "PRODUCTION_FACTORY" },
+        "phase": { "const": "PRE_SECURE_DOWNLOAD_LOCK" },
+        "station_id": { "$ref": "#/$defs/identifier" },
+        "signing_key_id": { "$ref": "#/$defs/identifier" },
+        "receipt_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "programmed_regions": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {
+          "allOf": [
+            { "$ref": "#/$defs/region" },
+            { "properties": {
+              "name": { "const": "bootloader" },
+              "offset": { "const": 0 },
+              "source_treatment": { "const": "SECURE_BOOT_V2_SIGNED_3_OF_3" },
+              "flash_treatment": { "const": "FLASH_ENCRYPTION_XTS_AES_128" }
+            } }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/region" },
+            { "properties": {
+              "name": { "const": "partition_table" },
+              "offset": { "const": 65536 },
+              "source_treatment": { "const": "FROZEN_PRODUCTION_PARTITION_TABLE" },
+              "flash_treatment": { "const": "FLASH_ENCRYPTION_XTS_AES_128" }
+            } }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/region" },
+            { "properties": {
+              "name": { "const": "nvs_factory" },
+              "offset": { "const": 69632 },
+              "size": { "const": 24576 },
+              "source_treatment": { "const": "AUTHENTICATED_PUBLIC_FACTORY_NVS" },
+              "flash_treatment": { "const": "PLAINTEXT_AUTHENTICATED_PUBLIC_NVS" }
+            } }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/region" },
+            { "properties": {
+              "name": { "const": "ota_data_initial" },
+              "offset": { "const": 135168 },
+              "source_treatment": { "const": "FROZEN_OTA_DATA_INITIAL" },
+              "flash_treatment": { "const": "FLASH_ENCRYPTION_XTS_AES_128" }
+            } }
+          ]
+        },
+        {
+          "allOf": [
+            { "$ref": "#/$defs/region" },
+            { "properties": {
+              "name": { "const": "application" },
+              "offset": { "const": 262144 },
+              "source_treatment": { "const": "SECURE_BOOT_V2_SIGNED_1_OF_3" },
+              "flash_treatment": { "const": "FLASH_ENCRYPTION_XTS_AES_128" }
+            } }
+          ]
+        }
+      ],
+      "items": false
+    },
+    "partition_initial_state": {
+      "const": [
+        { "name": "nvs_factory", "offset": 69632, "size": 24576, "initial_state": "PROGRAMMED_PLAINTEXT_AUTHENTICATED_PUBLIC_NVS" },
+        { "name": "nvs", "offset": 94208, "size": 40960, "initial_state": "BLANK_THEN_PRODUCT_HMAC_XTS_AES" },
+        { "name": "otadata", "offset": 135168, "size": 8192, "initial_state": "PROGRAMMED_FLASH_ENCRYPTED" },
+        { "name": "phy_init", "offset": 143360, "size": 4096, "initial_state": "BLANK_FLASH_ENCRYPTED" },
+        { "name": "coredump", "offset": 147456, "size": 77824, "initial_state": "BLANK_FLASH_ENCRYPTED" },
+        { "name": "ota_0", "offset": 262144, "size": 5767168, "initial_state": "PROGRAMMED_FLASH_ENCRYPTED" },
+        { "name": "ota_1", "offset": 6029312, "size": 5767168, "initial_state": "BLANK_FLASH_ENCRYPTED" },
+        { "name": "system", "offset": 11796480, "size": 2097152, "initial_state": "BLANK_FLASH_ENCRYPTED" },
+        { "name": "data", "offset": 13893632, "size": 2883584, "initial_state": "BLANK_FLASH_ENCRYPTED" }
+      ]
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "espsecure_version", "nvs_partition_tool_bundle_sha256",
+        "factory_manifest_builder_bundle_sha256"
+      ],
+      "properties": {
+        "espsecure_version": { "const": "5.3.1" },
+        "nvs_partition_tool_bundle_sha256": { "$ref": "#/$defs/sha256" },
+        "factory_manifest_builder_bundle_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9:_.-]{1,128}$" },
+    "mac": { "type": "string", "pattern": "^(?:[0-9A-F]{2}:){5}[0-9A-F]{2}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "digest0": {
+      "type": "object", "additionalProperties": false,
+      "required": ["slot", "digest_sha256"],
+      "properties": { "slot": { "const": 0 }, "digest_sha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "digest1": {
+      "type": "object", "additionalProperties": false,
+      "required": ["slot", "digest_sha256"],
+      "properties": { "slot": { "const": 1 }, "digest_sha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "digest2": {
+      "type": "object", "additionalProperties": false,
+      "required": ["slot", "digest_sha256"],
+      "properties": { "slot": { "const": 2 }, "digest_sha256": { "$ref": "#/$defs/sha256" } }
+    },
+    "region": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name", "offset", "size", "source_treatment", "flash_treatment",
+        "source_sha256", "programmed_sha256", "readback_sha256"
+      ],
+      "properties": {
+        "name": { "type": "string" },
+        "offset": { "type": "integer", "minimum": 0, "maximum": 16777215 },
+        "size": { "type": "integer", "minimum": 1, "maximum": 5771264 },
+        "source_treatment": { "type": "string" },
+        "flash_treatment": { "type": "string" },
+        "source_sha256": { "$ref": "#/$defs/sha256" },
+        "programmed_sha256": { "$ref": "#/$defs/sha256" },
+        "readback_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi/device-identity-snapshot.schema.json",
+  "title": "XiaoZhi product device identity snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "revision",
+    "purpose",
+    "issued_at",
+    "valid_until",
+    "devices",
+    "signing_key_id",
+    "signature"
+  ],
+  "properties": {
+    "version": { "const": 2 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "purpose": { "enum": ["access", "proof"] },
+    "issued_at": { "type": "string", "format": "date-time" },
+    "valid_until": { "type": "string", "format": "date-time" },
+    "signing_key_id": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,64}$" },
+    "signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" },
+    "devices": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["device_id"],
+        "properties": {
+          "device_id": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,64}$" },
+          "secret_b64": { "type": "string", "pattern": "^[A-Za-z0-9_-]{43,171}$" },
+          "board": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,32}$" },
+          "ota_channel": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,32}$" },
+          "disabled": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/managed-database-restore-config-v1.json",
+  "title": "M73 private isolated point-in-time restore config",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "environment": { "enum": ["staging", "production"] },
+    "run_nonce_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{22}$" },
+    "acknowledge_isolated_point_in_time_restore": { "const": true },
+    "databases": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "prefixItems": [
+        { "allOf": [{ "$ref": "#/$defs/database" }, { "properties": { "role": { "const": "ownership" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/database" }, { "properties": { "role": { "const": "accountauthorization" } } }] },
+        { "allOf": [{ "$ref": "#/$defs/database" }, { "properties": { "role": { "const": "factorytimeauthority" } } }] }
+      ],
+      "items": false
+    }
+  },
+  "required": ["schema", "qualification_id", "environment", "run_nonce_b64url", "acknowledge_isolated_point_in_time_restore", "databases"],
+  "$defs": {
+    "database": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "role": { "enum": ["ownership", "accountauthorization", "factorytimeauthority"] },
+        "managed_cluster_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+        "restore_operation_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+        "requested_recovery_target": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+        "restore_database_url": { "type": "string", "pattern": "^postgres(ql)?://.*[?&]sslmode=verify-full(?:&|$)", "maxLength": 8192 }
+      },
+      "required": ["role", "managed_cluster_id", "restore_operation_id", "requested_recovery_target", "restore_database_url"]
+    }
+  }
+}

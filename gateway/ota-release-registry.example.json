@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "signing_keys": [
+    {
+      "key_id": "release-key-2026",
+      "public_key_file": "release-keys/release-key-2026-public.pem"
+    }
+  ],
+  "releases": [
+    {
+      "manifest_file": "release-manifests/box3-development-00000015.json",
+      "enabled": false,
+      "rollout_basis_points": 0,
+      "retry_after_seconds": 900
+    }
+  ]
+}

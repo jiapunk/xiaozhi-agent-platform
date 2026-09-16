@@ -1,0 +1,39 @@
+[Unit]
+Description=XiaoZhi ESP32 product Gateway
+After=network-online.target xiaozhi-glyph-provider.service
+Wants=network-online.target xiaozhi-glyph-provider.service
+
+[Service]
+Type=simple
+User=xiaozhi-gateway
+Group=xiaozhi-gateway
+EnvironmentFile=/etc/xiaozhi-gateway/gateway.env
+StateDirectory=xiaozhi-gateway
+StateDirectoryMode=0700
+ExecStart=/opt/xiaozhi-gateway/s3camdevgateway
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=10s
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+UMask=0077
+LimitNOFILE=4096
+MemoryMax=640M
+TasksMax=128
+
+[Install]
+WantedBy=multi-user.target

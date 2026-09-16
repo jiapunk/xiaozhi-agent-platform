@@ -1,0 +1,293 @@
+menu "Product hardware"
+
+choice PRODUCT_BOARD
+    prompt "Product board profile"
+    default PRODUCT_BOARD_S3_N32R16_REFERENCE
+
+    config PRODUCT_BOARD_S3_N32R16_REFERENCE
+        bool "ESP32-S3 N32R16 reference module"
+
+    config PRODUCT_BOARD_ESP_BOX_3
+        bool "Espressif ESP32-S3-BOX-3 prototype"
+
+    config PRODUCT_BOARD_BREAD_COMPACT_WIFI_S3CAM
+        bool "Bread Compact WiFi S3CAM development board"
+
+    config PRODUCT_BOARD_WAVESHARE_S3_TOUCH_AMOLED_206
+        bool "Waveshare ESP32-S3 Touch AMOLED 2.06 watch development board"
+
+endchoice
+
+choice PRODUCT_SKU
+    prompt "Product-owned SKU"
+    default PRODUCT_SKU_S3_N32R16_REFERENCE if PRODUCT_BOARD_S3_N32R16_REFERENCE
+    default PRODUCT_SKU_VOICE_AGENT_KIT_BOX3 if PRODUCT_BOARD_ESP_BOX_3
+    default PRODUCT_SKU_BREAD_COMPACT_WIFI_S3CAM_DEVKIT if PRODUCT_BOARD_BREAD_COMPACT_WIFI_S3CAM
+    default PRODUCT_SKU_WAVESHARE_S3_TOUCH_AMOLED_206_DEVKIT if PRODUCT_BOARD_WAVESHARE_S3_TOUCH_AMOLED_206
+
+    config PRODUCT_SKU_S3_N32R16_REFERENCE
+        bool "Development-only ESP32-S3 N32R16 reference"
+        depends on PRODUCT_BOARD_S3_N32R16_REFERENCE
+
+    config PRODUCT_SKU_VOICE_AGENT_KIT_BOX3
+        bool "Candidate Voice Agent Kit on ESP32-S3-BOX-3"
+        depends on PRODUCT_BOARD_ESP_BOX_3
+
+    config PRODUCT_SKU_BREAD_COMPACT_WIFI_S3CAM_DEVKIT
+        bool "Development-only Bread Compact WiFi S3CAM"
+        depends on PRODUCT_BOARD_BREAD_COMPACT_WIFI_S3CAM
+
+    config PRODUCT_SKU_WAVESHARE_S3_TOUCH_AMOLED_206_DEVKIT
+        bool "Development-only Waveshare ESP32-S3 Touch AMOLED 2.06 watch"
+        depends on PRODUCT_BOARD_WAVESHARE_S3_TOUCH_AMOLED_206
+
+endchoice
+
+config PRODUCT_HARDWARE_REVISION
+    int "Product hardware revision"
+    range 0 65535
+    default 1 if PRODUCT_SKU_VOICE_AGENT_KIT_BOX3
+    default 1 if PRODUCT_SKU_BREAD_COMPACT_WIFI_S3CAM_DEVKIT
+    default 1 if PRODUCT_SKU_WAVESHARE_S3_TOUCH_AMOLED_206_DEVKIT
+    default 0
+    help
+        Product board revision frozen into the image. This is not a runtime
+        hardware observation; factory qualification must independently bind
+        the physical unit to the same revision before release.
+
+endmenu
+
+menu "Product live Agent runtime"
+
+    config PRODUCT_BOX3_BRINGUP_ENABLE
+        bool "Start the development-only BOX-3 bring-up firmware"
+        depends on PRODUCT_BOARD_ESP_BOX_3 && !PRODUCT_LIVE_RUNTIME_ENABLE
+        default n
+        help
+            Boot a deliberately non-production hardware test on an unmodified
+            ESP32-S3-BOX-3. It verifies codec initialization, plays a short
+            speaker tone, samples the microphone, and exposes the real typed
+            ESP-Claw device.get_status/device.set_indicator capabilities to a
+            physical-button harness. This mode skips factory identity because
+            it is intended for stock development boards. It must never be
+            combined with Live runtime, encrypted production storage, secure
+            boot, flash-encryption, or a shipping image.
+
+    config PRODUCT_BREAD_S3CAM_BRINGUP_ENABLE
+        bool "Start the development-only Bread S3CAM bring-up firmware"
+        depends on PRODUCT_BOARD_BREAD_COMPACT_WIFI_S3CAM && !PRODUCT_LIVE_RUNTIME_ENABLE
+        default n
+        help
+            Boot a non-production hardware diagnostic for the detected
+            bread-compact-wifi-s3cam board. It tests the ST7789 display,
+            camera capture, simplex I2S speaker/microphone path, GPIO0 button,
+            and the typed ESP-Claw device.get_status/device.set_indicator
+            capabilities. It never starts Wi-Fi, embeds cloud credentials,
+            writes eFuses, or enables a remote command path.
+
+    config PRODUCT_WAVESHARE_WATCH_BRINGUP_ENABLE
+        bool "Start the development-only Waveshare watch bring-up firmware"
+        depends on PRODUCT_BOARD_WAVESHARE_S3_TOUCH_AMOLED_206 && !PRODUCT_LIVE_RUNTIME_ENABLE
+        default n
+        help
+            Boot a reversible hardware diagnostic for the Waveshare
+            ESP32-S3-Touch-AMOLED-2.06 V1.0 board. It validates the exact
+            ESP32-S3R8/32MB Flash/8MB PSRAM profile, starts the 410x502 touch
+            display, opens the ES7210 microphone and ES8311 speaker at 16kHz,
+            displays a live microphone meter, and provides a large touch
+            target that replays a speaker test tone. It does not start Wi-Fi,
+            embed cloud credentials, write eFuses, or enable a remote command
+            path.
+
+    config PRODUCT_BREAD_S3CAM_VOICE_BOOTSTRAP_URL
+        string "Bread S3CAM voice bootstrap URL"
+        depends on PRODUCT_BREAD_S3CAM_BRINGUP_ENABLE
+        default "https://api.tenclass.net/xiaozhi/ota/"
+        help
+            Exact development voice bootstrap URL, including its trailing
+            slash. A private product Gateway can implement the same small
+            bootstrap response and return its device WebSocket URL plus a
+            short-lived bearer token. This value is public configuration and
+            must never contain a credential.
+
+    config PRODUCT_BREAD_S3CAM_BOOTSTRAP_TOKEN
+        string "Bread S3CAM prototype Gateway bootstrap token"
+        depends on PRODUCT_BREAD_S3CAM_BRINGUP_ENABLE
+        default ""
+        help
+            Optional development credential sent only to the exact bootstrap
+            URL over HTTPS. It protects a single-device Internet Gateway test
+            from issuing a session token based only on a public device ID.
+            A compiled token can be extracted from firmware and is not a
+            production device identity. Shipping devices must instead receive
+            unique credentials through protected factory provisioning.
+
+    config PRODUCT_BREAD_S3CAM_ALLOW_INSECURE_VOICE_GATEWAY
+        bool "Allow HTTP/WS for a local Bread S3CAM Gateway test"
+        depends on PRODUCT_BREAD_S3CAM_BRINGUP_ENABLE
+        default n
+        help
+            Development-only escape hatch for a Gateway on the same trusted
+            LAN. Never enable it in a shipped image or over an untrusted
+            network; production must use HTTPS/WSS certificate validation.
+
+    config PRODUCT_LIVE_RUNTIME_ENABLE
+        bool "Start the BOX-3 product runtime after secure storage"
+        depends on PRODUCT_BOARD_ESP_BOX_3
+        default n
+        help
+            Compose identity, authenticated control-plane clients, short-lived
+            credentials, Agent supervisor, approximate certificate time,
+            Wi-Fi, and secure provisioning at boot. Keep this disabled for
+            generic/reference builds and any BOX-3 image that does not have
+            reviewed release endpoints and a factory-provisioned identity
+            HMAC key.
+
+    config PRODUCT_IDENTITY_HMAC_KEY_ID
+        int "Device identity HMAC eFuse key ID"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        range 0 5
+        default 5
+        help
+            Dedicated HMAC_UP key slot for online identity and onboarding-key
+            derivation. It must not be shared with the NVS encryption key.
+
+    config PRODUCT_CONTROL_AUTHORITY
+        string "Product control-plane HTTPS authority"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        default ""
+        help
+            Exact https://host[:port] authority. Do not add a path. The runtime
+            appends only /v1/time, /v1/agent-token, and /v1/session. This is
+            public release configuration, never a credential.
+
+    config PRODUCT_AGENT_PROXY_AUTHORITY
+        string "Product Agent-proxy HTTPS authority"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        default ""
+        help
+            Exact https://host[:port] authority for the product-owned model
+            proxy. The runtime appends /v1. Never point production firmware at
+            a provider endpoint or embed a provider master key.
+
+    config PRODUCT_SNTP_SERVER_1
+        string "Primary approximate-time SNTP server"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        default ""
+        help
+            DNS hostname used only to make the process clock plausible for TLS
+            certificate validity checks. SNTP is not product-authenticated time
+            and is never accepted by the protected device identity.
+
+    config PRODUCT_SNTP_SERVER_2
+        string "Secondary approximate-time SNTP server"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        default ""
+
+    config PRODUCT_SNTP_SERVER_3
+        string "Tertiary approximate-time SNTP server"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        default ""
+
+    config PRODUCT_ONBOARDING_BUTTON_GPIO
+        int "Physical onboarding button GPIO"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        range 0 48
+        default 0
+        help
+            The pinned XiaoZhi ESP32-S3-BOX-3 board profile defines its Boot
+            button on GPIO0. Freeze this against the release schematic and
+            verify it on every hardware revision.
+
+    config PRODUCT_ONBOARDING_BUTTON_ACTIVE_HIGH
+        bool "Physical onboarding button is active-high"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        default n
+        help
+            The ESP32-S3-BOX-3 Boot button is active-low. Do not change this
+            without a reviewed schematic and physical validation.
+
+    config PRODUCT_ONBOARDING_BUTTON_SAMPLE_PERIOD_MS
+        int "Onboarding button sample period (ms)"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        range 5 100
+        default 10
+
+    config PRODUCT_ONBOARDING_BUTTON_DEBOUNCE_MS
+        int "Onboarding button debounce time (ms)"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        range 10 500
+        default 50
+
+    config PRODUCT_ONBOARDING_BUTTON_LONG_PRESS_MS
+        int "Onboarding button hold time (ms)"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        range 2000 10000
+        default 3000
+        help
+            A boot-held input never counts. The user must first release the
+            button, then hold and release. A release from this threshold up to
+            the factory-reset threshold opens one bounded onboarding window.
+
+    config PRODUCT_FACTORY_RESET_PRESS_MS
+        int "Factory-reset button hold time (ms)"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        range 5000 30000
+        default 10000
+        help
+            The reset is classified only when the user releases after this
+            threshold. A boot-held or stuck input cannot reset the product.
+            Reset clears local Wi-Fi/claim state and Agent memory only; cloud
+            ownership must be released separately by the authenticated owner.
+
+    config PRODUCT_AGENT_MODEL
+        string "Product Agent model alias"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        default "product-agent"
+        help
+            Product gateway alias, not a provider credential.
+
+    config PRODUCT_AGENT_SYSTEM_PROMPT
+        string "Product Agent system prompt"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        default "You are the product voice assistant. Use tools only when needed and never claim an action succeeded unless its tool confirmed it."
+
+    config PRODUCT_AGENT_INDICATOR_ACTION_ENABLE
+        bool "Expose the consent-protected status-indicator Agent action"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE && PRODUCT_BOARD_ESP_BOX_3
+        default n
+        help
+            Exposes device.set_indicator only when the compiled SKU also
+            permits the action and supplies the product-owned GPIO adapter.
+            The ESP32-S3-BOX-3 adapter controls the display backlight on the
+            SKU-frozen GPIO 47. This remains disabled in production-security
+            builds until the signed App, live account/database, board UX, and
+            market-release gates have independent evidence.
+
+    config PRODUCT_VOICE_PROTOCOL_VERSION
+        int "Product voice protocol version"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        range 1 3
+        default 1
+
+    config PRODUCT_OUTPUT_VOLUME_PERCENT
+        int "Initial speaker volume percent"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        range 0 100
+        default 70
+
+endmenu
+
+menu "Product production security"
+
+    config PRODUCT_PRODUCTION_SECURITY_PROFILE
+        bool "Enforce the externally signed production boot-security profile"
+        depends on PRODUCT_LIVE_RUNTIME_ENABLE
+        default n
+        help
+            Enforce the BOX-3 Secure Boot V2 RSA, flash-encryption release,
+            anti-rollback, secure-download, protected-storage, and external
+            signing contract. This build emits unsigned remote-signing inputs;
+            it is never directly flashable or shippable.
+
+endmenu

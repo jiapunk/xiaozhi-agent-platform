@@ -1,0 +1,166 @@
+{
+  "$id": "https://xiaozhi-agent.local/schemas/kubernetes-admission-qualification-evidence-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "binding_status": {
+      "items": { "$ref": "#/$defs/objectStatus" },
+      "maxItems": 10,
+      "minItems": 10,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "cleanup": {
+      "additionalProperties": false,
+      "properties": {
+        "bindings_absent": { "const": true },
+        "namespace_absent": { "const": true },
+        "policies_absent": { "const": true }
+      },
+      "required": ["bindings_absent", "namespace_absent", "policies_absent"],
+      "type": "object"
+    },
+    "cluster": {
+      "additionalProperties": false,
+      "properties": {
+        "client_git_version": { "$ref": "#/$defs/kubernetesVersion" },
+        "context": { "$ref": "#/$defs/identifier" },
+        "kube_system_uid": { "$ref": "#/$defs/uid" },
+        "kubectl_sha256": { "$ref": "#/$defs/sha256" },
+        "server": { "format": "uri", "pattern": "^https://[^/?#]+$", "type": "string" },
+        "server_git_version": { "$ref": "#/$defs/kubernetesVersion" },
+        "server_platform": { "pattern": "^[a-z0-9]+/[a-z0-9]+$", "type": "string" }
+      },
+      "required": ["context", "server", "kube_system_uid", "client_git_version", "server_git_version", "server_platform", "kubectl_sha256"],
+      "type": "object"
+    },
+    "deployment": {
+      "additionalProperties": false,
+      "properties": {
+        "admission_receipt_sha256": { "$ref": "#/$defs/sha256" },
+        "admission_signing_key_id": { "$ref": "#/$defs/identifier" },
+        "binding_names": { "$ref": "#/$defs/tenNames" },
+        "deployment_id": { "maxLength": 32, "pattern": "^[a-z0-9](?:[-a-z0-9]{0,30}[a-z0-9])?$", "type": "string" },
+        "namespace": { "$ref": "#/$defs/dnsLabel" },
+        "policy_names": { "$ref": "#/$defs/tenNames" }
+      },
+      "required": ["admission_receipt_sha256", "admission_signing_key_id", "binding_names", "deployment_id", "namespace", "policy_names"],
+      "type": "object"
+    },
+    "finished_at": { "$ref": "#/$defs/timestamp" },
+    "namespace_uid": { "$ref": "#/$defs/uid" },
+    "negative_tests": {
+      "maxItems": 10,
+      "minItems": 10,
+      "prefixItems": [
+        { "$ref": "#/$defs/negativePods" },
+        { "$ref": "#/$defs/negativeDeployments" },
+        { "$ref": "#/$defs/negativeStatefulsets" },
+        { "$ref": "#/$defs/negativeServices" },
+        { "$ref": "#/$defs/negativeServiceaccounts" },
+        { "$ref": "#/$defs/negativeNetworkpolicies" },
+        { "$ref": "#/$defs/negativeConfigmaps" },
+        { "$ref": "#/$defs/negativeSecrets" },
+        { "$ref": "#/$defs/negativePersistentvolumeclaims" },
+        { "$ref": "#/$defs/negativeNamespace" }
+      ],
+      "type": "array"
+    },
+    "policy_type_checking": {
+      "items": { "$ref": "#/$defs/policyStatus" },
+      "maxItems": 10,
+      "minItems": 10,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "positive_tests": {
+      "maxItems": 7,
+      "minItems": 7,
+      "prefixItems": [
+        { "$ref": "#/$defs/positiveAdmissionDryRun" },
+        { "$ref": "#/$defs/positivePolicy" },
+        { "$ref": "#/$defs/positiveNamespace" },
+        { "$ref": "#/$defs/positiveWorkload" },
+        { "$ref": "#/$defs/positivePods" },
+        { "$ref": "#/$defs/positivePrerequisites" },
+        { "$ref": "#/$defs/positivePvc" }
+      ],
+      "type": "array"
+    },
+    "qualification_id": { "$ref": "#/$defs/identifier" },
+    "qualification_tool_sha256": { "$ref": "#/$defs/sha256" },
+    "result": { "const": "LIVE_API_SERVER_PASS" },
+    "schema": { "const": 1 },
+    "started_at": { "$ref": "#/$defs/timestamp" }
+  },
+  "required": ["schema", "qualification_id", "result", "cluster", "deployment", "binding_status", "namespace_uid", "negative_tests", "policy_type_checking", "positive_tests", "cleanup", "qualification_tool_sha256", "started_at", "finished_at"],
+  "type": "object",
+  "$defs": {
+    "dnsLabel": { "maxLength": 63, "pattern": "^[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?$", "type": "string" },
+    "identifier": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+    "kubernetesVersion": { "pattern": "^v1\\.[3-9][0-9]\\.[0-9]{1,3}(?:[-+][0-9A-Za-z.-]+)?$", "type": "string" },
+    "name": { "maxLength": 253, "minLength": 1, "type": "string" },
+    "negative": {
+      "additionalProperties": false,
+      "properties": {
+        "category": { "type": "string" },
+        "denial_observed": { "const": true },
+        "policy_name": { "$ref": "#/$defs/name" },
+        "request_sha256": { "$ref": "#/$defs/sha256" },
+        "server_dry_run": { "const": true }
+      },
+      "required": ["category", "denial_observed", "policy_name", "request_sha256", "server_dry_run"],
+      "type": "object"
+    },
+    "negativeConfigmaps": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "configmaps" } } }] },
+    "negativeDeployments": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "deployments" } } }] },
+    "negativeNamespace": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "namespace" } } }] },
+    "negativeNetworkpolicies": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "networkpolicies" } } }] },
+    "negativePersistentvolumeclaims": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "persistentvolumeclaims" } } }] },
+    "negativePods": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "pods" } } }] },
+    "negativeSecrets": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "secrets" } } }] },
+    "negativeServiceaccounts": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "serviceaccounts" } } }] },
+    "negativeServices": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "services" } } }] },
+    "negativeStatefulsets": { "allOf": [{ "$ref": "#/$defs/negative" }, { "properties": { "category": { "const": "statefulsets" } } }] },
+    "objectStatus": {
+      "additionalProperties": false,
+      "properties": { "name": { "$ref": "#/$defs/name" }, "uid": { "$ref": "#/$defs/uid" } },
+      "required": ["name", "uid"],
+      "type": "object"
+    },
+    "policyStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "expression_warning_count": { "const": 0 },
+        "generation": { "minimum": 1, "type": "integer" },
+        "name": { "$ref": "#/$defs/name" },
+        "observed_generation": { "minimum": 1, "type": "integer" },
+        "uid": { "$ref": "#/$defs/uid" }
+      },
+      "required": ["name", "uid", "generation", "observed_generation", "expression_warning_count"],
+      "type": "object"
+    },
+    "positive": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "type": "string" },
+        "name": { "type": "string" },
+        "passed": { "const": true },
+        "resource_count": { "minimum": 1, "type": "integer" }
+      },
+      "required": ["mode", "name", "passed", "resource_count"],
+      "type": "object"
+    },
+    "positiveAdmissionDryRun": { "allOf": [{ "$ref": "#/$defs/positive" }, { "properties": { "mode": { "const": "server_dry_run" }, "name": { "const": "signed-admission-graph" }, "resource_count": { "const": 20 } } }] },
+    "positiveNamespace": { "allOf": [{ "$ref": "#/$defs/positive" }, { "properties": { "mode": { "const": "live_create" }, "name": { "const": "protected-namespace-create" }, "resource_count": { "const": 1 } } }] },
+    "positivePods": { "allOf": [{ "$ref": "#/$defs/positive" }, { "properties": { "mode": { "const": "server_dry_run" }, "name": { "const": "controller-pod-graph" }, "resource_count": { "const": 7 } } }] },
+    "positivePolicy": { "allOf": [{ "$ref": "#/$defs/positive" }, { "properties": { "mode": { "const": "live_create" }, "name": { "const": "admission-policy-install" }, "resource_count": { "const": 20 } } }] },
+    "positivePrerequisites": { "allOf": [{ "$ref": "#/$defs/positive" }, { "properties": { "mode": { "const": "server_dry_run" }, "name": { "const": "external-prerequisite-graph" }, "resource_count": { "const": 25 } } }] },
+    "positivePvc": { "allOf": [{ "$ref": "#/$defs/positive" }, { "properties": { "mode": { "const": "live_create_and_server_dry_run" }, "name": { "const": "pvc-one-time-controller-binding" }, "resource_count": { "const": 1 } } }] },
+    "positiveWorkload": { "allOf": [{ "$ref": "#/$defs/positive" }, { "properties": { "mode": { "const": "server_dry_run" }, "name": { "const": "signed-workload-graph" }, "resource_count": { "const": 44 } } }] },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "tenNames": { "items": { "$ref": "#/$defs/name" }, "maxItems": 10, "minItems": 10, "type": "array", "uniqueItems": true },
+    "timestamp": { "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$", "type": "string" },
+    "uid": { "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", "type": "string" }
+  }
+}

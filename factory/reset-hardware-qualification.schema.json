@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/reset-hardware-qualification-v1.schema.json",
+  "title": "ESP Agent reset hardware qualification receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "qualification_id", "profile", "board", "hardware_revision",
+    "firmware", "lab", "fixture", "gesture", "power_cut", "samples",
+    "started_at", "finished_at", "result", "signature_algorithm",
+    "signature_b64url"
+  ],
+  "properties": {
+    "schema": { "const": "xz-reset-hardware-qualification-v1" },
+    "qualification_id": { "$ref": "#/$defs/longIdentifier" },
+    "profile": { "const": "box3-reset-v1" },
+    "board": { "const": "esp32s3-box3" },
+    "hardware_revision": { "$ref": "#/$defs/identifier" },
+    "firmware": {
+      "type": "object", "additionalProperties": false,
+      "required": ["project", "version", "secure_version", "image_sha256"],
+      "properties": {
+        "project": { "const": "xiaozhi_agent_platform" },
+        "version": { "type": "string", "pattern": "^[A-Za-z0-9._+-]{1,32}$" },
+        "secure_version": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "image_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "lab": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operators", "signing_key_id"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "operators": {
+          "type": "array", "minItems": 2, "maxItems": 4,
+          "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" }
+        },
+        "signing_key_id": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "fixture": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "version", "tool_sha256", "evidence_bundle_sha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "version": { "$ref": "#/$defs/identifier" },
+        "tool_sha256": { "$ref": "#/$defs/sha256" },
+        "evidence_bundle_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "gesture": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "boot_held_ms", "boot_held_no_action_pass", "short_press_ms",
+        "short_press_no_action_pass", "onboarding_min_ms", "onboarding_max_ms",
+        "onboarding_window_pass", "reset_min_ms", "reset_pass",
+        "stuck_hold_ms", "stuck_hold_no_action_until_release_pass"
+      ],
+      "properties": {
+        "boot_held_ms": { "const": 30000 },
+        "boot_held_no_action_pass": { "const": true },
+        "short_press_ms": { "const": 2900 },
+        "short_press_no_action_pass": { "const": true },
+        "onboarding_min_ms": { "const": 3000 },
+        "onboarding_max_ms": { "const": 9900 },
+        "onboarding_window_pass": { "const": true },
+        "reset_min_ms": { "const": 10000 },
+        "reset_pass": { "const": true },
+        "stuck_hold_ms": { "const": 30000 },
+        "stuck_hold_no_action_until_release_pass": { "const": true }
+      }
+    },
+    "power_cut": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "after_intent_commit", "after_wifi_erase", "after_wifi_phase_commit",
+        "after_memory_erase", "after_memory_phase_commit", "after_journal_erase"
+      ],
+      "properties": {
+        "after_intent_commit": { "$ref": "#/$defs/powerCutResult" },
+        "after_wifi_erase": { "$ref": "#/$defs/powerCutResult" },
+        "after_wifi_phase_commit": { "$ref": "#/$defs/powerCutResult" },
+        "after_memory_erase": { "$ref": "#/$defs/powerCutResult" },
+        "after_memory_phase_commit": { "$ref": "#/$defs/powerCutResult" },
+        "after_journal_erase": { "$ref": "#/$defs/powerCutResult" }
+      }
+    },
+    "samples": {
+      "type": "array", "minItems": 3, "maxItems": 32,
+      "items": { "$ref": "#/$defs/sample" }
+    },
+    "started_at": { "$ref": "#/$defs/timestamp" },
+    "finished_at": { "$ref": "#/$defs/timestamp" },
+    "result": { "const": "PASS" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9:_.-]{1,64}$" },
+    "longIdentifier": { "type": "string", "pattern": "^[A-Za-z0-9:_.-]{1,128}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "mac": { "type": "string", "pattern": "^(?:[0-9A-F]{2}:){5}[0-9A-F]{2}$" },
+    "timestamp": {
+      "type": "string", "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "powerCutResult": {
+      "type": "object", "additionalProperties": false,
+      "required": ["attempts", "pass"],
+      "properties": {
+        "attempts": { "type": "integer", "minimum": 10, "maximum": 1000 },
+        "pass": { "const": true }
+      }
+    },
+    "sample": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "device_id", "serial_number", "base_mac", "reset_cycles",
+        "pre_identity_proof_sha256", "post_identity_proof_sha256",
+        "pre_nvs_factory_sha256", "post_nvs_factory_sha256",
+        "pre_efuse_summary_sha256", "post_efuse_summary_sha256",
+        "wifi_raw_keys_absent_pass", "agent_memory_raw_slots_absent_pass",
+        "cloud_binding_unchanged_pass", "secure_boot_preserved_pass",
+        "flash_encryption_preserved_pass", "anti_rollback_preserved_pass"
+      ],
+      "properties": {
+        "device_id": { "type": "string", "pattern": "^xz-[0-9a-f]{12}$" },
+        "serial_number": { "$ref": "#/$defs/identifier" },
+        "base_mac": { "$ref": "#/$defs/mac" },
+        "reset_cycles": { "type": "integer", "minimum": 100, "maximum": 100000 },
+        "pre_identity_proof_sha256": { "$ref": "#/$defs/sha256" },
+        "post_identity_proof_sha256": { "$ref": "#/$defs/sha256" },
+        "pre_nvs_factory_sha256": { "$ref": "#/$defs/sha256" },
+        "post_nvs_factory_sha256": { "$ref": "#/$defs/sha256" },
+        "pre_efuse_summary_sha256": { "$ref": "#/$defs/sha256" },
+        "post_efuse_summary_sha256": { "$ref": "#/$defs/sha256" },
+        "wifi_raw_keys_absent_pass": { "const": true },
+        "agent_memory_raw_slots_absent_pass": { "const": true },
+        "cloud_binding_unchanged_pass": { "const": true },
+        "secure_boot_preserved_pass": { "const": true },
+        "flash_encryption_preserved_pass": { "const": true },
+        "anti_rollback_preserved_pass": { "const": true }
+      }
+    }
+  }
+}

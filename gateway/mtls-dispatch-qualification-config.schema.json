@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/mtls-dispatch-qualification-config-v1.json",
+  "title": "Private M71 live mTLS dispatch configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "environment": { "enum": ["staging", "production"] },
+    "acknowledge_live_dispatch": { "const": true },
+    "deployment_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "oci_release_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "services": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/services" },
+    "endpoint": { "type": "string", "pattern": "^https://[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?:9444$", "maxLength": 80 },
+    "server_ca_file": { "$ref": "#/$defs/absolute_path" },
+    "expected_server_leaf_certificate_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "current_client_certificate_file": { "$ref": "#/$defs/absolute_path" },
+    "current_client_key_file": { "$ref": "#/$defs/absolute_path" },
+    "next_client_certificate_file": { "$ref": "#/$defs/absolute_path" },
+    "next_client_key_file": { "$ref": "#/$defs/absolute_path" },
+    "revoked_client_certificate_file": { "$ref": "#/$defs/absolute_path" },
+    "revoked_client_key_file": { "$ref": "#/$defs/absolute_path" },
+    "kubernetes_deployment_receipt_file": { "$ref": "#/$defs/absolute_path" },
+    "kubernetes_admission_receipt_file": { "$ref": "#/$defs/absolute_path" },
+    "controlplane_pod_uid_file": { "$ref": "#/$defs/absolute_path" },
+    "qualification_nonce": { "type": "string", "pattern": "^[A-Za-z0-9_-]{22}$" },
+    "tenant_id": { "$ref": "#/$defs/principal_identifier" },
+    "subject": { "$ref": "#/$defs/principal_identifier" },
+    "device_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "owner_revision": { "type": "integer", "minimum": 1, "maximum": 18446744073709551615 }
+  },
+  "required": [
+    "schema", "qualification_id", "environment", "acknowledge_live_dispatch",
+    "deployment_id", "oci_release_id", "services", "endpoint", "server_ca_file",
+    "expected_server_leaf_certificate_sha256", "current_client_certificate_file",
+    "current_client_key_file", "next_client_certificate_file", "next_client_key_file",
+    "revoked_client_certificate_file", "revoked_client_key_file",
+    "kubernetes_deployment_receipt_file", "kubernetes_admission_receipt_file",
+    "controlplane_pod_uid_file", "qualification_nonce", "tenant_id", "subject",
+    "device_id", "owner_revision"
+  ],
+  "$defs": {
+    "absolute_path": { "type": "string", "pattern": "^/[^\\u0000]{0,4094}$", "maxLength": 4095 },
+    "principal_identifier": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$" }
+  }
+}

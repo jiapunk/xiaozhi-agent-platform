@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/managed-database-restore-observation-v1.json",
+  "title": "M73 isolated point-in-time restore observation",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "run_binding_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "failover_observation_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "config_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "qualification_tool_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "roles": { "$ref": "managed-database-failover-observation.schema.json#/$defs/roles" },
+    "databases": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/$defs/database" } },
+    "started_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "finished_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "secret_free": { "const": true }
+  },
+  "required": ["schema", "qualification_id", "environment", "development_only", "run_binding_sha256", "failover_observation_sha256", "config_sha256", "qualification_tool_sha256", "roles", "databases", "started_at", "finished_at", "secret_free"],
+  "$defs": {
+    "database": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "role": { "$ref": "managed-database-failover-observation.schema.json#/$defs/role" },
+        "managed_cluster_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+        "restore_operation_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+        "source_endpoint_authority_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+        "restore_endpoint_authority_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+        "restored_node_binding_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+        "restored_postgres_version": { "type": "integer", "minimum": 140000 },
+        "requested_recovery_target": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+        "product_schemas_verified": { "const": true },
+        "pre_restore_event_present": { "const": true },
+        "restore_marker_present": { "const": true },
+        "restore_exclusion_absent": { "const": true },
+        "heartbeat_events_absent": { "const": true },
+        "post_failover_event_absent": { "const": true },
+        "restored_event_count": { "const": 2 },
+        "restore_marker_committed_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" }
+      },
+      "required": ["role", "managed_cluster_id", "restore_operation_id", "source_endpoint_authority_sha256", "restore_endpoint_authority_sha256", "restored_node_binding_sha256", "restored_postgres_version", "requested_recovery_target", "product_schemas_verified", "pre_restore_event_present", "restore_marker_present", "restore_exclusion_absent", "heartbeat_events_absent", "post_failover_event_absent", "restored_event_count", "restore_marker_committed_at"]
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/mtls-dispatch-qualification-receipt-v1.json",
+  "title": "M71 mTLS dispatch qualification receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "result": { "enum": ["FIXTURE_MTLS_DISPATCH_PASS", "LIVE_MTLS_DISPATCH_PASS"] },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "deployment_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "oci_release_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "services": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/services" },
+    "endpoint_authority_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "config_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "qualification_tool_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "kubernetes_deployment_receipt_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "kubernetes_admission_receipt_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "workload_evidence_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "controlplane_pod_binding_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "current_client_certificate_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "next_client_certificate_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "revoked_client_certificate_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "server_leaf_certificate_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "tls_version": { "const": "TLS1.3" },
+    "negotiated_protocol": { "const": "h2" },
+    "wake_contract": { "const": "xz-private-wake-dispatch-v1" },
+    "current_credential_accepted": { "const": true },
+    "next_credential_accepted": { "const": true },
+    "anonymous_client_rejected": { "const": true },
+    "revoked_client_rejected": { "const": true },
+    "wrong_server_name_rejected": { "const": true },
+    "current_latency_ms": { "type": "integer", "minimum": 0, "maximum": 15000 },
+    "next_latency_ms": { "type": "integer", "minimum": 0, "maximum": 15000 },
+    "started_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": "string", "format": "date-time" },
+    "observation_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "app_delivery_result": { "enum": ["FIXTURE_APP_FLOW_PASS", "LIVE_SIGNED_APP_FLOW_PASS"] },
+    "app_delivery_receipt_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "deployment_attestation_result": { "enum": ["FIXTURE_DEPLOYMENT_ATTESTATION_PASS", "LIVE_SEVEN_SERVICE_DEPLOYMENT_PASS"] },
+    "deployment_attestation_receipt_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "attestation_provider": { "enum": ["fixture", "kubernetes-cluster-authority"] },
+    "exact_seven_service_deployment_verified": { "type": "boolean" },
+    "live_api_server_admission_verified": { "type": "boolean" },
+    "mounted_workload_identity_verified": { "type": "boolean" },
+    "network_policy_path_verified": { "type": "boolean" },
+    "evaluated_at": { "type": "string", "format": "date-time" },
+    "secret_free": { "const": true },
+    "production_ready": { "const": false },
+    "unresolved_production_gates": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "end_to_end_mtls_dispatch", "managed_database_failover",
+          "provider_credential_revocation", "signed_app_delivery_receipt"
+        ]
+      },
+      "minItems": 2,
+      "maxItems": 4
+    },
+    "signing_key_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  },
+  "required": [
+    "schema", "qualification_id", "result", "environment", "development_only",
+    "deployment_id", "oci_release_id", "services", "endpoint_authority_sha256",
+    "config_sha256", "qualification_tool_sha256",
+    "kubernetes_deployment_receipt_sha256", "kubernetes_admission_receipt_sha256",
+    "workload_evidence_sha256", "controlplane_pod_binding_sha256",
+    "current_client_certificate_sha256", "next_client_certificate_sha256",
+    "revoked_client_certificate_sha256", "server_leaf_certificate_sha256",
+    "tls_version", "negotiated_protocol", "wake_contract",
+    "current_credential_accepted", "next_credential_accepted",
+    "anonymous_client_rejected", "revoked_client_rejected",
+    "wrong_server_name_rejected", "current_latency_ms", "next_latency_ms",
+    "started_at", "finished_at", "observation_sha256", "app_delivery_result",
+    "app_delivery_receipt_sha256", "deployment_attestation_result",
+    "deployment_attestation_receipt_sha256", "attestation_provider",
+    "exact_seven_service_deployment_verified", "live_api_server_admission_verified",
+    "mounted_workload_identity_verified", "network_policy_path_verified",
+    "evaluated_at", "secret_free", "production_ready",
+    "unresolved_production_gates", "signing_key_id", "signature_algorithm",
+    "signature_b64url"
+  ],
+  "allOf": [
+    {
+      "if": { "properties": { "development_only": { "const": true } }, "required": ["development_only"] },
+      "then": {
+        "properties": {
+          "environment": { "const": "staging" },
+          "result": { "const": "FIXTURE_MTLS_DISPATCH_PASS" },
+          "app_delivery_result": { "const": "FIXTURE_APP_FLOW_PASS" },
+          "deployment_attestation_result": { "const": "FIXTURE_DEPLOYMENT_ATTESTATION_PASS" },
+          "attestation_provider": { "const": "fixture" },
+          "exact_seven_service_deployment_verified": { "const": false },
+          "live_api_server_admission_verified": { "const": false },
+          "mounted_workload_identity_verified": { "const": false },
+          "network_policy_path_verified": { "const": false },
+          "unresolved_production_gates": {
+            "prefixItems": [
+              { "const": "end_to_end_mtls_dispatch" },
+              { "const": "managed_database_failover" },
+              { "const": "provider_credential_revocation" },
+              { "const": "signed_app_delivery_receipt" }
+            ],
+            "items": false,
+            "minItems": 4,
+            "maxItems": 4
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "result": { "const": "LIVE_MTLS_DISPATCH_PASS" },
+          "app_delivery_result": { "const": "LIVE_SIGNED_APP_FLOW_PASS" },
+          "deployment_attestation_result": { "const": "LIVE_SEVEN_SERVICE_DEPLOYMENT_PASS" },
+          "attestation_provider": { "const": "kubernetes-cluster-authority" },
+          "exact_seven_service_deployment_verified": { "const": true },
+          "live_api_server_admission_verified": { "const": true },
+          "mounted_workload_identity_verified": { "const": true },
+          "network_policy_path_verified": { "const": true },
+          "unresolved_production_gates": {
+            "prefixItems": [
+              { "const": "managed_database_failover" },
+              { "const": "provider_credential_revocation" }
+            ],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      }
+    }
+  ]
+}

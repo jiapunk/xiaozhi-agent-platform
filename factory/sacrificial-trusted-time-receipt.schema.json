@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://product.example/schemas/sacrificial-trusted-time-receipt-v1.json",
+  "title": "Sacrificial Trusted Time Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "environment",
+    "scope",
+    "request_sha256",
+    "request_id",
+    "nonce_b64url",
+    "ledger",
+    "authorization",
+    "transaction",
+    "station",
+    "authority_key_id",
+    "observed_at",
+    "expires_at",
+    "result",
+    "signature_algorithm",
+    "signature_b64url"
+  ],
+  "properties": {
+    "schema": { "const": "xz-sacrificial-trusted-time-receipt-v1" },
+    "environment": { "const": "SACRIFICIAL_HARDWARE_AUTHORIZATION" },
+    "scope": { "const": "SACRIFICIAL_ATTEMPT_CONSUMPTION_TIME" },
+    "request_sha256": { "$ref": "https://product.example/schemas/sacrificial-trusted-time-request-v1.json#/$defs/sha256" },
+    "request_id": { "$ref": "https://product.example/schemas/sacrificial-trusted-time-request-v1.json#/$defs/identifier" },
+    "nonce_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{43}$" },
+    "ledger": { "$ref": "https://product.example/schemas/sacrificial-trusted-time-request-v1.json#/$defs/ledger" },
+    "authorization": { "$ref": "https://product.example/schemas/sacrificial-trusted-time-request-v1.json#/$defs/authorization" },
+    "transaction": { "$ref": "https://product.example/schemas/sacrificial-trusted-time-request-v1.json#/$defs/transaction" },
+    "station": { "$ref": "https://product.example/schemas/sacrificial-trusted-time-request-v1.json#/$defs/station" },
+    "authority_key_id": { "$ref": "https://product.example/schemas/sacrificial-trusted-time-request-v1.json#/$defs/identifier" },
+    "observed_at": { "$ref": "https://product.example/schemas/sacrificial-trusted-time-request-v1.json#/$defs/timestamp" },
+    "expires_at": { "$ref": "https://product.example/schemas/sacrificial-trusted-time-request-v1.json#/$defs/timestamp" },
+    "result": { "const": "TRUSTED_TIME_ATTESTED" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  }
+}

@@ -1,0 +1,19 @@
+# Compile-only gate for the opt-in BOX-3 composition root.
+#
+# The reserved .invalid authorities are deliberately non-routable. This profile
+# proves that the live startup branch compiles and links together with the
+# secure-storage defaults; it is not flashable release configuration and must
+# never be promoted or shipped.
+CONFIG_PRODUCT_LIVE_RUNTIME_ENABLE=y
+CONFIG_PRODUCT_IDENTITY_HMAC_KEY_ID=5
+CONFIG_PRODUCT_CONTROL_AUTHORITY="https://control.example.invalid"
+CONFIG_PRODUCT_AGENT_PROXY_AUTHORITY="https://agent.example.invalid"
+CONFIG_PRODUCT_SNTP_SERVER_1="time.example.invalid"
+CONFIG_PRODUCT_ONBOARDING_BUTTON_GPIO=0
+# CONFIG_PRODUCT_ONBOARDING_BUTTON_ACTIVE_HIGH is not set
+CONFIG_PRODUCT_ONBOARDING_BUTTON_SAMPLE_PERIOD_MS=10
+CONFIG_PRODUCT_ONBOARDING_BUTTON_DEBOUNCE_MS=50
+CONFIG_PRODUCT_ONBOARDING_BUTTON_LONG_PRESS_MS=3000
+CONFIG_PRODUCT_FACTORY_RESET_PRESS_MS=10000
+CONFIG_PRODUCT_AGENT_MODEL="product-agent"
+CONFIG_PRODUCT_AGENT_INDICATOR_ACTION_ENABLE=y

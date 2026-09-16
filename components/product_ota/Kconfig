@@ -1,0 +1,38 @@
+menu "Product OTA"
+
+    config PRODUCT_OTA_RELEASE_SEQUENCE
+        int "Compiled product release sequence"
+        range 1 2147483647
+        default 14
+        help
+            Monotonic product release sequence used to reject network-level
+            downgrade manifests. Increment for every releasable firmware.
+
+    config PRODUCT_OTA_CHANNEL
+        string "Accepted OTA channel"
+        default "development"
+        help
+            Exact signed-manifest channel accepted by this firmware. Production
+            SKUs should use a reviewed channel such as stable or beta.
+
+    config PRODUCT_OTA_REQUIRE_STORAGE_HEALTH
+        bool "Require storage health before confirming an OTA image"
+        default y
+
+    config PRODUCT_OTA_REQUIRE_NETWORK_HEALTH
+        bool "Require network health before confirming an OTA image"
+        default y
+
+    config PRODUCT_OTA_REQUIRE_CONTROL_PLANE_HEALTH
+        bool "Require control-plane health before confirming an OTA image"
+        default y
+
+    config PRODUCT_OTA_REQUIRE_AGENT_HEALTH
+        bool "Require Agent runtime health before confirming an OTA image"
+        default y
+
+    config PRODUCT_OTA_REQUIRE_AUDIO_HEALTH
+        bool "Require board audio health before confirming an OTA image"
+        default n
+
+endmenu

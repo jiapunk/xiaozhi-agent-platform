@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "devices": [
+    {
+      "device_id": "box3-demo-001",
+      "secret_b64": "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=",
+      "board": "esp32s3-box3",
+      "ota_channel": "development",
+      "disabled": false
+    }
+  ]
+}

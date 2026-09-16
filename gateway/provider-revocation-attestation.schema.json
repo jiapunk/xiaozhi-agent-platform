@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/provider-revocation-attestation-v1.json",
+  "title": "M72 provider console revocation attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "provider-revocation-observation.schema.json#/$defs/identifier64" },
+    "result": { "enum": ["FIXTURE_PROVIDER_REVOCATION_ATTESTATION_PASS", "LIVE_PROVIDER_CONSOLE_REVOCATION_PASS"] },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "attestation_provider": { "enum": ["fixture", "provider-credential-audit-authority"] },
+    "observation_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+    "provider_audit_evidence_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+    "providers": {
+      "type": "array", "minItems": 1, "maxItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "platform": { "enum": ["apns-development", "apns-production", "fcm"] },
+          "application_id": { "$ref": "provider-revocation-observation.schema.json#/$defs/identifier128" },
+          "revoked_credential_id": { "$ref": "provider-revocation-observation.schema.json#/$defs/credential" },
+          "active_credential_id": { "$ref": "provider-revocation-observation.schema.json#/$defs/credential" },
+          "revoked_public_key_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" },
+          "active_public_key_sha256": { "$ref": "provider-revocation-observation.schema.json#/$defs/sha256" }
+        },
+        "required": ["platform", "application_id", "revoked_credential_id", "active_credential_id", "revoked_public_key_sha256", "active_public_key_sha256"]
+      }
+    },
+    "revocation_change_started_at": { "$ref": "provider-revocation-observation.schema.json#/$defs/timestamp" },
+    "revocation_change_completed_at": { "$ref": "provider-revocation-observation.schema.json#/$defs/timestamp" },
+    "provider_console_revocation_verified": { "type": "boolean" },
+    "revoked_credential_disabled_verified": { "type": "boolean" },
+    "active_credential_enabled_verified": { "type": "boolean" },
+    "worm_retention_verified": { "type": "boolean" },
+    "verified_at": { "$ref": "provider-revocation-observation.schema.json#/$defs/timestamp" },
+    "expires_at": { "$ref": "provider-revocation-observation.schema.json#/$defs/timestamp" },
+    "signing_key_id": { "$ref": "provider-revocation-observation.schema.json#/$defs/identifier64" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  },
+  "required": [
+    "schema", "qualification_id", "result", "environment", "development_only",
+    "attestation_provider", "observation_sha256", "provider_audit_evidence_sha256",
+    "providers", "revocation_change_started_at", "revocation_change_completed_at",
+    "provider_console_revocation_verified", "revoked_credential_disabled_verified",
+    "active_credential_enabled_verified", "worm_retention_verified", "verified_at",
+    "expires_at", "signing_key_id", "signature_algorithm", "signature_b64url"
+  ],
+  "allOf": [
+    {
+      "if": { "properties": { "development_only": { "const": true } }, "required": ["development_only"] },
+      "then": {
+        "properties": {
+          "environment": { "const": "staging" },
+          "result": { "const": "FIXTURE_PROVIDER_REVOCATION_ATTESTATION_PASS" },
+          "attestation_provider": { "const": "fixture" },
+          "provider_console_revocation_verified": { "const": false },
+          "revoked_credential_disabled_verified": { "const": false },
+          "active_credential_enabled_verified": { "const": false },
+          "worm_retention_verified": { "const": false }
+        }
+      },
+      "else": {
+        "properties": {
+          "result": { "const": "LIVE_PROVIDER_CONSOLE_REVOCATION_PASS" },
+          "attestation_provider": { "const": "provider-credential-audit-authority" },
+          "provider_console_revocation_verified": { "const": true },
+          "revoked_credential_disabled_verified": { "const": true },
+          "active_credential_enabled_verified": { "const": true },
+          "worm_retention_verified": { "const": true }
+        }
+      }
+    }
+  ]
+}

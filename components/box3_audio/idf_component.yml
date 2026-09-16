@@ -1,0 +1,4 @@
+dependencies:
+  espressif/esp_codec_dev: ~1.5.6
+  idf:
+    version: ">=6.0.0"

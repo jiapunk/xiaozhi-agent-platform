@@ -1,0 +1,40 @@
+{
+  "$id": "https://xiaozhi-agent.local/schemas/kubernetes-deployment-receipt-v7.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "deployment_id": { "maxLength": 32, "pattern": "^[a-z0-9](?:[-a-z0-9]{0,30}[a-z0-9])?$", "type": "string" },
+    "kubernetes_sha256": { "$ref": "#/$defs/sha256" },
+    "namespace": { "maxLength": 63, "pattern": "^[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?$", "type": "string" },
+    "oci_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "oci_release_id": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+    "oci_signing_key_id": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+    "prerequisites_sha256": { "$ref": "#/$defs/sha256" },
+    "profile_sha256": { "$ref": "#/$defs/sha256" },
+    "schema": { "const": 7 },
+    "services": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "image": { "type": "string" },
+          "image_index_digest": { "pattern": "^sha256:[0-9a-f]{64}$", "type": "string" },
+          "name": { "enum": ["gateway", "controlplane", "agentproxy", "firmwareorigin", "generationcoordinator", "accountauthorization", "factorytimeauthority"] }
+        },
+        "required": ["name", "image", "image_index_digest"],
+        "type": "object"
+      },
+      "maxItems": 7,
+      "minItems": 7,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "pattern": "^[A-Za-z0-9_-]{86}$", "type": "string" },
+    "signing_key_id": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" }
+  },
+  "required": ["schema", "deployment_id", "namespace", "oci_release_id", "oci_receipt_sha256", "oci_signing_key_id", "profile_sha256", "kubernetes_sha256", "prerequisites_sha256", "signing_key_id", "signature_algorithm", "signature_b64url", "services"],
+  "type": "object",
+  "$defs": {
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "boundary": "Reference decode proves fixture bitstream acceptance and exact sample count; it does not qualify an ESP codec, board audio path, or speech provider.",
+  "fixtures": [
+    {
+      "channels": 1,
+      "decoded_pcm_s16le_sha256": "5ecca2a2c0492a9eadc9dfd28f86f51cbc2d61b5ecfe0d97a00cf7d1d36e722b",
+      "decoded_sample_count": 960,
+      "direction": "stt_uplink",
+      "duration_ms": 60,
+      "encoder": {
+        "application": "voip",
+        "bit_rate": 24000,
+        "codec": "libopus",
+        "frame_duration_ms": 60,
+        "vbr": "off"
+      },
+      "name": "stt-16k-mono-60ms",
+      "packet_base64": "W0Eq5m/L6fEF2RCrGyG5RwPjcoYZy8DxgXZTmMvaSw8sQZlSFAjLzT4NDWkwz/cMlh//3K8oF6ThU6NCt4eJujv5fnXez4Ftl14ecg8BoDyQQl7HYsaOZ5F3CZNaSDfenBnNCcf4euaGNr1ixYVgwqVGahrDsxIZKBsiKfSf2a7/XOK9BVAdhPmsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "packet_bytes": 180,
+      "packet_sha256": "4fd29fa6857f33155530184649aec98217344c25ca46df6e0d46ea22b6825da2",
+      "sample_rate_hz": 16000,
+      "source": {
+        "frequency_hz": 997,
+        "kind": "lavfi_sine",
+        "selected_data_packet_index": 1,
+        "source_duration_ms": 180
+      }
+    },
+    {
+      "channels": 1,
+      "decoded_pcm_s16le_sha256": "7a2cabf0ad1d61bd4e25131f68bc1489d7c7bf9434638d09657d4257714adf5a",
+      "decoded_sample_count": 1440,
+      "direction": "tts_downlink",
+      "duration_ms": 60,
+      "encoder": {
+        "application": "voip",
+        "bit_rate": 24000,
+        "codec": "libopus",
+        "frame_duration_ms": 60,
+        "vbr": "off"
+      },
+      "name": "tts-24k-mono-60ms",
+      "packet_base64": "a0MDmyseRq8y0UrACAh0cZzwjwuHiiOLKGglE9zPIebn8w8gQguBEREj0VJEDZUdfqOa9SM1xr1XuzdWoZo3bqRE2giblMiv4uY/ACpFEIt15JJYZHQX1djAFdP3ygdMVUIMdDR83IYlrvb1E2RT87vZWNWoo5aaN26kRNoIknfvSHOmKXbYvrE2Vib1H8MBF0GsPo3whgT2siEssCmbGryD3sBAqqq1rZsaT/xfFYnYAAAA",
+      "packet_bytes": 180,
+      "packet_sha256": "c6da4bba20cfb2e4828673b026d386f5a81bbdfa3c1d658e0e458c28ce22b145",
+      "sample_rate_hz": 24000,
+      "source": {
+        "frequency_hz": 1301,
+        "kind": "lavfi_sine",
+        "selected_data_packet_index": 1,
+        "source_duration_ms": 180
+      }
+    }
+  ],
+  "qualification_only": true,
+  "reference_toolchain": {
+    "decoder_backend": "ffmpeg-native-opus",
+    "encoder_backend": "libopus",
+    "ffmpeg_sha256": "326895b16940f238d76e902fc71150f10c388c281985756f9850ff800a2f1499",
+    "ffmpeg_version": "ffmpeg version 7.0 Copyright (c) 2000-2024 the FFmpeg developers",
+    "license_boundary": "Reviewed GPL-enabled qualification binary; it is not linked, copied, or shipped with firmware or gateway services."
+  },
+  "schema": "xiaozhi-opus-codec-fixtures-v1"
+}

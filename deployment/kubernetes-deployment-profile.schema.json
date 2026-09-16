@@ -1,0 +1,139 @@
+{
+  "$id": "https://xiaozhi-agent.local/schemas/kubernetes-deployment-profile-v7.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent_usage": {
+      "additionalProperties": false,
+      "properties": {
+        "daily_budget_microusd": { "maximum": 1000000000000000, "minimum": 1, "type": "integer" },
+        "input_microusd_per_million_tokens": { "maximum": 1000000000000, "minimum": 1, "type": "integer" },
+        "input_token_overhead": { "maximum": 65536, "minimum": 0, "type": "integer" },
+        "output_microusd_per_million_tokens": { "maximum": 1000000000000, "minimum": 1, "type": "integer" },
+        "pricing_profile_id": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+        "reservation_ttl_seconds": { "maximum": 600, "minimum": 30, "type": "integer" }
+      },
+      "required": ["pricing_profile_id", "input_microusd_per_million_tokens", "output_microusd_per_million_tokens", "daily_budget_microusd", "input_token_overhead", "reservation_ttl_seconds"],
+      "type": "object"
+    },
+    "speech_usage": {
+      "additionalProperties": false,
+      "properties": {
+        "daily_budget_microusd": { "maximum": 1000000000000000, "minimum": 1, "type": "integer" },
+        "pricing_profile_id": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+        "reservation_ttl_seconds": { "maximum": 600, "minimum": 60, "type": "integer" },
+        "stt_microusd_per_million_audio_ms": { "maximum": 1000000000000, "minimum": 1, "type": "integer" },
+        "stt_reservation_chunk_audio_ms": { "maximum": 60000, "minimum": 1000, "type": "integer" },
+        "tts_max_output_audio_ms": { "maximum": 600000, "minimum": 1000, "type": "integer" },
+        "tts_microusd_per_million_characters": { "maximum": 1000000000000, "minimum": 0, "type": "integer" },
+        "tts_microusd_per_million_output_audio_ms": { "maximum": 1000000000000, "minimum": 0, "type": "integer" }
+      },
+      "required": ["pricing_profile_id", "stt_microusd_per_million_audio_ms", "tts_microusd_per_million_characters", "tts_microusd_per_million_output_audio_ms", "daily_budget_microusd", "stt_reservation_chunk_audio_ms", "tts_max_output_audio_ms", "reservation_ttl_seconds"],
+      "type": "object"
+    },
+    "config_maps": { "$ref": "#/$defs/serviceNames" },
+    "companion_push": {
+      "additionalProperties": false,
+      "properties": {
+        "apns": { "type": "boolean" },
+        "enabled": { "type": "boolean" },
+        "fcm_credential_mode": { "enum": ["disabled", "metadata", "service-account"] }
+      },
+      "required": ["enabled", "apns", "fcm_credential_mode"],
+      "type": "object"
+    },
+    "deployment_id": { "maxLength": 32, "pattern": "^[a-z0-9](?:[-a-z0-9]{0,30}[a-z0-9])?$", "type": "string" },
+    "dns_namespace": { "$ref": "#/$defs/name" },
+    "dns_pod_selector": {
+      "additionalProperties": { "maxLength": 63, "type": "string" },
+      "maxProperties": 4,
+      "minProperties": 1,
+      "type": "object"
+    },
+    "external_egress": {
+      "additionalProperties": false,
+      "properties": {
+        "database": { "$ref": "#/$defs/cidrs" },
+        "identity": { "$ref": "#/$defs/cidrs" },
+        "provider": { "$ref": "#/$defs/cidrs" },
+        "signer": { "$ref": "#/$defs/cidrs" },
+        "speech": { "$ref": "#/$defs/cidrs" }
+      },
+      "required": ["speech", "provider", "identity", "database", "signer"],
+      "type": "object"
+    },
+    "entitlement_update_trust": {
+      "additionalProperties": false,
+      "properties": {
+        "authorization_ttl_seconds": { "maximum": 300, "minimum": 60, "type": "integer" },
+        "keyring_min_revision": { "maximum": 9007199254740991, "minimum": 1, "type": "integer" }
+      },
+      "required": ["keyring_min_revision", "authorization_ttl_seconds"],
+      "type": "object"
+    },
+    "image_pull_secret": { "$ref": "#/$defs/name" },
+    "ingress_namespace": { "$ref": "#/$defs/name" },
+    "monitoring_namespace": { "$ref": "#/$defs/name" },
+    "namespace": { "$ref": "#/$defs/name" },
+    "registry_repository": { "maxLength": 255, "type": "string" },
+    "release_operator_namespace": { "$ref": "#/$defs/name" },
+    "schema": { "const": 7 },
+    "service_entitlement": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_token_ttl_seconds": { "maximum": 900, "minimum": 60, "type": "integer" },
+        "voice_token_ttl_seconds": { "maximum": 900, "minimum": 60, "type": "integer" }
+      },
+      "required": ["voice_token_ttl_seconds", "agent_token_ttl_seconds"],
+      "type": "object"
+    },
+    "secret_env": { "$ref": "#/$defs/serviceNames" },
+    "secret_files": { "$ref": "#/$defs/serviceNames" },
+    "storage_claims": {
+      "additionalProperties": false,
+      "properties": {
+        "controlplane_bundle": { "$ref": "#/$defs/name" },
+        "firmwareorigin_bundle": { "$ref": "#/$defs/name" },
+        "generation_state": { "$ref": "#/$defs/name" }
+      },
+      "required": ["controlplane_bundle", "firmwareorigin_bundle", "generation_state"],
+      "type": "object"
+    },
+    "telemetry": {
+      "additionalProperties": false,
+      "properties": {
+        "collector_service": { "$ref": "#/$defs/name" },
+        "pod_selector": {
+          "additionalProperties": { "maxLength": 63, "type": "string" },
+          "maxProperties": 4,
+          "minProperties": 1,
+          "type": "object"
+        },
+        "sample_ratio_ppm": { "maximum": 1000000, "minimum": 1, "type": "integer" },
+        "timeout_ms": { "maximum": 5000, "minimum": 100, "type": "integer" }
+      },
+      "required": ["collector_service", "pod_selector", "sample_ratio_ppm", "timeout_ms"],
+      "type": "object"
+    }
+  },
+  "required": ["schema", "agent_usage", "service_entitlement", "entitlement_update_trust", "speech_usage", "deployment_id", "namespace", "registry_repository", "image_pull_secret", "ingress_namespace", "monitoring_namespace", "release_operator_namespace", "dns_namespace", "dns_pod_selector", "external_egress", "config_maps", "secret_env", "secret_files", "storage_claims", "companion_push", "telemetry"],
+  "type": "object",
+  "$defs": {
+    "cidrs": { "items": { "type": "string" }, "maxItems": 32, "minItems": 1, "type": "array", "uniqueItems": true },
+    "name": { "maxLength": 63, "pattern": "^[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?$", "type": "string" },
+    "serviceNames": {
+      "additionalProperties": false,
+      "properties": {
+        "accountauthorization": { "$ref": "#/$defs/name" },
+        "agentproxy": { "$ref": "#/$defs/name" },
+        "controlplane": { "$ref": "#/$defs/name" },
+        "factorytimeauthority": { "$ref": "#/$defs/name" },
+        "firmwareorigin": { "$ref": "#/$defs/name" },
+        "gateway": { "$ref": "#/$defs/name" },
+        "generationcoordinator": { "$ref": "#/$defs/name" }
+      },
+      "required": ["gateway", "controlplane", "agentproxy", "firmwareorigin", "generationcoordinator", "accountauthorization", "factorytimeauthority"],
+      "type": "object"
+    }
+  }
+}

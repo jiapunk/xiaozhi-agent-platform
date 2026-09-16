@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/provider-revocation-observation-v1.json",
+  "title": "M72 provider credential revocation observation",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "#/$defs/identifier64" },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "config_sha256": { "$ref": "#/$defs/sha256" },
+    "qualification_tool_sha256": { "$ref": "#/$defs/sha256" },
+    "providers": {
+      "type": "array", "minItems": 1, "maxItems": 3,
+      "items": { "$ref": "#/$defs/provider" }
+    },
+    "started_at": { "$ref": "#/$defs/timestamp" },
+    "finished_at": { "$ref": "#/$defs/timestamp" },
+    "secret_free": { "const": true }
+  },
+  "required": [
+    "schema", "qualification_id", "environment", "development_only",
+    "config_sha256", "qualification_tool_sha256", "providers",
+    "started_at", "finished_at", "secret_free"
+  ],
+  "allOf": [
+    {
+      "if": { "properties": { "development_only": { "const": true } }, "required": ["development_only"] },
+      "then": { "properties": { "environment": { "const": "staging" } } }
+    }
+  ],
+  "$defs": {
+    "identifier64": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$" },
+    "identifier128": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$" },
+    "credential": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{7,127}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+    "latency": { "type": "integer", "minimum": 0, "maximum": 15000 },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "platform": { "enum": ["apns-development", "apns-production", "fcm"] },
+        "application_id": { "$ref": "#/$defs/identifier128" },
+        "revoked_credential_id": { "$ref": "#/$defs/credential" },
+        "active_credential_id": { "$ref": "#/$defs/credential" },
+        "revoked_public_key_sha256": { "$ref": "#/$defs/sha256" },
+        "active_public_key_sha256": { "$ref": "#/$defs/sha256" },
+        "active_before_accepted": { "const": true },
+        "revoked_credential_rejected": { "const": true },
+        "active_after_accepted": { "const": true },
+        "rejection_class": { "enum": ["apns-invalid-provider-token", "google-oauth-invalid-grant"] },
+        "active_before_latency_ms": { "$ref": "#/$defs/latency" },
+        "revoked_rejection_latency_ms": { "$ref": "#/$defs/latency" },
+        "active_after_latency_ms": { "$ref": "#/$defs/latency" }
+      },
+      "required": [
+        "platform", "application_id", "revoked_credential_id",
+        "active_credential_id", "revoked_public_key_sha256",
+        "active_public_key_sha256", "active_before_accepted",
+        "revoked_credential_rejected", "active_after_accepted",
+        "rejection_class", "active_before_latency_ms",
+        "revoked_rejection_latency_ms", "active_after_latency_ms"
+      ],
+      "allOf": [
+        {
+          "if": { "properties": { "platform": { "const": "fcm" } }, "required": ["platform"] },
+          "then": { "properties": { "rejection_class": { "const": "google-oauth-invalid-grant" } } },
+          "else": { "properties": { "rejection_class": { "const": "apns-invalid-provider-token" } } }
+        }
+      ]
+    }
+  }
+}

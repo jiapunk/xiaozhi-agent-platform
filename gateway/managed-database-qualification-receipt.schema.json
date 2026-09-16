@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/managed-database-qualification-receipt-v1.json",
+  "title": "M73 signed managed database failover and restore qualification receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "result": { "enum": ["LIVE_MANAGED_DATABASE_FAILOVER_RESTORE_PASS", "FIXTURE_MANAGED_DATABASE_FAILOVER_RESTORE_PASS"] },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "deployment_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "oci_release_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "roles": { "$ref": "managed-database-failover-observation.schema.json#/$defs/roles" },
+    "run_binding_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "failover_config_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "restore_config_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "failover_qualification_tool_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "restore_qualification_tool_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "ready_signal_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "failover_observation_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "restore_observation_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "failover_databases": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "managed-database-failover-observation.schema.json#/$defs/database" } },
+    "restore_databases": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "managed-database-restore-observation.schema.json#/$defs/database" } },
+    "failover_started_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "failover_ready_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "failover_finished_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "restore_started_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "restore_finished_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "provider_revocation_result": { "enum": ["LIVE_PROVIDER_CREDENTIAL_REVOCATION_PASS", "FIXTURE_PROVIDER_CREDENTIAL_REVOCATION_PASS"] },
+    "provider_revocation_receipt_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "database_attestation_result": { "enum": ["LIVE_MANAGED_POSTGRESQL_CONTROL_PLANE_PASS", "FIXTURE_MANAGED_POSTGRESQL_ATTESTATION_PASS"] },
+    "database_attestation_receipt_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "attestation_provider": { "enum": ["fixture", "managed-postgresql-audit-authority"] },
+    "provider_audit_evidence_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "worm_record_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+    "rpo_target_seconds": { "$ref": "managed-database-provider-audit.schema.json#/$defs/slo" },
+    "rto_target_seconds": { "$ref": "managed-database-provider-audit.schema.json#/$defs/slo" },
+    "database_audit_bindings": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "managed-database-provider-audit.schema.json#/$defs/database" } },
+    "managed_service_control_plane_verified": { "type": "boolean" },
+    "failover_operator_event_verified": { "type": "boolean" },
+    "automated_backups_verified": { "type": "boolean" },
+    "point_in_time_restore_verified": { "type": "boolean" },
+    "encryption_at_rest_verified": { "type": "boolean" },
+    "restore_isolation_verified": { "type": "boolean" },
+    "worm_retention_verified": { "type": "boolean" },
+    "evaluated_at": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "secret_free": { "const": true },
+    "production_ready": { "const": false },
+    "unresolved_production_gates": {
+      "type": "array", "maxItems": 4, "uniqueItems": true,
+      "items": { "enum": ["end_to_end_mtls_dispatch", "managed_database_failover", "provider_credential_revocation", "signed_app_delivery_receipt"] }
+    },
+    "signing_key_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  },
+  "required": ["schema", "qualification_id", "result", "environment", "development_only", "deployment_id", "oci_release_id", "roles", "run_binding_sha256", "failover_config_sha256", "restore_config_sha256", "failover_qualification_tool_sha256", "restore_qualification_tool_sha256", "ready_signal_sha256", "failover_observation_sha256", "restore_observation_sha256", "failover_databases", "restore_databases", "failover_started_at", "failover_ready_at", "failover_finished_at", "restore_started_at", "restore_finished_at", "provider_revocation_result", "provider_revocation_receipt_sha256", "database_attestation_result", "database_attestation_receipt_sha256", "attestation_provider", "provider_audit_evidence_sha256", "worm_record_id", "rpo_target_seconds", "rto_target_seconds", "database_audit_bindings", "managed_service_control_plane_verified", "failover_operator_event_verified", "automated_backups_verified", "point_in_time_restore_verified", "encryption_at_rest_verified", "restore_isolation_verified", "worm_retention_verified", "evaluated_at", "secret_free", "production_ready", "unresolved_production_gates", "signing_key_id", "signature_algorithm", "signature_b64url"],
+  "allOf": [
+    {
+      "if": { "properties": { "development_only": { "const": false } }, "required": ["development_only"] },
+      "then": {
+        "properties": {
+          "result": { "const": "LIVE_MANAGED_DATABASE_FAILOVER_RESTORE_PASS" },
+          "provider_revocation_result": { "const": "LIVE_PROVIDER_CREDENTIAL_REVOCATION_PASS" },
+          "database_attestation_result": { "const": "LIVE_MANAGED_POSTGRESQL_CONTROL_PLANE_PASS" },
+          "attestation_provider": { "const": "managed-postgresql-audit-authority" },
+          "unresolved_production_gates": { "const": [] },
+          "managed_service_control_plane_verified": { "const": true }, "failover_operator_event_verified": { "const": true },
+          "automated_backups_verified": { "const": true }, "point_in_time_restore_verified": { "const": true },
+          "encryption_at_rest_verified": { "const": true }, "restore_isolation_verified": { "const": true }, "worm_retention_verified": { "const": true }
+        }
+      }
+    }
+  ]
+}

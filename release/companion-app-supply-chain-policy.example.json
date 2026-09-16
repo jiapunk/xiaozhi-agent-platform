@@ -1,0 +1,71 @@
+{
+  "dependencies": [
+    {
+      "bundle_path": "licenses/esp-idf-provisioning-ios-LICENSE.txt",
+      "checkout_path": ".build/checkouts/esp-idf-provisioning-ios",
+      "identity": "esp-idf-provisioning-ios",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE",
+      "license_sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1",
+      "revision": "00a33ce4ccf79168a6cfd9d1d6cdc924d0101613",
+      "role": "ios-provisioning-transport",
+      "url": "https://github.com/espressif/esp-idf-provisioning-ios.git",
+      "version": "3.1.0"
+    },
+    {
+      "bundle_path": "licenses/swift-protobuf-LICENSE.txt",
+      "checkout_path": ".build/checkouts/swift-protobuf",
+      "identity": "swift-protobuf",
+      "license": "Apache-2.0",
+      "license_path": "LICENSE.txt",
+      "license_sha256": "186c5f0192a754714a7e542233ddaaad28745626e0ad32e358d3f5af00afb84a",
+      "revision": "55d7a1cc5666b85c13464aea1c4b4a90feccb4c8",
+      "role": "protobuf-runtime",
+      "url": "https://github.com/apple/swift-protobuf.git",
+      "version": "1.38.1"
+    }
+  ],
+  "package_name": "XiaozhiProductCompanion",
+  "package_resolved_sha256": "01da4777386bb0a2cf6dedde62581d4f6f77f0005e2679a22345a21b81e85e78",
+  "package_version": "1.0.0",
+  "platforms": [
+    "ios15",
+    "macos13"
+  ],
+  "policy_id": "companion-source-policy-2026-08",
+  "privacy_manifest_path": "Sources/ProductOnboardingCore/PrivacyInfo.xcprivacy",
+  "privacy_manifest_sha256": "e15082eb5a129733170c3d4b2e63b0ebaaa91fd20f36344a51ef8fe7035ca9a1",
+  "production_targets": [
+    "ProductActionConsentUI",
+    "ProductOnboardingCore",
+    "ProductOnboardingESPProvision"
+  ],
+  "release_id": "companion-source-release-0001",
+  "schema_version": 1,
+  "signing_key_id": "companion-source-authority-2026",
+  "signing_public_key_sha256": "abababababababababababababababababababababababababababababababab",
+  "source_date_epoch": 1786406400,
+  "source_paths": [
+    "Package.resolved",
+    "Package.swift",
+    "Sources/ProductActionConsentUI/AgentActionConsentGateView.swift",
+    "Sources/ProductOnboardingCore/AgentActionConsent.swift",
+    "Sources/ProductOnboardingCore/AgentActionConsentAPI.swift",
+    "Sources/ProductOnboardingCore/AgentActionConsentAccessAPI.swift",
+    "Sources/ProductOnboardingCore/AgentActionConsentDeliveryQualification.swift",
+    "Sources/ProductOnboardingCore/AgentActionConsentSession.swift",
+    "Sources/ProductOnboardingCore/AgentActionConsentWake.swift",
+    "Sources/ProductOnboardingCore/DeviceClaim.swift",
+    "Sources/ProductOnboardingCore/DeviceClaimAPI.swift",
+    "Sources/ProductOnboardingCore/OnboardingFlow.swift",
+    "Sources/ProductOnboardingCore/OnboardingQRCode.swift",
+    "Sources/ProductOnboardingCore/PrivacyInfo.xcprivacy",
+    "Sources/ProductOnboardingCore/ProvisioningTransport.swift",
+    "Sources/ProductOnboardingCore/PushInstallationAPI.swift",
+    "Sources/ProductOnboardingCore/WiFiCredentials.swift",
+    "Sources/ProductOnboardingESPProvision/ESPProvisionTransport.swift",
+    "upstream-lock.json"
+  ],
+  "tool_sha256": "7428f2e731fbc2daf269ee79f64d880d841798ee2182ed19b665fc04f953e6b8",
+  "upstream_lock_sha256": "876610e98fbd45e7c837e6064040997b6985ef9c1fe3482d85a403040a01eff9"
+}

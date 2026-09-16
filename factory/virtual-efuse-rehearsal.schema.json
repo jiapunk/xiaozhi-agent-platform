@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.example/schemas/virtual-efuse-rehearsal-v1.json",
+  "title": "BOX3 virtual eFuse rehearsal evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "version",
+    "environment",
+    "result",
+    "subject",
+    "tool",
+    "key_allocation",
+    "stages",
+    "final_virtual_efuse_image_sha256",
+    "secret_handling",
+    "boundary"
+  ],
+  "properties": {
+    "schema": { "const": "xz-box3-virtual-efuse-rehearsal-v1" },
+    "version": { "const": 1 },
+    "environment": { "const": "VIRTUAL_TEST_ONLY" },
+    "result": { "const": "VIRTUAL_EFUSE_REHEARSAL_PASS" },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "target",
+        "idf_version",
+        "secure_version",
+        "signing_request_sha256"
+      ],
+      "properties": {
+        "profile": { "const": "box3-production-security-v1" },
+        "target": { "const": "esp32s3" },
+        "idf_version": { "const": "6.0.2" },
+        "secure_version": { "const": 1 },
+        "signing_request_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "tool": {
+      "const": {
+        "name": "espefuse",
+        "version": "5.3.1",
+        "mode": "--virt",
+        "chip": "esp32s3"
+      }
+    },
+    "key_allocation": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "logical_slot",
+          "physical_block",
+          "block_name",
+          "purpose",
+          "product_role"
+        ],
+        "properties": {
+          "logical_slot": { "type": "integer", "minimum": 0, "maximum": 5 },
+          "physical_block": { "type": "integer", "minimum": 4, "maximum": 9 },
+          "block_name": { "enum": ["BLOCK_KEY0", "BLOCK_KEY1", "BLOCK_KEY2", "BLOCK_KEY3", "BLOCK_KEY4", "BLOCK_KEY5"] },
+          "purpose": { "enum": ["SECURE_BOOT_DIGEST0", "SECURE_BOOT_DIGEST1", "SECURE_BOOT_DIGEST2", "XTS_AES_128_KEY", "HMAC_UP"] },
+          "product_role": { "enum": ["SECURE_BOOT_DIGEST0", "SECURE_BOOT_DIGEST1", "SECURE_BOOT_DIGEST2", "FLASH_ENCRYPTION", "CREDENTIAL_NVS", "DEVICE_IDENTITY"] }
+        }
+      }
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/stage" }
+    },
+    "final_virtual_efuse_image_sha256": { "$ref": "#/$defs/sha256" },
+    "secret_handling": {
+      "const": {
+        "test_only_ephemeral": true,
+        "secure_boot_private_keys_persisted": false,
+        "raw_secret_values_recorded": false
+      }
+    },
+    "boundary": {
+      "const": {
+        "physical_device_touched": false,
+        "factory_evidence": false,
+        "market_release_evidence": false
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bit_len", "block", "raw_value", "readable", "value", "writeable"],
+      "properties": {
+        "bit_len": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "block": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "raw_value": { "type": "string", "minLength": 3, "maxLength": 66 },
+        "readable": { "type": "boolean" },
+        "value": {},
+        "writeable": { "type": "boolean" }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "RD_DIS",
+        "SPI_BOOT_CRYPT_CNT",
+        "SECURE_VERSION",
+        "DIS_DOWNLOAD_ICACHE",
+        "DIS_DOWNLOAD_DCACHE",
+        "DIS_PAD_JTAG",
+        "DIS_DOWNLOAD_MANUAL_ENCRYPT",
+        "DIS_USB_JTAG",
+        "DIS_DIRECT_BOOT",
+        "SECURE_BOOT_EN",
+        "ENABLE_SECURITY_DOWNLOAD",
+        "DIS_DOWNLOAD_MODE",
+        "SECURE_BOOT_AGGRESSIVE_REVOKE",
+        "SECURE_BOOT_KEY_REVOKE0",
+        "SECURE_BOOT_KEY_REVOKE1",
+        "SECURE_BOOT_KEY_REVOKE2",
+        "KEY_PURPOSE_0",
+        "KEY_PURPOSE_1",
+        "KEY_PURPOSE_2",
+        "KEY_PURPOSE_3",
+        "KEY_PURPOSE_4",
+        "KEY_PURPOSE_5",
+        "BLOCK_KEY0",
+        "BLOCK_KEY1",
+        "BLOCK_KEY2",
+        "BLOCK_KEY3",
+        "BLOCK_KEY4",
+        "BLOCK_KEY5"
+      ],
+      "properties": {
+        "RD_DIS": { "$ref": "#/$defs/field" },
+        "SPI_BOOT_CRYPT_CNT": { "$ref": "#/$defs/field" },
+        "SECURE_VERSION": { "$ref": "#/$defs/field" },
+        "DIS_DOWNLOAD_ICACHE": { "$ref": "#/$defs/field" },
+        "DIS_DOWNLOAD_DCACHE": { "$ref": "#/$defs/field" },
+        "DIS_PAD_JTAG": { "$ref": "#/$defs/field" },
+        "DIS_DOWNLOAD_MANUAL_ENCRYPT": { "$ref": "#/$defs/field" },
+        "DIS_USB_JTAG": { "$ref": "#/$defs/field" },
+        "DIS_DIRECT_BOOT": { "$ref": "#/$defs/field" },
+        "SECURE_BOOT_EN": { "$ref": "#/$defs/field" },
+        "ENABLE_SECURITY_DOWNLOAD": { "$ref": "#/$defs/field" },
+        "DIS_DOWNLOAD_MODE": { "$ref": "#/$defs/field" },
+        "SECURE_BOOT_AGGRESSIVE_REVOKE": { "$ref": "#/$defs/field" },
+        "SECURE_BOOT_KEY_REVOKE0": { "$ref": "#/$defs/field" },
+        "SECURE_BOOT_KEY_REVOKE1": { "$ref": "#/$defs/field" },
+        "SECURE_BOOT_KEY_REVOKE2": { "$ref": "#/$defs/field" },
+        "KEY_PURPOSE_0": { "$ref": "#/$defs/field" },
+        "KEY_PURPOSE_1": { "$ref": "#/$defs/field" },
+        "KEY_PURPOSE_2": { "$ref": "#/$defs/field" },
+        "KEY_PURPOSE_3": { "$ref": "#/$defs/field" },
+        "KEY_PURPOSE_4": { "$ref": "#/$defs/field" },
+        "KEY_PURPOSE_5": { "$ref": "#/$defs/field" },
+        "BLOCK_KEY0": { "$ref": "#/$defs/field" },
+        "BLOCK_KEY1": { "$ref": "#/$defs/field" },
+        "BLOCK_KEY2": { "$ref": "#/$defs/field" },
+        "BLOCK_KEY3": { "$ref": "#/$defs/field" },
+        "BLOCK_KEY4": { "$ref": "#/$defs/field" },
+        "BLOCK_KEY5": { "$ref": "#/$defs/field" }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "official_summary_sha256", "selected_fields_sha256", "fields"],
+      "properties": {
+        "name": {
+          "enum": [
+            "BLANK",
+            "SECRETS_LOCKED",
+            "DIGESTS_LOCKED",
+            "RD_DIS_LOCKED",
+            "SECURITY_POLICY_PRE_DOWNLOAD_LOCK",
+            "FINAL_SECURE_DOWNLOAD_LOCKED"
+          ]
+        },
+        "official_summary_sha256": { "$ref": "#/$defs/sha256" },
+        "selected_fields_sha256": { "$ref": "#/$defs/sha256" },
+        "fields": { "$ref": "#/$defs/fields" }
+      }
+    }
+  }
+}

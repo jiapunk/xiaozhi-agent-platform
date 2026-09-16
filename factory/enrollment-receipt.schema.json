@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/factory-enrollment-receipt-v4.schema.json",
+  "title": "ESP Agent factory enrollment receipt v4",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version", "receipt_id", "device_id", "serial_number", "chip",
+    "product_identity", "station", "identity_key", "secure_storage", "boot_security", "onboarding",
+    "registry", "firmware", "tests", "started_at", "finished_at",
+    "result", "signature_algorithm", "receipt_signature_b64url"
+  ],
+  "properties": {
+    "version": { "const": 4 },
+    "receipt_id": { "$ref": "#/$defs/longIdentifier" },
+    "device_id": { "type": "string", "pattern": "^xz-[0-9a-f]{12}$" },
+    "serial_number": { "$ref": "#/$defs/identifier" },
+    "chip": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "base_mac", "softap_mac", "revision"],
+      "properties": {
+        "model": { "const": "ESP32-S3" },
+        "base_mac": { "$ref": "#/$defs/mac" },
+        "softap_mac": { "$ref": "#/$defs/mac" },
+        "revision": { "type": "integer", "minimum": 0, "maximum": 999 }
+      }
+    },
+    "product_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sku", "board", "hardware_revision", "chip_revision", "base_mac",
+        "manifest_schema", "manifest_id", "factory_record_version",
+        "manifest_sha256", "manifest_size", "nvs_namespace", "nvs_key",
+        "authentication_domain", "identity_hmac_key_slot",
+        "runtime_verification_pass"
+      ],
+      "properties": {
+        "sku": { "const": "VOICE_AGENT_KIT_BOX3" },
+        "board": { "const": "esp32s3-box3" },
+        "hardware_revision": { "const": 1 },
+        "chip_revision": { "type": "integer", "minimum": 0, "maximum": 999 },
+        "base_mac": { "$ref": "#/$defs/mac" },
+        "manifest_schema": { "const": 1 },
+        "manifest_id": { "$ref": "#/$defs/manifestId" },
+        "factory_record_version": { "type": "integer", "minimum": 1, "maximum": 4294967295 },
+        "manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "manifest_size": { "const": 70 },
+        "nvs_namespace": { "const": "prod_sku" },
+        "nvs_key": { "const": "manifest" },
+        "authentication_domain": { "const": "XIAOZHI-PRODUCT-SKU-MANIFEST-V1" },
+        "identity_hmac_key_slot": { "const": 5 },
+        "runtime_verification_pass": { "const": true }
+      }
+    },
+    "station": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "operators", "espefuse_version", "fixture_version", "signing_key_id"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "operators": {
+          "type": "array", "minItems": 2, "maxItems": 4,
+          "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" }
+        },
+        "espefuse_version": { "$ref": "#/$defs/identifier" },
+        "fixture_version": { "$ref": "#/$defs/identifier" },
+        "signing_key_id": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "identity_key": { "$ref": "#/$defs/protectedHmacKey" },
+    "secure_storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key", "credential_partition", "encryption_scheme",
+        "factory_partition", "factory_material_public_only"
+      ],
+      "properties": {
+        "key": { "$ref": "#/$defs/protectedHmacKey" },
+        "credential_partition": { "const": "nvs" },
+        "encryption_scheme": { "const": "HMAC_XTS_AES" },
+        "factory_partition": { "const": "nvs_factory" },
+        "factory_material_public_only": { "const": true }
+      }
+    },
+    "boot_security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "secure_boot_scheme", "secure_boot_digests",
+        "flash_encryption_key", "secure_download_mode", "jtag_disabled",
+        "read_protect_lock_closed", "anti_rollback_efuse_version",
+        "signing_request_sha256", "signed_artifact_verification_sha256",
+        "encrypted_flash_manifest_sha256", "efuse_summary_sha256"
+      ],
+      "properties": {
+        "secure_boot_scheme": { "const": "RSA-3072" },
+        "secure_boot_digests": {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/secureBootDigest" }
+        },
+        "flash_encryption_key": { "$ref": "#/$defs/flashEncryptionKey" },
+        "secure_download_mode": { "const": true },
+        "jtag_disabled": { "const": true },
+        "read_protect_lock_closed": { "const": true },
+        "anti_rollback_efuse_version": {
+          "type": "integer", "minimum": 1, "maximum": 16
+        },
+        "signing_request_sha256": { "$ref": "#/$defs/sha256" },
+        "signed_artifact_verification_sha256": { "$ref": "#/$defs/sha256" },
+        "encrypted_flash_manifest_sha256": { "$ref": "#/$defs/sha256" },
+        "efuse_summary_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "onboarding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "material_sha256", "nvs_factory_readback_sha256",
+        "label_issue_id", "security2_transaction_pass"
+      ],
+      "properties": {
+        "material_sha256": { "$ref": "#/$defs/sha256" },
+        "nvs_factory_readback_sha256": { "$ref": "#/$defs/sha256" },
+        "label_issue_id": { "$ref": "#/$defs/longIdentifier" },
+        "security2_transaction_pass": { "const": true }
+      }
+    },
+    "registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_version", "committed", "sku", "board", "hardware_revision",
+        "factory_manifest_sha256"
+      ],
+      "properties": {
+        "record_version": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+        "committed": { "const": true },
+        "sku": { "const": "VOICE_AGENT_KIT_BOX3" },
+        "board": { "const": "esp32s3-box3" },
+        "hardware_revision": { "const": 1 },
+        "factory_manifest_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "firmware": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "secure_boot_v2", "flash_encryption_release_mode", "security_version"],
+      "properties": {
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "secure_boot_v2": { "const": true },
+        "flash_encryption_release_mode": { "const": true },
+        "security_version": { "type": "integer", "minimum": 1, "maximum": 16 }
+      }
+    },
+    "tests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "efuse_summary_pass", "identity_hmac_challenge_pass",
+        "storage_hmac_challenge_pass", "encrypted_nvs_roundtrip_pass",
+        "onboarding_button_gesture_pass", "factory_sku_identity_pass", "session_issuance_pass",
+        "wss_upgrade_pass", "signed_bootloader_verification_pass",
+        "signed_app_verification_pass", "flash_encryption_roundtrip_pass",
+        "anti_rollback_rejection_pass", "secure_download_mode_pass"
+      ],
+      "properties": {
+        "efuse_summary_pass": { "const": true },
+        "identity_hmac_challenge_pass": { "const": true },
+        "storage_hmac_challenge_pass": { "const": true },
+        "encrypted_nvs_roundtrip_pass": { "const": true },
+        "onboarding_button_gesture_pass": { "const": true },
+        "factory_sku_identity_pass": { "const": true },
+        "session_issuance_pass": { "const": true },
+        "wss_upgrade_pass": { "const": true },
+        "signed_bootloader_verification_pass": { "const": true },
+        "signed_app_verification_pass": { "const": true },
+        "flash_encryption_roundtrip_pass": { "const": true },
+        "anti_rollback_rejection_pass": { "const": true },
+        "secure_download_mode_pass": { "const": true }
+      }
+    },
+    "started_at": { "$ref": "#/$defs/timestamp" },
+    "finished_at": { "$ref": "#/$defs/timestamp" },
+    "result": { "const": "PASS" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "receipt_signature_b64url": { "$ref": "#/$defs/base64url64" }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9:_.-]{1,64}$" },
+    "longIdentifier": { "type": "string", "pattern": "^[A-Za-z0-9:_.-]{1,128}$" },
+    "mac": { "type": "string", "pattern": "^(?:[0-9A-F]{2}:){5}[0-9A-F]{2}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "manifestId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+    "timestamp": {
+      "type": "string", "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "base64url32": { "type": "string", "pattern": "^[A-Za-z0-9_-]{43}$" },
+    "base64url64": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" },
+    "secureBootDigest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot", "purpose", "key_id", "digest_sha256", "read_protected",
+        "write_protected", "purpose_write_protected"
+      ],
+      "properties": {
+        "slot": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "purpose": {
+          "enum": [
+            "SECURE_BOOT_DIGEST0", "SECURE_BOOT_DIGEST1",
+            "SECURE_BOOT_DIGEST2"
+          ]
+        },
+        "key_id": { "$ref": "#/$defs/identifier" },
+        "digest_sha256": { "$ref": "#/$defs/sha256" },
+        "read_protected": { "const": false },
+        "write_protected": { "const": true },
+        "purpose_write_protected": { "const": true }
+      }
+    },
+    "flashEncryptionKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot", "purpose", "read_protected", "write_protected",
+        "purpose_write_protected"
+      ],
+      "properties": {
+        "slot": { "const": 3 },
+        "purpose": { "const": "XTS_AES_128_KEY" },
+        "read_protected": { "const": true },
+        "write_protected": { "const": true },
+        "purpose_write_protected": { "const": true }
+      }
+    },
+    "protectedHmacKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot", "purpose", "read_protected", "write_protected",
+        "purpose_write_protected", "confirmation_b64url"
+      ],
+      "properties": {
+        "slot": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "purpose": { "const": "HMAC_UP" },
+        "read_protected": { "const": true },
+        "write_protected": { "const": true },
+        "purpose_write_protected": { "const": true },
+        "confirmation_b64url": { "$ref": "#/$defs/base64url32" }
+      }
+    }
+  }
+}

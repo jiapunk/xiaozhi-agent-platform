@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/mtls-dispatch-observation-v1.json",
+  "title": "M71 mTLS dispatch observation",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "#/$defs/identifier" },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "deployment_id": { "$ref": "#/$defs/identifier" },
+    "oci_release_id": { "$ref": "#/$defs/identifier" },
+    "services": { "$ref": "#/$defs/services" },
+    "endpoint_authority_sha256": { "$ref": "#/$defs/sha256" },
+    "config_sha256": { "$ref": "#/$defs/sha256" },
+    "qualification_tool_sha256": { "$ref": "#/$defs/sha256" },
+    "kubernetes_deployment_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "kubernetes_admission_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "controlplane_pod_binding_sha256": { "$ref": "#/$defs/sha256" },
+    "current_client_certificate_sha256": { "$ref": "#/$defs/sha256" },
+    "next_client_certificate_sha256": { "$ref": "#/$defs/sha256" },
+    "revoked_client_certificate_sha256": { "$ref": "#/$defs/sha256" },
+    "server_leaf_certificate_sha256": { "$ref": "#/$defs/sha256" },
+    "tls_version": { "const": "TLS1.3" },
+    "negotiated_protocol": { "const": "h2" },
+    "wake_contract": { "const": "xz-private-wake-dispatch-v1" },
+    "current_credential_accepted": { "const": true },
+    "next_credential_accepted": { "const": true },
+    "anonymous_client_rejected": { "const": true },
+    "revoked_client_rejected": { "const": true },
+    "wrong_server_name_rejected": { "const": true },
+    "current_latency_ms": { "type": "integer", "minimum": 0, "maximum": 15000 },
+    "next_latency_ms": { "type": "integer", "minimum": 0, "maximum": 15000 },
+    "started_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": "string", "format": "date-time" },
+    "secret_free": { "const": true }
+  },
+  "required": [
+    "schema", "qualification_id", "environment", "development_only",
+    "deployment_id", "oci_release_id", "services",
+    "endpoint_authority_sha256", "config_sha256", "qualification_tool_sha256",
+    "kubernetes_deployment_receipt_sha256", "kubernetes_admission_receipt_sha256",
+    "controlplane_pod_binding_sha256", "current_client_certificate_sha256",
+    "next_client_certificate_sha256", "revoked_client_certificate_sha256",
+    "server_leaf_certificate_sha256", "tls_version", "negotiated_protocol",
+    "wake_contract", "current_credential_accepted", "next_credential_accepted",
+    "anonymous_client_rejected", "revoked_client_rejected",
+    "wrong_server_name_rejected", "current_latency_ms", "next_latency_ms",
+    "started_at", "finished_at", "secret_free"
+  ],
+  "allOf": [
+    {
+      "if": { "properties": { "development_only": { "const": true } }, "required": ["development_only"] },
+      "then": { "properties": { "environment": { "const": "staging" } } }
+    }
+  ],
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "services": {
+      "type": "array",
+      "prefixItems": [
+        { "const": "gateway" },
+        { "const": "controlplane" },
+        { "const": "agentproxy" },
+        { "const": "firmwareorigin" },
+        { "const": "generationcoordinator" },
+        { "const": "accountauthorization" },
+        { "const": "factorytimeauthority" }
+      ],
+      "items": false,
+      "minItems": 7,
+      "maxItems": 7
+    }
+  }
+}

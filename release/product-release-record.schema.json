@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/product-release-record-v2.json",
+  "title": "XiaoZhi Agent product market-release record v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_type",
+    "record_id",
+    "policy_sha256",
+    "release_sequence",
+    "previous_record_sha256",
+    "subject",
+    "issued_at",
+    "valid_until",
+    "evidence",
+    "backend_slo",
+    "result",
+    "signing_key_id",
+    "signature_algorithm",
+    "signature_b64url"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "record_type": {"const": "PRODUCT_MARKET_RELEASE"},
+    "record_id": {"$ref": "product-release-policy.schema.json#/$defs/identifier"},
+    "policy_sha256": {"$ref": "product-release-policy.schema.json#/$defs/sha256"},
+    "release_sequence": {"type": "integer", "minimum": 1, "maximum": 2147483647},
+    "previous_record_sha256": {"$ref": "product-release-policy.schema.json#/$defs/sha256"},
+    "subject": {"$ref": "product-release-policy.schema.json#/$defs/subject"},
+    "issued_at": {"$ref": "product-release-policy.schema.json#/$defs/timestamp"},
+    "valid_until": {"$ref": "product-release-policy.schema.json#/$defs/timestamp"},
+    "evidence": {
+      "type": "array",
+      "minItems": 15,
+      "maxItems": 15,
+      "items": {"$ref": "#/$defs/evidenceSummary"}
+    },
+    "backend_slo": {"$ref": "#/$defs/backendSLOSummary"},
+    "result": {"const": "MARKET_RELEASE_PASS"},
+    "signing_key_id": {"$ref": "product-release-policy.schema.json#/$defs/identifier"},
+    "signature_algorithm": {"const": "Ed25519"},
+    "signature_b64url": {"type": "string", "pattern": "^[A-Za-z0-9_-]{86}$"}
+  },
+  "$defs": {
+    "backendSLOSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observation_id", "observation_sha256", "policy_sha256", "collector_id", "window_start", "window_end", "generated_at", "authority_key_id", "authority_public_key_sha256"],
+      "properties": {
+        "observation_id": {"$ref": "product-release-policy.schema.json#/$defs/identifier"},
+        "observation_sha256": {"$ref": "product-release-policy.schema.json#/$defs/sha256"},
+        "policy_sha256": {"$ref": "product-release-policy.schema.json#/$defs/sha256"},
+        "collector_id": {"$ref": "product-release-policy.schema.json#/$defs/identifier"},
+        "window_start": {"$ref": "product-release-policy.schema.json#/$defs/timestamp"},
+        "window_end": {"$ref": "product-release-policy.schema.json#/$defs/timestamp"},
+        "generated_at": {"$ref": "product-release-policy.schema.json#/$defs/timestamp"},
+        "authority_key_id": {"$ref": "product-release-policy.schema.json#/$defs/identifier"},
+        "authority_public_key_sha256": {"$ref": "product-release-policy.schema.json#/$defs/sha256"}
+      }
+    },
+    "evidenceSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_type",
+        "evidence_id",
+        "attestation_sha256",
+        "evidence_uri",
+        "evidence_sha256",
+        "region",
+        "observed_at",
+        "valid_until",
+        "authority_key_id",
+        "authority_public_key_sha256"
+      ],
+      "properties": {
+        "evidence_type": {"$ref": "product-release-policy.schema.json#/$defs/evidenceType"},
+        "evidence_id": {"$ref": "product-release-policy.schema.json#/$defs/identifier"},
+        "attestation_sha256": {"$ref": "product-release-policy.schema.json#/$defs/sha256"},
+        "evidence_uri": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "evidence_sha256": {"$ref": "product-release-policy.schema.json#/$defs/sha256"},
+        "region": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,31}$"},
+        "observed_at": {"$ref": "product-release-policy.schema.json#/$defs/timestamp"},
+        "valid_until": {"$ref": "product-release-policy.schema.json#/$defs/timestamp"},
+        "authority_key_id": {"$ref": "product-release-policy.schema.json#/$defs/identifier"},
+        "authority_public_key_sha256": {"$ref": "product-release-policy.schema.json#/$defs/sha256"}
+      }
+    }
+  }
+}

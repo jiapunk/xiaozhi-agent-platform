@@ -1,0 +1,124 @@
+{
+  "$id": "https://xiaozhi-agent.local/schemas/app-delivery-qualification-receipt-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": { "development_only": { "const": true } },
+        "required": ["development_only"]
+      },
+      "then": {
+        "properties": {
+          "app_attestation_result": { "const": "FIXTURE_APP_ATTESTATION_PASS" },
+          "attestation_provider": { "const": "fixture" },
+          "environment": { "const": "staging" },
+          "provider_qualification_result": { "const": "FIXTURE_PROTOCOL_PASS" },
+          "result": { "const": "FIXTURE_APP_FLOW_PASS" },
+          "signed_artifact_verified": { "const": false },
+          "unresolved_production_gates": {
+            "maxItems": 4,
+            "minItems": 4,
+            "prefixItems": [
+              { "const": "end_to_end_mtls_dispatch" },
+              { "const": "managed_database_failover" },
+              { "const": "provider_credential_revocation" },
+              { "const": "signed_app_delivery_receipt" }
+            ]
+          },
+          "vendor_attestation_verified": { "const": false }
+        }
+      },
+      "else": {
+        "properties": {
+          "app_attestation_result": { "const": "LIVE_APP_ATTESTATION_PASS" },
+          "attestation_provider": { "const": "apple-app-attest" },
+          "provider_qualification_result": { "const": "LIVE_PROVIDER_API_PASS" },
+          "result": { "const": "LIVE_SIGNED_APP_FLOW_PASS" },
+          "signed_artifact_verified": { "const": true },
+          "unresolved_production_gates": {
+            "maxItems": 3,
+            "minItems": 3,
+            "prefixItems": [
+              { "const": "end_to_end_mtls_dispatch" },
+              { "const": "managed_database_failover" },
+              { "const": "provider_credential_revocation" }
+            ]
+          },
+          "vendor_attestation_verified": { "const": true }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "#/$defs/identifier64" },
+    "result": { "enum": ["FIXTURE_APP_FLOW_PASS", "LIVE_SIGNED_APP_FLOW_PASS"] },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "platform": { "const": "ios" },
+    "application_id": { "$ref": "#/$defs/identifier128" },
+    "app_build_id": { "$ref": "#/$defs/identifier64" },
+    "app_binary_sha256": { "$ref": "#/$defs/sha256" },
+    "provider_qualification_result": { "enum": ["FIXTURE_PROTOCOL_PASS", "LIVE_PROVIDER_API_PASS"] },
+    "provider_qualification_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "app_observation_sha256": { "$ref": "#/$defs/sha256" },
+    "app_attestation_result": { "enum": ["FIXTURE_APP_ATTESTATION_PASS", "LIVE_APP_ATTESTATION_PASS"] },
+    "app_attestation_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "attestation_provider": { "enum": ["fixture", "apple-app-attest"] },
+    "vendor_evidence_sha256": { "$ref": "#/$defs/sha256" },
+    "attested_key_sha256": { "$ref": "#/$defs/sha256" },
+    "content_free_wake": { "const": true },
+    "background_network_request": { "const": false },
+    "background_wake_count": { "maximum": 8, "minimum": 1, "type": "integer" },
+    "wake_received_at_unix_ms": { "$ref": "#/$defs/unix_ms" },
+    "foreground_entered_at_unix_ms": { "$ref": "#/$defs/unix_ms" },
+    "authenticated_fetch_presented_at_unix_ms": { "$ref": "#/$defs/unix_ms" },
+    "wake_to_fetch_ms": { "maximum": 120000, "minimum": 0, "type": "integer" },
+    "challenge_binding_sha256": { "$ref": "#/$defs/sha256" },
+    "device_binding_sha256": { "$ref": "#/$defs/sha256" },
+    "decision_issued": { "const": false },
+    "signed_artifact_verified": { "type": "boolean" },
+    "vendor_attestation_verified": { "type": "boolean" },
+    "evaluated_at": { "$ref": "#/$defs/timestamp" },
+    "secret_free": { "const": true },
+    "production_ready": { "const": false },
+    "unresolved_production_gates": {
+      "items": {
+        "enum": [
+          "end_to_end_mtls_dispatch", "managed_database_failover",
+          "provider_credential_revocation", "signed_app_delivery_receipt"
+        ]
+      },
+      "maxItems": 4,
+      "minItems": 3,
+      "type": "array"
+    },
+    "signing_key_id": { "$ref": "#/$defs/identifier64" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "pattern": "^[A-Za-z0-9_-]{86}$", "type": "string" }
+  },
+  "required": [
+    "schema", "qualification_id", "result", "environment", "development_only",
+    "platform", "application_id", "app_build_id", "app_binary_sha256",
+    "provider_qualification_result", "provider_qualification_receipt_sha256",
+    "app_observation_sha256", "app_attestation_result",
+    "app_attestation_receipt_sha256", "attestation_provider",
+    "vendor_evidence_sha256", "attested_key_sha256", "content_free_wake",
+    "background_network_request", "background_wake_count",
+    "wake_received_at_unix_ms", "foreground_entered_at_unix_ms",
+    "authenticated_fetch_presented_at_unix_ms", "wake_to_fetch_ms",
+    "challenge_binding_sha256", "device_binding_sha256", "decision_issued",
+    "signed_artifact_verified", "vendor_attestation_verified", "evaluated_at",
+    "secret_free", "production_ready", "unresolved_production_gates",
+    "signing_key_id", "signature_algorithm", "signature_b64url"
+  ],
+  "type": "object",
+  "$defs": {
+    "identifier64": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+    "identifier128": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$", "type": "string" },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "timestamp": { "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$", "type": "string" },
+    "unix_ms": { "maximum": 253402300799999, "minimum": 1, "type": "integer" }
+  }
+}

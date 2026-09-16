@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/companion-app-supply-chain-policy-v1.json",
+  "title": "XiaoZhi Companion App source supply-chain policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_id",
+    "release_id",
+    "package_name",
+    "package_version",
+    "source_date_epoch",
+    "platforms",
+    "production_targets",
+    "source_paths",
+    "package_resolved_sha256",
+    "upstream_lock_sha256",
+    "privacy_manifest_path",
+    "privacy_manifest_sha256",
+    "dependencies",
+    "tool_sha256",
+    "signing_key_id",
+    "signing_public_key_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "policy_id": {"$ref": "#/$defs/identifier"},
+    "release_id": {"$ref": "#/$defs/identifier"},
+    "package_name": {"$ref": "#/$defs/identifier"},
+    "package_version": {"type": "string", "pattern": "^[0-9][A-Za-z0-9._+-]{0,63}$"},
+    "source_date_epoch": {"type": "integer", "minimum": 1577836800, "maximum": 4102444800},
+    "platforms": {"const": ["ios15", "macos13"]},
+    "production_targets": {"const": ["ProductActionConsentUI", "ProductOnboardingCore", "ProductOnboardingESPProvision"]},
+    "source_paths": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^(?:Package\\.swift|Package\\.resolved|upstream-lock\\.json|Sources/[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*\\.(?:swift|xcprivacy))$"}
+    },
+    "package_resolved_sha256": {"$ref": "#/$defs/sha256"},
+    "upstream_lock_sha256": {"$ref": "#/$defs/sha256"},
+    "privacy_manifest_path": {"type": "string", "pattern": "^Sources/.+/PrivacyInfo\\.xcprivacy$"},
+    "privacy_manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "dependencies": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/dependency"}
+    },
+    "tool_sha256": {"$ref": "#/$defs/sha256"},
+    "signing_key_id": {"$ref": "#/$defs/identifier"},
+    "signing_public_key_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity", "url", "version", "revision", "role", "license", "license_sha256", "checkout_path", "license_path", "bundle_path"],
+      "properties": {
+        "identity": {"enum": ["esp-idf-provisioning-ios", "swift-protobuf"]},
+        "url": {"type": "string", "pattern": "^https://github\\.com/.+\\.git$"},
+        "version": {"type": "string", "pattern": "^[0-9][A-Za-z0-9._+-]{0,63}$"},
+        "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "role": {"$ref": "#/$defs/identifier"},
+        "license": {"const": "Apache-2.0"},
+        "license_sha256": {"$ref": "#/$defs/sha256"},
+        "checkout_path": {"type": "string", "pattern": "^\\.build/checkouts/[a-z0-9-]+$"},
+        "license_path": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+        "bundle_path": {"type": "string", "pattern": "^licenses/[A-Za-z0-9_.-]+\\.txt$"}
+      }
+    }
+  }
+}

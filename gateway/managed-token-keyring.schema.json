@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/managed-token-keyring-v1.json",
+  "title": "Managed HMAC Token Keyring",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "revision",
+    "active_key_id",
+    "legacy_unkeyed_key_id",
+    "legacy_unkeyed_verify_until_unix",
+    "keys"
+  ],
+  "properties": {
+    "schema": { "const": "xz-hmac-token-keyring-v1" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "active_key_id": { "$ref": "#/$defs/keyId" },
+    "legacy_unkeyed_key_id": {
+      "oneOf": [
+        { "const": "" },
+        { "$ref": "#/$defs/keyId" }
+      ]
+    },
+    "legacy_unkeyed_verify_until_unix": {
+      "type": "integer",
+      "minimum": 0,
+      "exclusiveMaximum": 4102444800
+    },
+    "keys": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/key" }
+    }
+  },
+  "$defs": {
+    "keyId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9:_.-]*$"
+    },
+    "key": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key_id",
+        "hmac_key_b64url",
+        "state",
+        "issue_before_unix",
+        "verify_until_unix"
+      ],
+      "properties": {
+        "key_id": { "$ref": "#/$defs/keyId" },
+        "hmac_key_b64url": {
+          "type": "string",
+          "minLength": 43,
+          "maxLength": 171,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "state": { "enum": ["active", "retiring"] },
+        "issue_before_unix": {
+          "type": "integer",
+          "minimum": 0,
+          "exclusiveMaximum": 4102444800
+        },
+        "verify_until_unix": {
+          "type": "integer",
+          "minimum": 1577836800,
+          "exclusiveMaximum": 4102444800
+        }
+      }
+    }
+  }
+}

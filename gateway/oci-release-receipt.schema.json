@@ -1,0 +1,62 @@
+{
+  "$id": "https://xiaozhi-agent.local/schemas/oci-release-receipt-v3.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "ca_bundle_sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "go_executable_sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "go_version": { "const": "go1.26.5" },
+    "release_id": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+    "schema": { "const": 3 },
+    "services": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "image_index_digest": { "pattern": "^sha256:[0-9a-f]{64}$", "type": "string" },
+          "image_index_size": { "minimum": 1, "type": "integer" },
+          "name": {
+            "enum": ["gateway", "controlplane", "agentproxy", "firmwareorigin", "generationcoordinator", "accountauthorization", "factorytimeauthority"]
+          },
+          "oci_index_sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+          "oci_index_size": { "minimum": 1, "type": "integer" },
+          "platforms": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "architecture": { "enum": ["amd64", "arm64"] },
+                "binary_sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+                "binary_size": { "minimum": 1, "type": "integer" },
+                "image_manifest_digest": { "pattern": "^sha256:[0-9a-f]{64}$", "type": "string" },
+                "image_manifest_size": { "minimum": 1, "type": "integer" }
+              },
+              "required": ["architecture", "binary_sha256", "binary_size", "image_manifest_digest", "image_manifest_size"],
+              "type": "object"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "provenance_manifest_digest": { "pattern": "^sha256:[0-9a-f]{64}$", "type": "string" },
+          "provenance_manifest_size": { "minimum": 1, "type": "integer" },
+          "sbom_manifest_digest": { "pattern": "^sha256:[0-9a-f]{64}$", "type": "string" },
+          "sbom_manifest_size": { "minimum": 1, "type": "integer" }
+        },
+        "required": ["name", "oci_index_sha256", "oci_index_size", "image_index_digest", "image_index_size", "sbom_manifest_digest", "sbom_manifest_size", "provenance_manifest_digest", "provenance_manifest_size", "platforms"],
+        "type": "object"
+      },
+      "maxItems": 7,
+      "minItems": 7,
+      "uniqueItems": true,
+      "type": "array"
+    },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "pattern": "^[A-Za-z0-9_-]{86}$", "type": "string" },
+    "signing_key_id": { "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$", "type": "string" },
+    "source_date_epoch": { "maximum": 4102444800, "minimum": 946684800, "type": "integer" },
+    "source_inputs_sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "version": { "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$", "type": "string" }
+  },
+  "required": ["schema", "release_id", "version", "source_date_epoch", "source_inputs_sha256", "ca_bundle_sha256", "go_executable_sha256", "go_version", "signing_key_id", "signature_algorithm", "signature_b64url", "services"],
+  "title": "XiaoZhi Agent OCI release receipt v3",
+  "type": "object"
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/managed-database-failover-observation-v1.json",
+  "title": "M73 managed PostgreSQL failover observation",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "run_binding_sha256": { "$ref": "#/$defs/sha256" },
+    "config_sha256": { "$ref": "#/$defs/sha256" },
+    "qualification_tool_sha256": { "$ref": "#/$defs/sha256" },
+    "ready_signal_sha256": { "$ref": "#/$defs/sha256" },
+    "roles": { "$ref": "#/$defs/roles" },
+    "databases": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/$defs/database" } },
+    "ready_at": { "$ref": "#/$defs/timestamp" },
+    "started_at": { "$ref": "#/$defs/timestamp" },
+    "finished_at": { "$ref": "#/$defs/timestamp" },
+    "secret_free": { "const": true }
+  },
+  "required": ["schema", "qualification_id", "environment", "development_only", "run_binding_sha256", "config_sha256", "qualification_tool_sha256", "ready_signal_sha256", "roles", "databases", "ready_at", "started_at", "finished_at", "secret_free"],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "timestamp": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$" },
+    "role": { "enum": ["ownership", "accountauthorization", "factorytimeauthority"] },
+    "roles": { "const": ["ownership", "accountauthorization", "factorytimeauthority"] },
+    "database": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "role": { "$ref": "#/$defs/role" },
+        "managed_cluster_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier128" },
+        "endpoint_authority_sha256": { "$ref": "#/$defs/sha256" },
+        "before_node_binding_sha256": { "$ref": "#/$defs/sha256" },
+        "after_node_binding_sha256": { "$ref": "#/$defs/sha256" },
+        "before_postgres_version": { "type": "integer", "minimum": 140000 },
+        "after_postgres_version": { "type": "integer", "minimum": 140000 },
+        "product_schemas_verified": { "const": true },
+        "failover_observed": { "const": true },
+        "all_acknowledged_events_durable": { "const": true },
+        "restore_marker_sequence": { "const": 2 },
+        "restore_marker_committed_at": { "$ref": "#/$defs/timestamp" },
+        "restore_exclusion_sequence": { "const": 3 },
+        "restore_exclusion_committed_at": { "$ref": "#/$defs/timestamp" },
+        "post_failover_sequence": { "type": "integer", "minimum": 4, "maximum": 100000 },
+        "post_failover_committed_at": { "$ref": "#/$defs/timestamp" },
+        "acknowledged_event_count": { "type": "integer", "minimum": 5, "maximum": 100000 },
+        "ambiguous_commit_recovered_count": { "type": "integer", "minimum": 0, "maximum": 100000 },
+        "availability_failure_count": { "type": "integer", "minimum": 0, "maximum": 100000 },
+        "failover_detection_ms": { "type": "integer", "minimum": 0, "maximum": 1200000 },
+        "maximum_unavailable_ms": { "type": "integer", "minimum": 0, "maximum": 1200000 }
+      },
+      "required": ["role", "managed_cluster_id", "endpoint_authority_sha256", "before_node_binding_sha256", "after_node_binding_sha256", "before_postgres_version", "after_postgres_version", "product_schemas_verified", "failover_observed", "all_acknowledged_events_durable", "restore_marker_sequence", "restore_marker_committed_at", "restore_exclusion_sequence", "restore_exclusion_committed_at", "post_failover_sequence", "post_failover_committed_at", "acknowledged_event_count", "ambiguous_commit_recovered_count", "availability_failure_count", "failover_detection_ms", "maximum_unavailable_ms"]
+    }
+  }
+}

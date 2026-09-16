@@ -1,0 +1,13 @@
+# ESP32-S3-BOX-3 production-security layout: 16 MiB flash, Secure Boot V2,
+# rollback-capable A/B OTA. The 0x10000 partition-table offset leaves room for
+# the secure-padded bootloader; both app offsets and sizes are 64 KiB aligned.
+# Name,       Type, SubType,  Offset,    Size,       Flags
+nvs_factory,  data, nvs,      0x11000,   0x6000,
+nvs,          data, nvs,      ,         0xA000,
+otadata,      data, ota,      ,         0x2000,     encrypted
+phy_init,     data, phy,      ,         0x1000,     encrypted
+coredump,     data, coredump, ,         0x13000,    encrypted
+ota_0,        app,  ota_0,    0x40000,   0x580000,
+ota_1,        app,  ota_1,    ,         0x580000,
+system,       data, fat,      ,         0x200000,   encrypted
+data,         data, fat,      ,         0x2C0000,   encrypted

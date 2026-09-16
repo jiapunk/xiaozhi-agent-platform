@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/ota-rollout-receipt-v2.schema.json",
+  "title": "XiaoZhi Agent approved OTA rollout receipt v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "generation_id", "generation_sequence",
+    "parent_generation_id", "parent_generation_sequence",
+    "parent_receipt_sha256", "promotion_action",
+    "approval_keyring_sha256", "rollout_request_sha256",
+    "approval_evidence", "promoted_at", "release_id", "signing_key_id",
+    "project", "board", "channel", "version", "release_sequence",
+    "secure_version", "image_authority", "image_url_path", "image_size",
+    "image_sha256", "manifest_sha256", "public_key_sha256",
+    "sdkconfig_sha256", "control_registry_sha256", "origin_catalog_sha256",
+    "rollout_enabled", "rollout_basis_points", "retry_after_seconds"
+  ],
+  "properties": {
+    "schema": { "const": 2 },
+    "generation_id": { "$ref": "#/$defs/identifier64" },
+    "generation_sequence": {
+      "type": "integer", "minimum": 1, "maximum": 2147483647
+    },
+    "parent_generation_id": { "$ref": "#/$defs/identifier64" },
+    "parent_generation_sequence": {
+      "type": "integer", "minimum": 0, "maximum": 2147483646
+    },
+    "parent_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "promotion_action": {
+      "enum": ["EXPAND", "EMERGENCY_STOP", "RESUME"]
+    },
+    "approval_keyring_sha256": { "$ref": "#/$defs/sha256" },
+    "rollout_request_sha256": { "$ref": "#/$defs/sha256" },
+    "approval_evidence": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["approver_id", "approval_key_id", "approval_sha256"],
+        "properties": {
+          "approver_id": { "$ref": "#/$defs/identifier64" },
+          "approval_key_id": { "$ref": "#/$defs/identifier64" },
+          "approval_sha256": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    "promoted_at": {
+      "type": "integer", "minimum": 1609459200, "maximum": 4102444800
+    },
+    "release_id": { "$ref": "#/$defs/identifier64" },
+    "signing_key_id": { "$ref": "#/$defs/identifier64" },
+    "project": { "$ref": "#/$defs/identifier32" },
+    "board": { "$ref": "#/$defs/identifier32" },
+    "channel": { "$ref": "#/$defs/identifier32" },
+    "version": {
+      "type": "string", "minLength": 1, "maxLength": 32,
+      "pattern": "^[A-Za-z0-9._+-]+$"
+    },
+    "release_sequence": {
+      "type": "integer", "minimum": 1, "maximum": 2147483647
+    },
+    "secure_version": {
+      "type": "integer", "minimum": 0, "maximum": 4294967295
+    },
+    "image_authority": {
+      "type": "string", "minLength": 1, "maxLength": 253,
+      "pattern": "^[a-z0-9.-]+(?::[1-9][0-9]{0,4})?$"
+    },
+    "image_url_path": {
+      "type": "string", "minLength": 2, "maxLength": 512,
+      "pattern": "^/[A-Za-z0-9/_.-]+\\.bin$"
+    },
+    "image_size": {
+      "type": "integer", "minimum": 1024, "maximum": 2147483647
+    },
+    "image_sha256": { "$ref": "#/$defs/sha256" },
+    "manifest_sha256": { "$ref": "#/$defs/sha256" },
+    "public_key_sha256": { "$ref": "#/$defs/sha256" },
+    "sdkconfig_sha256": { "$ref": "#/$defs/sha256" },
+    "control_registry_sha256": { "$ref": "#/$defs/sha256" },
+    "origin_catalog_sha256": { "$ref": "#/$defs/sha256" },
+    "rollout_enabled": { "type": "boolean" },
+    "rollout_basis_points": {
+      "type": "integer", "minimum": 0, "maximum": 10000
+    },
+    "retry_after_seconds": {
+      "type": "integer", "minimum": 60, "maximum": 86400
+    }
+  },
+  "$defs": {
+    "identifier64": {
+      "type": "string", "minLength": 1, "maxLength": 64,
+      "pattern": "^[A-Za-z0-9:_.-]+$"
+    },
+    "identifier32": {
+      "type": "string", "minLength": 1, "maxLength": 32,
+      "pattern": "^[A-Za-z0-9:_.-]+$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

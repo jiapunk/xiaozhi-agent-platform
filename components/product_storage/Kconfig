@@ -1,0 +1,25 @@
+menu "Product secure storage"
+
+    config PRODUCT_STORAGE_REQUIRE_HMAC_NVS_ENCRYPTION
+        bool "Require factory-provisioned HMAC NVS encryption"
+        depends on SOC_HMAC_SUPPORTED
+        default n
+        help
+            Encrypt the product credential NVS partition with XTS-AES keys
+            derived from an already-provisioned HMAC_UP eFuse key. The normal
+            firmware never generates or burns the key and fails closed if the
+            key or its read/write/purpose protections are missing. Keep this
+            disabled for development builds without provisioned eFuse.
+
+    config PRODUCT_STORAGE_NVS_HMAC_KEY_ID
+        int "Dedicated NVS HMAC eFuse key ID"
+        depends on PRODUCT_STORAGE_REQUIRE_HMAC_NVS_ENCRYPTION
+        range 0 5
+        default 4
+        help
+            Dedicated HMAC key slot for product NVS encryption. It must not be
+            shared with the device identity, Secure Boot, Flash Encryption, or
+            any other purpose. The reference production profiles reserve key
+            ID 4 and use a different reviewed slot for device identity.
+
+endmenu

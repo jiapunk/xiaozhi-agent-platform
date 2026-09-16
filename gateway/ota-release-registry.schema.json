@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/ota-release-registry-v1.schema.json",
+  "title": "XiaoZhi Agent OTA release registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "signing_keys", "releases"],
+  "properties": {
+    "version": { "const": 1 },
+    "signing_keys": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key_id", "public_key_file"],
+        "properties": {
+          "key_id": { "$ref": "#/$defs/identifier" },
+          "public_key_file": { "$ref": "#/$defs/path" }
+        }
+      }
+    },
+    "releases": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "manifest_file", "enabled", "rollout_basis_points",
+          "retry_after_seconds"
+        ],
+        "properties": {
+          "manifest_file": { "$ref": "#/$defs/path" },
+          "enabled": { "type": "boolean" },
+          "rollout_basis_points": {
+            "type": "integer", "minimum": 0, "maximum": 10000
+          },
+          "retry_after_seconds": {
+            "type": "integer", "minimum": 60, "maximum": 86400
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string", "minLength": 1, "maxLength": 64,
+      "pattern": "^[A-Za-z0-9:_.-]+$"
+    },
+    "path": {
+      "type": "string", "minLength": 1, "maxLength": 4096,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*//)[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$"
+    }
+  }
+}

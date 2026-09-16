@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/generation-replica-registry-v1.schema.json",
+  "title": "XiaoZhi Agent generation replica registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "replicas"],
+  "properties": {
+    "version": { "const": 1 },
+    "replicas": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["replica_id", "role", "hmac_key_b64"],
+        "properties": {
+          "replica_id": { "$ref": "#/$defs/identifier" },
+          "role": { "enum": ["controlplane", "firmwareorigin"] },
+          "hmac_key_b64": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 171,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9:_.-]+$"
+    }
+  }
+}

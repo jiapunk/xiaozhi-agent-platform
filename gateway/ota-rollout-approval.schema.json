@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/ota-rollout-approval-v1.schema.json",
+  "title": "XiaoZhi Agent OTA rollout approval v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "request_sha256", "approver_id", "approval_key_id",
+    "decision", "signed_at", "signature_algorithm", "signature_b64url"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "request_sha256": { "$ref": "#/$defs/sha256" },
+    "approver_id": { "$ref": "#/$defs/identifier" },
+    "approval_key_id": { "$ref": "#/$defs/identifier" },
+    "decision": { "const": "APPROVE" },
+    "signed_at": {
+      "type": "integer", "minimum": 1609459200, "maximum": 4102444800
+    },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": {
+      "type": "string", "minLength": 86, "maxLength": 86,
+      "pattern": "^[A-Za-z0-9_-]{86}$"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string", "minLength": 1, "maxLength": 64,
+      "pattern": "^[A-Za-z0-9:_.-]+$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/managed-database-evidence-manifest-v1.json",
+  "title": "M73 public evidence and independent trust manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "environment": { "enum": ["staging", "production"] },
+    "deployment_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "oci_release_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "evaluation_time": { "$ref": "managed-database-failover-observation.schema.json#/$defs/timestamp" },
+    "expected_run_binding_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "expected_failover_config_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "expected_failover_tool_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "expected_restore_config_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "expected_restore_tool_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "failover_observation_path": { "$ref": "#/$defs/path" },
+    "ready_signal_path": { "$ref": "#/$defs/path" },
+    "restore_observation_path": { "$ref": "#/$defs/path" },
+    "database_attestation_path": { "$ref": "#/$defs/path" },
+    "database_attestation_public_key_path": { "$ref": "#/$defs/path" },
+    "expected_database_attestation_key_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "expected_database_attestation_provider": { "enum": ["fixture", "managed-postgresql-audit-authority"] },
+    "expected_provider_audit_evidence_sha256": { "$ref": "managed-database-failover-observation.schema.json#/$defs/sha256" },
+    "provider_revocation_receipt_path": { "$ref": "#/$defs/path" },
+    "provider_revocation_public_key_path": { "$ref": "#/$defs/path" },
+    "expected_provider_revocation_key_id": { "$ref": "managed-database-failover-config.schema.json#/$defs/identifier64" },
+    "provider_revocation_evidence_manifest_path": { "$ref": "#/$defs/path" }
+  },
+  "required": ["schema", "qualification_id", "environment", "deployment_id", "oci_release_id", "evaluation_time", "expected_run_binding_sha256", "expected_failover_config_sha256", "expected_failover_tool_sha256", "expected_restore_config_sha256", "expected_restore_tool_sha256", "failover_observation_path", "ready_signal_path", "restore_observation_path", "database_attestation_path", "database_attestation_public_key_path", "expected_database_attestation_key_id", "expected_database_attestation_provider", "expected_provider_audit_evidence_sha256", "provider_revocation_receipt_path", "provider_revocation_public_key_path", "expected_provider_revocation_key_id", "provider_revocation_evidence_manifest_path"],
+  "$defs": {
+    "path": { "type": "string", "pattern": "^/", "maxLength": 4096 }
+  }
+}

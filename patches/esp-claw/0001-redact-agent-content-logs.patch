@@ -1,0 +1,145 @@
+diff --git a/components/claw_modules/claw_core/src/claw_core_context.c b/components/claw_modules/claw_core/src/claw_core_context.c
+index 78d9415..b293373 100644
+--- a/components/claw_modules/claw_core/src/claw_core_context.c
++++ b/components/claw_modules/claw_core/src/claw_core_context.c
+@@ -230,11 +230,9 @@ void claw_core_finish_from_plain_text(uint32_t request_id,
+     free(response->error_message);
+     response->error_message = NULL;
+ 
+-    ESP_LOGI(TAG, "completion request=%" PRIu32 " status=done raw=%.*s%s",
+-             request_id,
+-             claw_core_log_snippet_len(text),
+-             claw_core_log_snippet(text),
+-             claw_core_log_snippet_suffix(text));
++    ESP_LOGI(TAG,
++             "completion request=%" PRIu32 " status=done text_len=%u",
++             request_id, (unsigned)strlen(text));
+ }
+ 
+ esp_err_t claw_core_append_tool_results_messages(claw_core_state_t *core,
+@@ -269,12 +267,13 @@ esp_err_t claw_core_append_tool_results_messages(claw_core_state_t *core,
+         cJSON *runtime_copy = NULL;
+         esp_err_t err;
+ 
+-        ESP_LOGI(TAG, "tool_call request=%" PRIu32 " name=%s args=%.*s%s",
++        ESP_LOGI(TAG,
++                 "tool_call request=%" PRIu32 " name=%s args_len=%u",
+                  request->request_id,
+                  response->tool_calls[i].name ? response->tool_calls[i].name : "(null)",
+-                 claw_core_log_snippet_len(response->tool_calls[i].arguments_json),
+-                 claw_core_log_snippet(response->tool_calls[i].arguments_json),
+-                 claw_core_log_snippet_suffix(response->tool_calls[i].arguments_json));
++                 (unsigned)strlen(response->tool_calls[i].arguments_json
++                                      ? response->tool_calls[i].arguments_json
++                                      : ""));
+ 
+         err = core->call_cap(response->tool_calls[i].name,
+                              response->tool_calls[i].arguments_json,
+@@ -289,13 +288,13 @@ esp_err_t claw_core_append_tool_results_messages(claw_core_state_t *core,
+             goto cleanup;
+         }
+ 
+-        ESP_LOGI(TAG, "tool_result request=%" PRIu32 " name=%s err=%s output=%.*s%s",
++        ESP_LOGI(TAG,
++                 "tool_result request=%" PRIu32
++                 " name=%s err=%s output_len=%u",
+                  request->request_id,
+                  response->tool_calls[i].name ? response->tool_calls[i].name : "(null)",
+                  esp_err_to_name(err),
+-                 claw_core_log_snippet_len(tool_output),
+-                 claw_core_log_snippet(tool_output),
+-                 claw_core_log_snippet_suffix(tool_output));
++                 (unsigned)strlen(tool_output));
+ 
+         if (tool_summary && tool_summary_size > 0 && response->tool_calls[i].name) {
+             esp_err_t summary_err = claw_core_append_tool_summary_line(tool_summary,
+diff --git a/components/claw_modules/claw_core/src/claw_core_llm.c b/components/claw_modules/claw_core/src/claw_core_llm.c
+index 59ddbaa..ff5d0b9 100644
+--- a/components/claw_modules/claw_core/src/claw_core_llm.c
++++ b/components/claw_modules/claw_core/src/claw_core_llm.c
+@@ -14,6 +14,10 @@
+ 
+ static const char *TAG = "claw_core_llm";
+ 
++#if defined(CLAW_CORE_LOG_FULL_LLM_REQUEST) && \
++    CLAW_CORE_LOG_FULL_LLM_REQUEST
++#error "Product builds forbid full LLM request logging"
++#endif
+ #ifndef CLAW_CORE_LOG_FULL_LLM_REQUEST
+ #define CLAW_CORE_LOG_FULL_LLM_REQUEST 0
+ #endif
+diff --git a/components/claw_modules/claw_core/src/claw_core_utils.c b/components/claw_modules/claw_core/src/claw_core_utils.c
+index 3ca3890..a6d6e5b 100644
+--- a/components/claw_modules/claw_core/src/claw_core_utils.c
++++ b/components/claw_modules/claw_core/src/claw_core_utils.c
+@@ -143,11 +143,10 @@ void claw_core_log_tool_call_names(uint32_t request_id, const claw_core_llm_resp
+     }
+ 
+     if (response->reasoning_content && response->reasoning_content[0]) {
+-        ESP_LOGD(TAG, "llm_reasoning_content request=%" PRIu32 " content=%.*s%s",
++        ESP_LOGD(TAG,
++                 "llm_reasoning request=%" PRIu32 " content_len=%u",
+                  request_id,
+-                 claw_core_log_snippet_len(response->reasoning_content),
+-                 claw_core_log_snippet(response->reasoning_content),
+-                 claw_core_log_snippet_suffix(response->reasoning_content));
++                 (unsigned)strlen(response->reasoning_content));
+         return;
+     }
+ 
+diff --git a/components/claw_modules/claw_core/src/llm/claw_llm_http_transport.c b/components/claw_modules/claw_core/src/llm/claw_llm_http_transport.c
+index 2bfe16f..5b411a5 100644
+--- a/components/claw_modules/claw_core/src/llm/claw_llm_http_transport.c
++++ b/components/claw_modules/claw_core/src/llm/claw_llm_http_transport.c
+@@ -222,39 +222,9 @@ static const char *auth_header_name(const char *auth_type)
+ 
+ static char *parse_error_message_body(const char *body, int status)
+ {
+-    cJSON *root;
+-    cJSON *error;
+-    cJSON *message;
+-    char *fallback;
+-
+-    if (!body || !body[0]) {
+-        return dup_printf("HTTP %d", status);
+-    }
+-
+-    root = cJSON_Parse(body);
+-    if (!root) {
+-        return dup_printf("HTTP %d: %.160s", status, body);
+-    }
+-
+-    error = cJSON_GetObjectItem(root, "error");
+-    if (error && cJSON_IsObject(error)) {
+-        message = cJSON_GetObjectItem(error, "message");
+-        if (message && cJSON_IsString(message) && message->valuestring[0]) {
+-            fallback = dup_printf("HTTP %d: %s", status, message->valuestring);
+-            cJSON_Delete(root);
+-            return fallback;
+-        }
+-    }
+-
+-    message = cJSON_GetObjectItem(root, "message");
+-    if (message && cJSON_IsString(message) && message->valuestring[0]) {
+-        fallback = dup_printf("HTTP %d: %s", status, message->valuestring);
+-        cJSON_Delete(root);
+-        return fallback;
+-    }
+-
+-    cJSON_Delete(root);
+-    return dup_printf("HTTP %d: %.160s", status, body);
++    /* Provider bodies can echo prompts, tool data, or credentials. */
++    (void)body;
++    return dup_printf("HTTP %d", status);
+ }
+ 
+ esp_err_t claw_llm_http_post_json(const claw_llm_http_json_request_t *request,
+@@ -360,7 +330,7 @@ esp_err_t claw_llm_http_post_json(const claw_llm_http_json_request_t *request,
+     if (status_code != 200) {
+         err = ESP_FAIL;
+         *out_error_message = parse_error_message_body(buffer.data, status_code);
+-        ESP_LOGE(TAG, "LLM error: %s", *out_error_message ? *out_error_message : "(null)");
++        ESP_LOGE(TAG, "LLM request rejected: HTTP %d", status_code);
+         goto cleanup;
+     }
+ 

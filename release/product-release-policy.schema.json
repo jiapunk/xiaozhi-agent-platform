@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/product-release-policy-v2.json",
+  "title": "XiaoZhi Agent product market-release policy v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_id",
+    "record_id",
+    "release_sequence",
+    "previous_record_sha256",
+    "subject",
+    "valid_from",
+    "valid_until",
+    "tool_sha256",
+    "required_evidence",
+    "backend_slo",
+    "release_signing_key_id",
+    "release_public_key_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "policy_id": {"$ref": "#/$defs/identifier"},
+    "record_id": {"$ref": "#/$defs/identifier"},
+    "release_sequence": {"type": "integer", "minimum": 1, "maximum": 2147483647},
+    "previous_record_sha256": {"$ref": "#/$defs/sha256"},
+    "subject": {"$ref": "#/$defs/subject"},
+    "valid_from": {"$ref": "#/$defs/timestamp"},
+    "valid_until": {"$ref": "#/$defs/timestamp"},
+    "tool_sha256": {"$ref": "#/$defs/sha256"},
+    "required_evidence": {
+      "type": "array",
+      "minItems": 15,
+      "maxItems": 15,
+      "items": {"$ref": "#/$defs/trust"}
+    },
+    "backend_slo": {"$ref": "#/$defs/backendSLOTrust"},
+    "release_signing_key_id": {"$ref": "#/$defs/identifier"},
+    "release_public_key_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "evidenceType": {
+      "enum": [
+        "agent_security_privacy",
+        "alpha_fleet",
+        "backend_supply_chain",
+        "companion_apps",
+        "device_soak_power_acoustic",
+        "factory_boot_storage_onboarding",
+        "firmware_supply_chain",
+        "kubernetes_live_admission",
+        "legal_market",
+        "managed_postgresql_resilience",
+        "ota_release_chain",
+        "push_provider_delivery",
+        "reset_resale_hardware",
+        "speech_backup_adapter",
+        "speech_primary_adapter"
+      ]
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product_release_id",
+        "sku",
+        "product_version",
+        "firmware_sha256",
+        "firmware_security_version",
+        "ota_release_id",
+        "oci_release_id",
+        "deployment_id",
+        "qualification_id"
+      ],
+      "properties": {
+        "product_release_id": {"$ref": "#/$defs/identifier"},
+        "sku": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9_.-]{0,63}$"},
+        "product_version": {"type": "string", "pattern": "^[0-9][A-Za-z0-9._+-]{0,63}$"},
+        "firmware_sha256": {"$ref": "#/$defs/sha256"},
+        "firmware_security_version": {"type": "integer", "minimum": 1, "maximum": 16},
+        "ota_release_id": {"$ref": "#/$defs/identifier"},
+        "oci_release_id": {"$ref": "#/$defs/identifier"},
+        "deployment_id": {"$ref": "#/$defs/identifier"},
+        "qualification_id": {"$ref": "#/$defs/identifier"}
+      }
+    },
+    "trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_type", "signing_key_id", "public_key_sha256", "max_age_seconds"],
+      "properties": {
+        "evidence_type": {"$ref": "#/$defs/evidenceType"},
+        "signing_key_id": {"$ref": "#/$defs/identifier"},
+        "public_key_sha256": {"$ref": "#/$defs/sha256"},
+        "max_age_seconds": {"type": "integer", "minimum": 3600, "maximum": 15552000}
+      }
+    },
+    "backendSLOTrust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collector_id", "signing_key_id", "public_key_sha256", "policy_sha256"],
+      "properties": {
+        "collector_id": {"type": "string", "pattern": "^[a-z0-9](?:[-a-z0-9.]{0,62}[a-z0-9])?$"},
+        "signing_key_id": {"type": "string", "pattern": "^[a-z0-9](?:[-a-z0-9.]{0,62}[a-z0-9])?$"},
+        "public_key_sha256": {"$ref": "#/$defs/sha256"},
+        "policy_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

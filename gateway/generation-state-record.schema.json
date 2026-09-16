@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/generation-state-record-v1.schema.json",
+  "title": "XiaoZhi Agent durable generation state record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "revision", "previous_record_sha256", "phase", "active",
+    "pending", "required_replicas", "acknowledgements", "prepare_deadline",
+    "drain_until", "commit_deadline", "updated_at", "record_hmac_b64url"
+  ],
+  "properties": {
+    "schema": { "const": 1 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "previous_record_sha256": { "$ref": "#/$defs/sha256" },
+    "phase": { "enum": ["STABLE", "PREPARING", "DRAINING", "COMMITTING"] },
+    "active": { "$ref": "#/$defs/generation" },
+    "pending": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/generation" }]
+    },
+    "required_replicas": {
+      "type": "array", "minItems": 2, "maxItems": 64,
+      "items": { "$ref": "#/$defs/replica" }
+    },
+    "acknowledgements": {
+      "type": "array", "maxItems": 64,
+      "items": { "$ref": "#/$defs/acknowledgement" }
+    },
+    "prepare_deadline": { "type": "integer", "minimum": 0, "maximum": 4102444800 },
+    "drain_until": { "type": "integer", "minimum": 0, "maximum": 4102444800 },
+    "commit_deadline": { "type": "integer", "minimum": 0, "maximum": 4102444800 },
+    "updated_at": { "$ref": "#/$defs/unix_time" },
+    "record_hmac_b64url": {
+      "type": "string", "minLength": 43, "maxLength": 43,
+      "pattern": "^[A-Za-z0-9_-]{43}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "phase": { "const": "STABLE" } } },
+      "then": {
+        "properties": {
+          "pending": { "type": "null" },
+          "acknowledgements": { "maxItems": 0 },
+          "prepare_deadline": { "const": 0 },
+          "drain_until": { "const": 0 },
+          "commit_deadline": { "const": 0 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "phase": { "const": "PREPARING" } } },
+      "then": {
+        "properties": {
+          "pending": { "$ref": "#/$defs/generation" },
+          "prepare_deadline": { "$ref": "#/$defs/unix_time" },
+          "drain_until": { "const": 0 },
+          "commit_deadline": { "type": "integer", "minimum": 30, "maximum": 86400 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "phase": { "const": "DRAINING" } } },
+      "then": {
+        "properties": {
+          "pending": { "$ref": "#/$defs/generation" },
+          "prepare_deadline": { "const": 0 },
+          "drain_until": { "$ref": "#/$defs/unix_time" },
+          "commit_deadline": { "type": "integer", "minimum": 30, "maximum": 86400 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "phase": { "const": "COMMITTING" } } },
+      "then": {
+        "properties": {
+          "pending": { "$ref": "#/$defs/generation" },
+          "prepare_deadline": { "const": 0 },
+          "drain_until": { "const": 0 },
+          "commit_deadline": { "$ref": "#/$defs/unix_time" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string", "minLength": 1, "maxLength": 64,
+      "pattern": "^[A-Za-z0-9:_.-]+$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "unix_time": {
+      "type": "integer", "minimum": 1609459200, "maximum": 4102444800
+    },
+    "generation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["generation_id", "generation_sequence", "receipt_sha256"],
+      "properties": {
+        "generation_id": { "$ref": "#/$defs/identifier" },
+        "generation_sequence": { "type": "integer", "minimum": 0, "maximum": 4294967295 },
+        "receipt_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "replica": {
+      "type": "object", "additionalProperties": false,
+      "required": ["replica_id", "role"],
+      "properties": {
+        "replica_id": { "$ref": "#/$defs/identifier" },
+        "role": { "enum": ["controlplane", "firmwareorigin"] }
+      }
+    },
+    "acknowledgement": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "replica_id", "role", "stage", "generation_id",
+        "receipt_sha256", "acknowledged_at"
+      ],
+      "properties": {
+        "replica_id": { "$ref": "#/$defs/identifier" },
+        "role": { "enum": ["controlplane", "firmwareorigin"] },
+        "stage": { "enum": ["PREPARED", "ACTIVE"] },
+        "generation_id": { "$ref": "#/$defs/identifier" },
+        "receipt_sha256": { "$ref": "#/$defs/sha256" },
+        "acknowledged_at": { "$ref": "#/$defs/unix_time" }
+      }
+    }
+  }
+}

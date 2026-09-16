@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "resolved_at": "2026-08-09",
+  "upstreams": {
+    "xiaozhi-esp32": {
+      "url": "https://github.com/78/xiaozhi-esp32.git",
+      "commit": "18a60b8051f5ee6a25beed6248ed84c7fcc742bf",
+      "license": "MIT"
+    },
+    "esp-claw": {
+      "url": "https://github.com/espressif/esp-claw.git",
+      "commit": "9ba07d013329df480e34a1a59d1513ab783d8a52",
+      "license": "Apache-2.0",
+      "patches": [
+        {
+          "path": "patches/esp-claw/0001-redact-agent-content-logs.patch",
+          "sha256": "8c239b7eb5a1875ffb211cb65bef96ffa988561b2e373e594626a6011a344316"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "approvers": [
+    {
+      "approval_key_id": "rollout-operator-a-2026",
+      "approver_id": "release-operator-a",
+      "enabled": true,
+      "public_key_file": "rollout-approver-keys/operator-a-public.pem"
+    },
+    {
+      "approval_key_id": "rollout-operator-b-2026",
+      "approver_id": "release-operator-b",
+      "enabled": true,
+      "public_key_file": "rollout-approver-keys/operator-b-public.pem"
+    }
+  ],
+  "version": 1
+}

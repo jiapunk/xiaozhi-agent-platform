@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://xiaozhi-agent.local/schemas/mtls-dispatch-deployment-attestation-v1.json",
+  "title": "M71 mTLS dispatch deployment attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": 1 },
+    "qualification_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "result": { "enum": ["FIXTURE_DEPLOYMENT_ATTESTATION_PASS", "LIVE_SEVEN_SERVICE_DEPLOYMENT_PASS"] },
+    "environment": { "enum": ["staging", "production"] },
+    "development_only": { "type": "boolean" },
+    "attestation_provider": { "enum": ["fixture", "kubernetes-cluster-authority"] },
+    "deployment_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "oci_release_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "services": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/services" },
+    "observation_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "kubernetes_deployment_receipt_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "kubernetes_admission_receipt_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "workload_evidence_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "controlplane_pod_binding_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "current_client_certificate_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "next_client_certificate_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "revoked_client_certificate_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "server_leaf_certificate_sha256": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/sha256" },
+    "exact_seven_service_deployment_verified": { "type": "boolean" },
+    "live_api_server_admission_verified": { "type": "boolean" },
+    "mounted_workload_identity_verified": { "type": "boolean" },
+    "network_policy_path_verified": { "type": "boolean" },
+    "verified_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "signing_key_id": { "$ref": "mtls-dispatch-observation.schema.json#/$defs/identifier" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  },
+  "required": [
+    "schema", "qualification_id", "result", "environment", "development_only",
+    "attestation_provider", "deployment_id", "oci_release_id", "services",
+    "observation_sha256", "kubernetes_deployment_receipt_sha256",
+    "kubernetes_admission_receipt_sha256", "workload_evidence_sha256",
+    "controlplane_pod_binding_sha256", "current_client_certificate_sha256",
+    "next_client_certificate_sha256", "revoked_client_certificate_sha256",
+    "server_leaf_certificate_sha256", "exact_seven_service_deployment_verified",
+    "live_api_server_admission_verified", "mounted_workload_identity_verified",
+    "network_policy_path_verified", "verified_at", "expires_at", "signing_key_id",
+    "signature_algorithm", "signature_b64url"
+  ],
+  "allOf": [
+    {
+      "if": { "properties": { "development_only": { "const": true } }, "required": ["development_only"] },
+      "then": {
+        "properties": {
+          "environment": { "const": "staging" },
+          "result": { "const": "FIXTURE_DEPLOYMENT_ATTESTATION_PASS" },
+          "attestation_provider": { "const": "fixture" },
+          "exact_seven_service_deployment_verified": { "const": false },
+          "live_api_server_admission_verified": { "const": false },
+          "mounted_workload_identity_verified": { "const": false },
+          "network_policy_path_verified": { "const": false }
+        }
+      },
+      "else": {
+        "properties": {
+          "result": { "const": "LIVE_SEVEN_SERVICE_DEPLOYMENT_PASS" },
+          "attestation_provider": { "const": "kubernetes-cluster-authority" },
+          "exact_seven_service_deployment_verified": { "const": true },
+          "live_api_server_admission_verified": { "const": true },
+          "mounted_workload_identity_verified": { "const": true },
+          "network_policy_path_verified": { "const": true }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/xiaozhi-agent/release-manifest-v2.schema.json",
+  "title": "XiaoZhi Agent product OTA release manifest v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "release_id", "project", "board", "channel", "version",
+    "release_sequence", "secure_version", "image_url", "image_size",
+    "image_sha256", "reset_qualification_sha256", "not_before", "expires_at", "signing_key_id",
+    "signature_algorithm", "signature_b64url"
+  ],
+  "properties": {
+    "schema": { "const": 2 },
+    "release_id": { "$ref": "#/$defs/identifier" },
+    "project": { "$ref": "#/$defs/shortIdentifier" },
+    "board": { "$ref": "#/$defs/shortIdentifier" },
+    "channel": { "$ref": "#/$defs/shortIdentifier" },
+    "version": {
+      "type": "string", "minLength": 1, "maxLength": 32,
+      "pattern": "^[A-Za-z0-9._+-]+$"
+    },
+    "release_sequence": {
+      "type": "integer", "minimum": 1, "maximum": 2147483647
+    },
+    "secure_version": {
+      "type": "integer", "minimum": 0, "maximum": 4294967295
+    },
+    "image_url": {
+      "type": "string", "minLength": 10, "maxLength": 512,
+      "pattern": "^https://[A-Za-z0-9.:-]+/[^?#\\\\\\u0000-\\u0020\\u007f]+$"
+    },
+    "image_size": {
+      "type": "integer", "minimum": 1024, "maximum": 2147483647
+    },
+    "image_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "reset_qualification_sha256": {
+      "type": "string", "pattern": "^[0-9a-f]{64}$"
+    },
+    "not_before": {
+      "type": "integer", "minimum": 1609459200, "maximum": 4102444800
+    },
+    "expires_at": {
+      "type": "integer", "minimum": 1609459200, "maximum": 4102444800
+    },
+    "signing_key_id": { "$ref": "#/$defs/identifier" },
+    "signature_algorithm": { "const": "ECDSA_P256_SHA256" },
+    "signature_b64url": {
+      "type": "string", "pattern": "^[A-Za-z0-9_-]{11,107}$"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string", "minLength": 1, "maxLength": 64,
+      "pattern": "^[A-Za-z0-9:_.-]+$"
+    },
+    "shortIdentifier": {
+      "type": "string", "minLength": 1, "maxLength": 32,
+      "pattern": "^[A-Za-z0-9:_.-]+$"
+    }
+  }
+}

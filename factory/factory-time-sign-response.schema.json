@@ -1,0 +1,26 @@
+{
+  "$id": "https://product.example/schemas/factory-time-sign-response-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "key_id": { "$ref": "sacrificial-trusted-time-request.schema.json#/$defs/identifier" },
+    "result": { "const": "FACTORY_TIME_RECEIPT_SIGNED" },
+    "schema": { "const": "xz-factory-time-sign-response-v1" },
+    "signature_algorithm": { "const": "Ed25519" },
+    "signature_b64url": {
+      "pattern": "^[A-Za-z0-9_-]{86}$",
+      "type": "string"
+    },
+    "unsigned_receipt_sha256": { "$ref": "sacrificial-trusted-time-request.schema.json#/$defs/sha256" }
+  },
+  "required": [
+    "schema",
+    "key_id",
+    "signature_algorithm",
+    "signature_b64url",
+    "unsigned_receipt_sha256",
+    "result"
+  ],
+  "title": "Factory Trusted-Time Sign Response v1",
+  "type": "object"
+}

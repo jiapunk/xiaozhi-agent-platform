@@ -1,0 +1,21 @@
+idf_component_register(
+    SRCS
+        "box3_product_runtime.c"
+        "box3_product_runtime_core.c"
+    INCLUDE_DIRS "include"
+    REQUIRES
+        agent_control_plane_client
+        agent_device_identity
+        box3_agent_credentials_client
+        box3_agent_supervisor
+        esp_timer
+        freertos
+        heap
+        product_factory_reset
+        product_local_action
+        esp_system
+        product_provisioning
+        product_storage
+        product_time_bootstrap
+        product_wifi
+)
