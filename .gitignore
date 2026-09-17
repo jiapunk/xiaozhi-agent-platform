@@ -41,6 +41,8 @@ __pycache__/
 # ---- docs whitelist: only technical docs are published ----
 /*.md
 !/README.md
+!/README.zh-TW.md
+!/README.ja.md
 !/THIRD_PARTY_NOTICES.md
 !/XIAOZHI_INTEGRATION.md
 !/VOICE_AGENT_PROTOCOL.md
