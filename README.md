@@ -52,19 +52,19 @@ provisioning, signed A/B OTA, fleet control, revocation, reset & resale).
 ```mermaid
 flowchart LR
     subgraph EDGE["Edge — ESP32-S3 wearable"]
-        W[Lumen Watch\nvoice · touch · AMOLED\nHMAC identity]
+        W[Lumen Watch<br/>voice · touch · AMOLED<br/>HMAC identity]
     end
     subgraph CLOUD["Product cloud"]
-        G[Voice Gateway\nGo · WSS · Opus\nrate limits · metrics]
-        CP[Control plane\n+ Agent proxy]
-        F[Factory & release\nsigning · OTA fleet]
+        G[Voice Gateway<br/>Go · WSS · Opus<br/>rate limits · metrics]
+        CP[Control plane<br/>+ Agent proxy]
+        F[Factory & release<br/>signing · OTA fleet]
     end
     subgraph PROVIDERS["Model & tool providers"]
         S[STT / TTS]
         L[LLM realtime]
         T[Tools · memory]
     end
-    C[Companion App\nSwift / iOS]
+    C[Companion App<br/>Swift / iOS]
     W <-->|low-latency stream| G
     G --> S
     G --> L
