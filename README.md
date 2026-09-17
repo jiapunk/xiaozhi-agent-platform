@@ -17,25 +17,30 @@ product-owned ESP-IDF application shell.
 [![Companion](https://img.shields.io/badge/Companion-Swift%20%2F%20iOS-F05138?logo=swift&logoColor=white)](#repository-layout)
 [![Milestone](https://img.shields.io/badge/Engineering-baseline_M88-2EA043)](#roadmap)
 
-[體驗網站](https://github.com/jiapunk/lumen-watch-site) · [產品藍圖](https://github.com/jiapunk/xiaozhi-esp-claw-blueprint) · [工程日誌](docs/ENGINEERING_LOG.md)
+[**English**](README.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja.md)
+
+[Live site](https://github.com/jiapunk/lumen-watch-site) · [Product blueprint](https://github.com/jiapunk/xiaozhi-esp-claw-blueprint) · [Engineering log](docs/ENGINEERING_LOG.md)
 
 </div>
 
 ---
 
-## 中文簡介
+## What is this
 
-**Lumen Agent Watch** 是一款以 ESP32-S3 為基礎的智慧手錶型 AI Agent 裝置：手上自然對話、
-即時查詢、裝置控制與個人長期記憶。本 repo 是它的完整產品平台：
+**Lumen Agent Watch** is an ESP32-S3 based smart-watch AI agent device: natural
+conversation, real-time queries, device control and personal long-term memory —
+on the wrist. This repository is its complete product platform:
 
-- **韌體**：自有 ESP-IDF 應用框架，選擇性重用小智（xiaozhi-esp32）的喚醒、音訊、Codec 與板級模組，
-  並以 ESP-Claw 作為裝置端 Agent Runtime，兩者透過自研 `agent_bridge` 整合層連接。
-- **後端**：Go 語音 Gateway（WSS + Opus、裝置認證、STT/TTS adapter、限流與指標）、
-  control plane、Agent proxy 與工廠／釋出工具鏈。
-- **配套**：Swift Companion App、工廠與供應鏈 schema、大量 host 級測試與 release gate。
+- **Firmware** — a product-owned ESP-IDF application shell that selectively reuses
+  XiaoZhi's wake-word, audio, codec and board modules, with ESP-Claw as the on-device
+  agent runtime, joined by the in-house `agent_bridge` integration layer.
+- **Backend** — a Go voice gateway (WSS + Opus, device auth, STT/TTS adapters, rate
+  limits and metrics), control plane, agent proxy, and factory / release tooling.
+- **Companions** — a Swift iOS companion app, factory & supply-chain schemas, and an
+  extensive host-test / release-gate suite.
 
-> 完整產品設計理念見 [產品藍圖 repo](https://github.com/jiapunk/xiaozhi-esp-claw-blueprint)，
-> 可操作的介紹網站見 [lumen-watch-site](https://github.com/jiapunk/lumen-watch-site)。
+> Full product rationale: [blueprint repo](https://github.com/jiapunk/xiaozhi-esp-claw-blueprint) ·
+> Interactive intro site: [lumen-watch-site](https://github.com/jiapunk/lumen-watch-site)
 
 ---
 
