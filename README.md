@@ -9,7 +9,7 @@
 XiaoZhi's proven voice stack × ESP-Claw's on-device agent runtime, rebuilt behind a
 product-owned ESP-IDF application shell.
 
-[![Live demo](https://img.shields.io/badge/─_Live_demo-jiapunk.github.io%2Flumen--watch--site-2EA043)](https://jiapunk.github.io/lumen-watch-site/)
+[![Live demo](https://img.shields.io/badge/Live_demo-jiapunk.github.io%2Flumen--watch--site-2EA043)](https://jiapunk.github.io/lumen-watch-site/)
 [![Target](https://img.shields.io/badge/SoC-ESP32--S3--WROOM--2-E7352C?logo=espressif&logoColor=white)](#hardware-targets)
 [![ESP-IDF](https://img.shields.io/badge/ESP--IDF-6.0.2-blue)](#quick-start)
 [![Voice](https://img.shields.io/badge/Voice-Opus_16k%2F24k-8A2BE2)](#highlights)

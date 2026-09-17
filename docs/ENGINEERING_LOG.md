@@ -307,13 +307,13 @@ controller, and XiaoZhi adapter host test suites pass.
 These measurements include ESP-Claw Agent Core startup, Capabilities, HTTP and
 TLS linkage. They do not include XiaoZhi audio/board code, live Wi-Fi traffic,
 Skills, Memory, Lua, MCP, or production telemetry. See
-[M0_BUILD_REPORT.md](M0_BUILD_REPORT.md) for the original baseline and
-[VOICE_AGENT_PROTOCOL.md](VOICE_AGENT_PROTOCOL.md) for the implemented wire
+](../M0_BUILD_REPORT.md) for the original baseline and
+](../VOICE_AGENT_PROTOCOL.md) for the implemented wire
 contract. The current protocol-slice measurements are in
-[M1_PROTOCOL_REPORT.md](M1_PROTOCOL_REPORT.md).
+](../M1_PROTOCOL_REPORT.md).
 The real WebSocket boundary and its remaining deployment gates are documented
-in [GATEWAY_M2_REPORT.md](GATEWAY_M2_REPORT.md) and
-[gateway/README.md](gateway/README.md).
+in ](../GATEWAY_M2_REPORT.md) and
+](../gateway/README.md).
 
 ## Verified M3 BOX-3 result
 
@@ -326,7 +326,7 @@ ESP-IDF reports its dedicated IRAM subrange as 16,384 of 16,384 bytes used.
 This was conservatively treated as a gate at M3; M10 later proved from the link
 map that executable code continues into the intended shared D/IRAM region and
 that total static internal headroom is not exhausted. Exact M3 evidence is in
-[BOX3_M3_REPORT.md](BOX3_M3_REPORT.md).
+](../BOX3_M3_REPORT.md).
 
 ## Verified M4 voice-stream result
 
@@ -340,7 +340,7 @@ All C host suites, seven Python gateway-contract tests, Go tests and vetting,
 Go race tests, shell syntax checks, and both ESP-IDF builds pass. The historical
 size table still shows the 16,384/16,384 dedicated subrange; its corrected
 combined-memory interpretation is documented in M10. See
-[M4_AUDIO_STREAM_REPORT.md](M4_AUDIO_STREAM_REPORT.md) for exact evidence and
+](../M4_AUDIO_STREAM_REPORT.md) for exact evidence and
 the honest boundary between compiled integration and real-device proof.
 
 ## Verified M5 secure-device integration result
@@ -355,7 +355,7 @@ Eight C host suites, seven Python contract tests, all Go tests/vetting/race
 tests, shell checks, both firmware builds, and license-copy verification pass.
 The dedicated 16,384/16,384 row is retained as historical output but is not the
 complete ESP32-S3 internal instruction capacity. See
-[M5_SECURE_DEVICE_INTEGRATION_REPORT.md](M5_SECURE_DEVICE_INTEGRATION_REPORT.md)
+`M5_SECURE_DEVICE_INTEGRATION_REPORT.md`
 for the exact security policy, memory evidence, and remaining product gates.
 
 ## Verified M6 credential-lifecycle result
@@ -370,7 +370,7 @@ Nine C host suites, seven Python contract tests, Go unit/integration/vet/race
 checks, shell checks, and both ESP-IDF builds pass. The generic image remains
 585,776 bytes; the BOX-3 image is 866,480 bytes, leaving 85% of its application
 slot free. This is still not hardware or production-identity proof. See
-[M6_CREDENTIAL_LIFECYCLE_REPORT.md](M6_CREDENTIAL_LIFECYCLE_REPORT.md).
+`M6_CREDENTIAL_LIFECYCLE_REPORT.md`.
 
 ## Verified M7 device-credential client result
 
@@ -385,7 +385,7 @@ tests, shell checks, and both ESP-IDF builds pass. The generic image remains
 585,776 bytes; the BOX-3 image is 870,112 bytes and retains 4,897,056 bytes
 (85%) in each OTA slot. The later M10 link-map audit supersedes the earlier
 full-IRAM interpretation. See
-[M7_DEVICE_CREDENTIAL_CLIENT_REPORT.md](M7_DEVICE_CREDENTIAL_CLIENT_REPORT.md).
+`M7_DEVICE_CREDENTIAL_CLIENT_REPORT.md`.
 
 ## Verified M8 factory-identity baseline
 
@@ -400,8 +400,8 @@ tests, all Go unit/integration/vet/race checks, shell/schema checks, and both
 ESP-IDF builds pass. The generic image remains 585,776 bytes; BOX-3 is 873,200
 bytes with 4,893,968 bytes (85%) free per OTA slot. The later M10 link-map audit
 supersedes the earlier full-IRAM interpretation. See
-[M8_FACTORY_IDENTITY_REPORT.md](M8_FACTORY_IDENTITY_REPORT.md) and the
-[factory identity runbook](FACTORY_IDENTITY_RUNBOOK.md).
+`M8_FACTORY_IDENTITY_REPORT.md` and the
+`factory identity runbook`.
 
 ## Verified M9 control-plane and Agent-proxy vertical slice
 
@@ -418,7 +418,7 @@ unit/integration/vet/race checks, all three Go command builds, and both
 ESP-IDF builds pass. The generic binary remains 585,776 bytes; BOX-3 is 877,792
 bytes with 4,889,376 bytes (85%) free per OTA slot. No physical device or live
 provider was exercised.
-See [M9_CONTROL_PLANE_AGENT_PROXY_REPORT.md](M9_CONTROL_PLANE_AGENT_PROXY_REPORT.md).
+See `M9_CONTROL_PLANE_AGENT_PROXY_REPORT.md`.
 
 ## Verified M10 static internal-memory budget
 
@@ -432,7 +432,7 @@ headroom and limits the executable span to 98,304 bytes. Both variants pass
 with 287,872 and 285,504 bytes of headroom. Final Wi-Fi integration and
 physical runtime internal/DMA heap, stack, audio, TLS, reconnect, and soak
 measurements remain release gates. See
-[M10_STATIC_MEMORY_BUDGET_REPORT.md](M10_STATIC_MEMORY_BUDGET_REPORT.md).
+](../M10_STATIC_MEMORY_BUDGET_REPORT.md).
 
 ## Verified M11 product Wi-Fi lifecycle
 
@@ -450,7 +450,7 @@ generic and BOX-3 binaries to 978,816 and 1,268,704 bytes. Their exact static
 internal headroom is 239,472 and 237,664 bytes, so both still pass the M10
 release budget. Secure onboarding transport, production NVS encryption, and
 physical RF/runtime memory tests remain mandatory. See
-[M11_PRODUCT_WIFI_LIFECYCLE_REPORT.md](M11_PRODUCT_WIFI_LIFECYCLE_REPORT.md).
+](../M11_PRODUCT_WIFI_LIFECYCLE_REPORT.md).
 
 ## Verified M12 secure onboarding transport
 
@@ -471,7 +471,7 @@ full-clean firmware builds pass. The generic and BOX-3 binaries are 1,041,952
 and 1,332,336 bytes. Exact static internal headroom remains 239,440 and 237,648
 bytes. Physical button/UI integration, real Android/CLI/board verification,
 production NVS encryption, and factory execution are still release gates. See
-[M12_SECURE_PROVISIONING_REPORT.md](M12_SECURE_PROVISIONING_REPORT.md).
+`M12_SECURE_PROVISIONING_REPORT.md`.
 
 ## Verified M13 production credential-storage baseline
 
@@ -490,7 +490,7 @@ and vetting, and all four development/secure-storage firmware builds pass. The
 secure Generic and BOX-3 binaries are 1,052,064 and 1,342,032 bytes, with
 239,056 and 237,264 bytes of static internal headroom. Actual eFuse burning and
 encrypted-NVS operation on hardware remain release gates. See
-[M13_PRODUCTION_STORAGE_REPORT.md](M13_PRODUCTION_STORAGE_REPORT.md).
+`M13_PRODUCTION_STORAGE_REPORT.md`.
 
 ## Verified M14 signed A/B OTA vertical slice
 
@@ -507,8 +507,8 @@ Generic and BOX-3 binaries are 1,074,208 and 1,364,256 bytes, with 238,784 and
 236,976 bytes of static internal headroom. Physical OTA/rollback, production
 keys/CDN/fleet orchestration, health wiring, Secure Boot/Flash Encryption, and
 hardware anti-rollback remain release gates. See
-[M14_SIGNED_AB_OTA_REPORT.md](M14_SIGNED_AB_OTA_REPORT.md) and the
-[OTA release runbook](OTA_RELEASE_RUNBOOK.md).
+`M14_SIGNED_AB_OTA_REPORT.md` and the
+`OTA release runbook`.
 
 ## Verified M15 fleet OTA control vertical slice
 
@@ -528,7 +528,7 @@ firmware profiles build; final Generic/BOX-3 secure-storage binaries are
 headroom. Production deployment, HSM/CDN integration, audited registry reload,
 distributed replay/fleet state, physical OTA/rollback, and a 10–30 device alpha
 remain open gates. See
-[M15_OTA_FLEET_CONTROL_REPORT.md](M15_OTA_FLEET_CONTROL_REPORT.md).
+`M15_OTA_FLEET_CONTROL_REPORT.md`.
 
 ## Verified M16 immutable firmware-origin vertical slice
 
@@ -545,7 +545,7 @@ and verifies the exact returned bytes. All Go tests, race detection, and vetting
 pass, and a stripped static Linux service cross-build succeeds. No container
 engine is installed here, so OCI build/scan/signing remains a deployment gate.
 M16 changes no ESP source or M15 firmware size. See
-[M16_IMMUTABLE_FIRMWARE_ORIGIN_REPORT.md](M16_IMMUTABLE_FIRMWARE_ORIGIN_REPORT.md).
+`M16_IMMUTABLE_FIRMWARE_ORIGIN_REPORT.md`.
 
 ## Verified M17 fail-closed OTA deployment bundle
 
@@ -564,7 +564,7 @@ manifest resolution was also hardened to reject absolute paths, traversal, and
 symlink escape. M17 changes no ESP source or M15 firmware size. Audited rollout
 promotion, live replica convergence, OCI deployment, hardware OTA/rollback,
 and fleet alpha evidence remain open. See
-[M17_OTA_DEPLOYMENT_BUNDLE_REPORT.md](M17_OTA_DEPLOYMENT_BUNDLE_REPORT.md).
+`M17_OTA_DEPLOYMENT_BUNDLE_REPORT.md`.
 
 ## Verified M18 two-person rollout-generation chain
 
@@ -584,7 +584,7 @@ reuse, and load each generation through the production OTA/origin loaders.
 M18 changes no ESP source or firmware size. HSM-backed operator signing,
 append-only audit storage, atomic replica publication/convergence, live fleet
 telemetry, OCI deployment, hardware rollback, and alpha evidence remain open.
-See [M18_OTA_ROLLOUT_GENERATION_REPORT.md](M18_OTA_ROLLOUT_GENERATION_REPORT.md).
+See `M18_OTA_ROLLOUT_GENERATION_REPORT.md`.
 
 ## Verified M19 durable generation publication and replica convergence
 
@@ -613,7 +613,7 @@ closed. Go and independent Python validators verify the audit chain. M19 changes
 no ESP source or firmware size. External HA storage/WORM export, managed
 workload identity/HSM, registry signing/admission, hardware OTA/rollback, provider/App/factory
 validation, and fleet alpha evidence remain open. See
-[M19_ATOMIC_GENERATION_PUBLICATION_REPORT.md](M19_ATOMIC_GENERATION_PUBLICATION_REPORT.md).
+`M19_ATOMIC_GENERATION_PUBLICATION_REPORT.md`.
 
 ## Verified M20 deterministic OCI supply-chain bundle
 
@@ -634,8 +634,8 @@ all ten platform binaries twice, compares the complete trees, then passes both
 validators. This local receipt is explicitly not Cosign/transparency evidence
 or a SLSA level claim. Registry push, current vulnerability scanning,
 Cosign/workload identity, admission policy, and TLS/HA cluster evidence remain
-environment gates. See [M20_OCI_SUPPLY_CHAIN_REPORT.md](M20_OCI_SUPPLY_CHAIN_REPORT.md)
-and [OCI_DEPLOYMENT_BASELINE.md](OCI_DEPLOYMENT_BASELINE.md).
+environment gates. See `M20_OCI_SUPPLY_CHAIN_REPORT.md`
+and `OCI_DEPLOYMENT_BASELINE.md`.
 
 ## Verified M21 bounded product Agent memory
 
@@ -662,8 +662,8 @@ and architectural restrictions. All four ESP profiles build and retain at
 least 236,976 bytes of static internal-memory headroom. Physical power-cut,
 factory-reset, App consent UX, wear/soak, and provisioned encrypted-NVS tests
 remain hardware/product gates. See
-[M21_BOUNDED_AGENT_MEMORY_REPORT.md](M21_BOUNDED_AGENT_MEMORY_REPORT.md) and
-[AGENT_MEMORY_DATA_POLICY.md](AGENT_MEMORY_DATA_POLICY.md).
+](../M21_BOUNDED_AGENT_MEMORY_REPORT.md) and
+`AGENT_MEMORY_DATA_POLICY.md`.
 
 ## Verified M22 product runtime orchestration
 
@@ -690,8 +690,8 @@ package tests, and `go vet`. Four normal firmware profiles plus the Live
 compile-only profile build; the lowest static internal-memory headroom is
 236,800 bytes. Real button/App, eFuse factory, production service, provider,
 audio, soak, regulatory, and alpha-fleet evidence remains open. See
-[M22_PRODUCT_RUNTIME_ORCHESTRATION_REPORT.md](M22_PRODUCT_RUNTIME_ORCHESTRATION_REPORT.md)
-and [PRODUCT_RUNTIME_RUNBOOK.md](PRODUCT_RUNTIME_RUNBOOK.md).
+](../M22_PRODUCT_RUNTIME_ORCHESTRATION_REPORT.md)
+and `PRODUCT_RUNTIME_RUNBOOK.md`.
 
 ## Verified M23 physical-action onboarding
 
@@ -720,8 +720,8 @@ compile-only image is 1,392,288 bytes and the lowest static internal-memory
 headroom remains 236,800 bytes. This excludes the 3,072-byte runtime task stack
 and dynamic heap. Real button/electrical/enclosure, display/App, factory,
 provider, soak, regulatory, and fleet evidence remains open. See
-[M23_PHYSICAL_ACTION_ONBOARDING_REPORT.md](M23_PHYSICAL_ACTION_ONBOARDING_REPORT.md)
-and [LOCAL_ACTION_ONBOARDING_RUNBOOK.md](LOCAL_ACTION_ONBOARDING_RUNBOOK.md).
+`M23_PHYSICAL_ACTION_ONBOARDING_REPORT.md`
+and `LOCAL_ACTION_ONBOARDING_RUNBOOK.md`.
 
 ## Verified M24 production boot-security release gate
 
@@ -749,9 +749,9 @@ security application is 1,441,792 padded bytes with 236,688 bytes of static
 internal-memory headroom; the lowest headroom across all profiles remains
 236,688 bytes. No real eFuse, HSM key, or board was used, so sacrificial-board
 factory proof remains a hard release gate. See
-[M24_PRODUCTION_BOOT_SECURITY_REPORT.md](M24_PRODUCTION_BOOT_SECURITY_REPORT.md),
-[PRODUCTION_BOOT_SECURITY_RUNBOOK.md](PRODUCTION_BOOT_SECURITY_RUNBOOK.md), and
-[FACTORY_IDENTITY_RUNBOOK.md](FACTORY_IDENTITY_RUNBOOK.md).
+`M24_PRODUCTION_BOOT_SECURITY_REPORT.md`,
+`PRODUCTION_BOOT_SECURITY_RUNBOOK.md`, and
+`FACTORY_IDENTITY_RUNBOOK.md`.
 
 ## Verified M25 speech-provider conformance gate
 
@@ -774,8 +774,8 @@ factory tests, 99 tooling tests, 5 independent generation-state tests, all Go
 package tests, `go vet`, and the Go race suite. M25 changes only the backend
 speech boundary, so all M24 firmware hashes and security evidence remain
 unchanged. See
-[M25_SPEECH_PROVIDER_CONFORMANCE_REPORT.md](M25_SPEECH_PROVIDER_CONFORMANCE_REPORT.md)
-and [SPEECH_PROVIDER_ACCEPTANCE.md](SPEECH_PROVIDER_ACCEPTANCE.md).
+](../M25_SPEECH_PROVIDER_CONFORMANCE_REPORT.md)
+and `SPEECH_PROVIDER_ACCEPTANCE.md`.
 
 ## Verified M26 firmware SBOM and license-release gate
 
@@ -802,8 +802,8 @@ package tests and `go vet`; the previously completed Go race suite remains
 valid because M26 changes no Go or firmware code. All M24 firmware/signing
 hashes remain unchanged. M26 is inventory evidence, not a legal opinion or a
 current vulnerability scan. See
-[M26_FIRMWARE_SBOM_REPORT.md](M26_FIRMWARE_SBOM_REPORT.md) and
-[FIRMWARE_SBOM_RELEASE_RUNBOOK.md](FIRMWARE_SBOM_RELEASE_RUNBOOK.md).
+`M26_FIRMWARE_SBOM_REPORT.md` and
+`FIRMWARE_SBOM_RELEASE_RUNBOOK.md`.
 
 ## Verified M27 reference Opus codec gate
 
@@ -829,8 +829,8 @@ synthetic fixture bitstream acceptance; real provider captures, ESP codec and
 BOX3 acoustic tests remain release gates. The full regression passed 23 C host
 suites, 7 gateway-contract tests, 16 factory tests, 114 tooling tests, 5
 independent generation-state tests, all Go package tests, `go vet`, and the Go
-race suite. See [M27_REFERENCE_OPUS_CODEC_REPORT.md](M27_REFERENCE_OPUS_CODEC_REPORT.md)
-and [SPEECH_PROVIDER_ACCEPTANCE.md](SPEECH_PROVIDER_ACCEPTANCE.md).
+race suite. See ](../M27_REFERENCE_OPUS_CODEC_REPORT.md)
+and `SPEECH_PROVIDER_ACCEPTANCE.md`.
 
 ## Verified M28 speech-adapter qualification runner
 
@@ -858,8 +858,8 @@ The final regression passed 23 C host suites, 7 gateway-contract tests, 16
 factory tests, 119 tooling tests, 5 independent generation-state tests, all Go
 package tests, `go vet`, and the Go race suite. M28 changes no firmware bytes;
 all M24 firmware/signing hashes remain unchanged. See
-[M28_SPEECH_ADAPTER_QUALIFICATION_REPORT.md](M28_SPEECH_ADAPTER_QUALIFICATION_REPORT.md)
-and [SPEECH_ADAPTER_QUALIFICATION_RUNBOOK.md](SPEECH_ADAPTER_QUALIFICATION_RUNBOOK.md).
+](../M28_SPEECH_ADAPTER_QUALIFICATION_REPORT.md)
+and `SPEECH_ADAPTER_QUALIFICATION_RUNBOOK.md`.
 
 ## Verified M29 device identity and urgent revocation
 
@@ -884,8 +884,8 @@ proxy or firmware-origin bearer use. M30 closes that local downstream gap;
 M74 later supplies the PostgreSQL replay/session coordination software boundary,
 while live cross-region convergence, audited KMS rotation and disaster recovery
 remain external release gates. See
-[M29_DEVICE_IDENTITY_REVOCATION_REPORT.md](M29_DEVICE_IDENTITY_REVOCATION_REPORT.md)
-and [DEVICE_IDENTITY_SNAPSHOT_RUNBOOK.md](DEVICE_IDENTITY_SNAPSHOT_RUNBOOK.md).
+`M29_DEVICE_IDENTITY_REVOCATION_REPORT.md`
+and `DEVICE_IDENTITY_SNAPSHOT_RUNBOOK.md`.
 
 ## Verified M30 cross-service identity enforcement
 
@@ -907,7 +907,7 @@ The expanded identity gate covers provisioning, request leases, gateway,
 control plane, Agent Proxy, firmware origin and the proof-to-provider vertical
 slice. This proves the local single-process semantics, not multi-replica
 publication convergence or a managed HA identity service. See
-[M30_CROSS_SERVICE_IDENTITY_REPORT.md](M30_CROSS_SERVICE_IDENTITY_REPORT.md).
+`M30_CROSS_SERVICE_IDENTITY_REPORT.md`.
 
 ## Verified M31 remote identity-source client contract
 
@@ -929,8 +929,8 @@ An ephemeral-CA integration test proves three access consumers and one proof
 consumer concurrently activate one higher fleet revision under the Go race
 detector. This is client/protocol evidence in one test process, not managed
 service, cluster, HSM or regional-HA evidence. See
-[REMOTE_IDENTITY_SOURCE_RUNBOOK.md](REMOTE_IDENTITY_SOURCE_RUNBOOK.md) and
-[M31_REMOTE_IDENTITY_SOURCE_REPORT.md](M31_REMOTE_IDENTITY_SOURCE_REPORT.md).
+`REMOTE_IDENTITY_SOURCE_RUNBOOK.md` and
+`M31_REMOTE_IDENTITY_SOURCE_REPORT.md`.
 
 ## Verified M32 Companion App onboarding core
 
@@ -958,8 +958,8 @@ gate passes Swift 6 warnings-as-errors, adapter API-subset type checking, 38
 core scenarios and Thread Sanitizer. A full Xcode/iOS build, signed App, UI,
 account binding, actual product-online client and iPhone/BOX-3 tests remain
 external. See
-[COMPANION_APP_ONBOARDING_RUNBOOK.md](COMPANION_APP_ONBOARDING_RUNBOOK.md) and
-[M32_COMPANION_APP_ONBOARDING_REPORT.md](M32_COMPANION_APP_ONBOARDING_REPORT.md).
+`COMPANION_APP_ONBOARDING_RUNBOOK.md` and
+`M32_COMPANION_APP_ONBOARDING_REPORT.md`.
 
 ## Verified M33 authenticated device ownership
 
@@ -983,8 +983,8 @@ still requires a durable serializable multi-replica store, managed account
 issuer, App UI/signing and real phone/device evidence. M34 closes encrypted
 pending Wi-Fi/claim recovery and M35 closes owner-aware downstream
 authorization, but their physical and managed-service gates remain.
-See [DEVICE_OWNERSHIP_CLAIM_RUNBOOK.md](DEVICE_OWNERSHIP_CLAIM_RUNBOOK.md) and
-[M33_DEVICE_OWNERSHIP_CLAIM_REPORT.md](M33_DEVICE_OWNERSHIP_CLAIM_REPORT.md).
+See `DEVICE_OWNERSHIP_CLAIM_RUNBOOK.md` and
+`M33_DEVICE_OWNERSHIP_CLAIM_REPORT.md`.
 
 ## Verified M34 power-loss-safe claim recovery
 
@@ -1006,8 +1006,8 @@ Host state/blob tests, ten M33/M34 policy checks, BOX-3 ESP-IDF 6.0.2 compile
 and the linker-map budget pass. Physical brownout/power-cut qualification,
 dual-network rollback if required by product policy, durable ownership storage,
 owner-aware service tokens and real App/device evidence remain external. See
-[DEVICE_CLAIM_RECOVERY_RUNBOOK.md](DEVICE_CLAIM_RECOVERY_RUNBOOK.md) and
-[M34_POWER_LOSS_CLAIM_RECOVERY_REPORT.md](M34_POWER_LOSS_CLAIM_RECOVERY_REPORT.md).
+`DEVICE_CLAIM_RECOVERY_RUNBOOK.md` and
+`M34_POWER_LOSS_CLAIM_RECOVERY_REPORT.md`.
 
 ## Verified M35 owner/tenant service authorization
 
@@ -1030,8 +1030,8 @@ M38 supersedes the original M35 v2 wire contract with the lifecycle-aware v3
 contract. Market release still requires a managed IdP, live serializable
 multi-replica database evidence, controlled old-token drain, workload
 credentials and live provider captures. See
-[OWNER_AUTHORIZATION_RUNBOOK.md](OWNER_AUTHORIZATION_RUNBOOK.md) and
-[M35_OWNER_TENANT_AUTHORIZATION_REPORT.md](M35_OWNER_TENANT_AUTHORIZATION_REPORT.md).
+`OWNER_AUTHORIZATION_RUNBOOK.md` and
+`M35_OWNER_TENANT_AUTHORIZATION_REPORT.md`.
 
 ## M36 durable ownership adapter implemented; live database gate open
 
@@ -1052,8 +1052,8 @@ two-pool, 32-way race test is present. This workspace has no PostgreSQL runtime,
 so that live gate has not executed and M36 is not yet release evidence. Managed
 TLS/failover/PITR/load tests and immutable migration packaging remain open.
 See
-[POSTGRES_OWNERSHIP_RUNBOOK.md](POSTGRES_OWNERSHIP_RUNBOOK.md) and
-[M36_DURABLE_OWNERSHIP_ADAPTER_REPORT.md](M36_DURABLE_OWNERSHIP_ADAPTER_REPORT.md).
+`POSTGRES_OWNERSHIP_RUNBOOK.md` and
+`M36_DURABLE_OWNERSHIP_ADAPTER_REPORT.md`.
 
 ## Verified M37 asymmetric product-account token boundary
 
@@ -1073,8 +1073,8 @@ claim intent and HMAC rejection under the same verifier configuration.
 This is not a deployed IdP/account service: OIDC exchange, membership store,
 MFA/passkey/recovery, KMS/HSM signing, hot key reload/emergency revocation,
 App attestation and multi-region rollout remain release gates. See
-[ACCOUNT_TOKEN_TRUST_RUNBOOK.md](ACCOUNT_TOKEN_TRUST_RUNBOOK.md) and
-[M37_ASYMMETRIC_ACCOUNT_TOKEN_REPORT.md](M37_ASYMMETRIC_ACCOUNT_TOKEN_REPORT.md).
+`ACCOUNT_TOKEN_TRUST_RUNBOOK.md` and
+`M37_ASYMMETRIC_ACCOUNT_TOKEN_REPORT.md`.
 
 ## Verified M38 ownership binding lifecycle and memory isolation
 
@@ -1109,8 +1109,8 @@ the final deterministic dual-build OCI tree is
 This is local implementation evidence. Live PostgreSQL,
 managed IdP/MFA, full App UI/signing, physical reset/resale/power-cut tests,
 account deletion/support recovery and cross-region convergence remain release
-gates. See [OWNERSHIP_TRANSFER_RUNBOOK.md](OWNERSHIP_TRANSFER_RUNBOOK.md) and
-[M38_OWNERSHIP_BINDING_LIFECYCLE_REPORT.md](M38_OWNERSHIP_BINDING_LIFECYCLE_REPORT.md).
+gates. See `OWNERSHIP_TRANSFER_RUNBOOK.md` and
+`M38_OWNERSHIP_BINDING_LIFECYCLE_REPORT.md`.
 
 ## Verified M39 power-loss-resumable local factory reset
 
@@ -1138,8 +1138,8 @@ compiles the live path at `0x156880` bytes with 76% App-partition free; IRAM and
 internal-static use remain `81152/98304` and `121344/358144` bytes. No board was
 available, so electrical, flash-remnant, brownout, App/IdP and live PostgreSQL
 evidence remain mandatory. See
-[FACTORY_RESET_RESALE_RUNBOOK.md](FACTORY_RESET_RESALE_RUNBOOK.md) and
-[M39_FACTORY_RESET_REPORT.md](M39_FACTORY_RESET_REPORT.md).
+`FACTORY_RESET_RESALE_RUNBOOK.md` and
+`M39_FACTORY_RESET_REPORT.md`.
 
 ## Verified M40 reset-hardware qualification release gate
 
@@ -1168,8 +1168,8 @@ tooling/policy tests, 5 generation-state tests, Companion warnings/core/race,
 all Go packages/vet and a separate Go race run. BOX-3 ESP-IDF 6.0.2 compiles
 manifest v2 at `0x156910` bytes with 76% App-partition free; IRAM and internal
 static remain `81152/98304` and `121344/358144` bytes. See
-[RESET_HARDWARE_QUALIFICATION_RUNBOOK.md](RESET_HARDWARE_QUALIFICATION_RUNBOOK.md)
-and [M40_RESET_QUALIFICATION_RELEASE_GATE_REPORT.md](M40_RESET_QUALIFICATION_RELEASE_GATE_REPORT.md).
+`RESET_HARDWARE_QUALIFICATION_RUNBOOK.md`
+and `M40_RESET_QUALIFICATION_RELEASE_GATE_REPORT.md`.
 
 ## Verified M41 product-owned Agent capability firewall
 
@@ -1202,8 +1202,8 @@ of the smallest App partition free. Link-map policy reports IRAM
 internal-static headroom. This is code and compile evidence;
 physical UI consent, LED/display behavior, telemetry retention, penetration
 testing and board-side abuse tests remain release gates. See
-[AGENT_CAPABILITY_SECURITY_RUNBOOK.md](AGENT_CAPABILITY_SECURITY_RUNBOOK.md) and
-[M41_AGENT_CAPABILITY_FIREWALL_REPORT.md](M41_AGENT_CAPABILITY_FIREWALL_REPORT.md).
+`AGENT_CAPABILITY_SECURITY_RUNBOOK.md` and
+`M41_AGENT_CAPABILITY_FIREWALL_REPORT.md`.
 
 ## Verified M42 Agent content-private observability
 
@@ -1242,8 +1242,8 @@ of the smallest App partition free. Link-map policy reports IRAM
 `121392/358144`, and 236,752 bytes of internal-static headroom. Physical log
 capture, crash dump/JTAG review, deployed telemetry retention, penetration and
 privacy review remain release gates. See
-[AGENT_CONTENT_PRIVACY_OBSERVABILITY_RUNBOOK.md](AGENT_CONTENT_PRIVACY_OBSERVABILITY_RUNBOOK.md)
-and [M42_AGENT_CONTENT_PRIVACY_OBSERVABILITY_REPORT.md](M42_AGENT_CONTENT_PRIVACY_OBSERVABILITY_REPORT.md).
+`AGENT_CONTENT_PRIVACY_OBSERVABILITY_RUNBOOK.md`
+and `M42_AGENT_CONTENT_PRIVACY_OBSERVABILITY_REPORT.md`.
 
 ## Verified M43 exact-action consent software boundary
 
@@ -1284,8 +1284,8 @@ SHA-256 is
 These used the existing configured S3 build graphs because unrelated all-target
 ESP-IDF tools were unavailable; a clean isolated release build still remains
 mandatory before promotion.
-See [AGENT_ACTION_CONSENT_RUNBOOK.md](AGENT_ACTION_CONSENT_RUNBOOK.md) and
-[M43_AGENT_ACTION_CONSENT_REPORT.md](M43_AGENT_ACTION_CONSENT_REPORT.md).
+See `AGENT_ACTION_CONSENT_RUNBOOK.md` and
+`M43_AGENT_ACTION_CONSENT_REPORT.md`.
 
 ## Verified M44 durable action-consent relay boundary
 
@@ -1336,8 +1336,8 @@ test is implemented but skipped without `OWNERSHIP_TEST_DATABASE_URL`; this is
 not live database evidence. Authenticated device-to-App delivery, signed App
 UI, bounded runtime callback/cancellation, managed failover/PITR/retention and
 physical indicator evidence remain release blockers. See
-[ACTION_CONSENT_POSTGRES_RUNBOOK.md](ACTION_CONSENT_POSTGRES_RUNBOOK.md) and
-[M44_DURABLE_ACTION_CONSENT_RELAY_REPORT.md](M44_DURABLE_ACTION_CONSENT_RELAY_REPORT.md).
+`ACTION_CONSENT_POSTGRES_RUNBOOK.md` and
+`M44_DURABLE_ACTION_CONSENT_RELAY_REPORT.md`.
 
 ## Verified M45 action-consent inbox and bounded runtime boundary
 
@@ -1382,7 +1382,7 @@ database failover/PITR/retention, physical consent/action matrix, privacy/
 penetration review and clean HSM-backed release build remain mandatory. The
 Live profile therefore still exposes only `device.get_status`; the model cannot
 see or execute `device.set_indicator`. See
-[M45_ACTION_CONSENT_INBOX_RUNTIME_REPORT.md](M45_ACTION_CONSENT_INBOX_RUNTIME_REPORT.md).
+`M45_ACTION_CONSENT_INBOX_RUNTIME_REPORT.md`.
 
 ## Verified M46 foreground consent and online account authorization boundary
 
@@ -1425,9 +1425,9 @@ IdP/account deployment. Live account/ownership databases, mobile lifecycle and
 accessibility evidence, physical action qualification and cross-service release
 artifacts remain mandatory. The model still cannot see or execute
 `device.set_indicator`. See
-[COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md](COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md)
+`COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md`
 and
-[M46_FOREGROUND_CONSENT_ACCOUNT_AUTH_REPORT.md](M46_FOREGROUND_CONSENT_ACCOUNT_AUTH_REPORT.md).
+`M46_FOREGROUND_CONSENT_ACCOUNT_AUTH_REPORT.md`.
 
 ## Verified M47 durable Companion authorization core
 
@@ -1472,9 +1472,9 @@ SHA-256 `467a61606af241fb92e3e9df1244bc8597d3840c71d9c255886d79854563c8d2`;
 the production-security image remains 1,441,792 bytes with SHA-256
 `1e31596f7ccc41901c9852dfe4f0de047e3cef404f98eff9d1698c96e06d467d`.
 See
-[COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md](COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md)
+`COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md`
 and
-[M47_DURABLE_ACCOUNT_AUTHORIZATION_REPORT.md](M47_DURABLE_ACCOUNT_AUTHORIZATION_REPORT.md).
+`M47_DURABLE_ACCOUNT_AUTHORIZATION_REPORT.md`.
 
 ## Verified M48 exact six-service OCI release contract
 
@@ -1506,8 +1506,8 @@ and `1e31596f7ccc41901c9852dfe4f0de047e3cef404f98eff9d1698c96e06d467d`.
 This remains an offline software-boundary GO: no registry push, current scan,
 Cosign/transparency, cluster admission, managed account database, selected IdP
 or signed App was exercised. The action capability remains disabled. See
-[M48_SIX_SERVICE_OCI_RELEASE_REPORT.md](M48_SIX_SERVICE_OCI_RELEASE_REPORT.md)
-and [OCI_DEPLOYMENT_BASELINE.md](OCI_DEPLOYMENT_BASELINE.md).
+`M48_SIX_SERVICE_OCI_RELEASE_REPORT.md`
+and `OCI_DEPLOYMENT_BASELINE.md`.
 
 ## Verified M49 signed hardened Kubernetes deployment bundle
 
@@ -1548,8 +1548,8 @@ This is still an offline policy-boundary GO. Kustomize parsing is not
 kube-apiserver OpenAPI/defaulting/admission evidence, and no registry push,
 Cosign, CNI packet test, managed secrets/database, rollout or live service was
 performed. The action capability remains disabled. See
-[M49_SIGNED_KUBERNETES_DEPLOYMENT_REPORT.md](M49_SIGNED_KUBERNETES_DEPLOYMENT_REPORT.md)
-and [KUBERNETES_DEPLOYMENT_RUNBOOK.md](KUBERNETES_DEPLOYMENT_RUNBOOK.md).
+`M49_SIGNED_KUBERNETES_DEPLOYMENT_REPORT.md`
+and `KUBERNETES_DEPLOYMENT_RUNBOOK.md`.
 
 ## Verified M50 signed Kubernetes admission policy bundle
 
@@ -1587,8 +1587,8 @@ OpenAPI/defaulting, server-side dry-run, real denial, admission-resource RBAC,
 CNI packet enforcement or rollout was executed. API-created Policy/Binding
 objects require independent RBAC/audit protection. The action capability remains
 disabled. See
-[M50_SIGNED_KUBERNETES_ADMISSION_REPORT.md](M50_SIGNED_KUBERNETES_ADMISSION_REPORT.md)
-and [KUBERNETES_ADMISSION_RUNBOOK.md](KUBERNETES_ADMISSION_RUNBOOK.md).
+`M50_SIGNED_KUBERNETES_ADMISSION_REPORT.md`
+and `KUBERNETES_ADMISSION_RUNBOOK.md`.
 
 ## Verified M51 live-admission qualification contract
 
@@ -1625,8 +1625,8 @@ JSON files parse. Firmware and the action allow-list are unchanged.
 No Kubernetes cluster or kubeconfig exists in this workspace, so no live runner
 was executed and no M51 `LIVE_API_SERVER_PASS` receipt exists. Fixture tests are
 state-machine evidence only. See
-[M51_KUBERNETES_ADMISSION_LIVE_QUALIFICATION_REPORT.md](M51_KUBERNETES_ADMISSION_LIVE_QUALIFICATION_REPORT.md)
-and [KUBERNETES_ADMISSION_QUALIFICATION_RUNBOOK.md](KUBERNETES_ADMISSION_QUALIFICATION_RUNBOOK.md).
+`M51_KUBERNETES_ADMISSION_LIVE_QUALIFICATION_REPORT.md`
+and `KUBERNETES_ADMISSION_QUALIFICATION_RUNBOOK.md`.
 
 ## Verified M52 product market-release evidence contract
 
@@ -1669,8 +1669,8 @@ unchanged.
 No production evidence/SLO keys or complete external evidence set exists in
 this workspace, so no production bundle was built and no `MARKET_RELEASE_PASS`
 exists. The example policy contains placeholder fingerprints. See
-[M52_PRODUCT_MARKET_RELEASE_EVIDENCE_REPORT.md](M52_PRODUCT_MARKET_RELEASE_EVIDENCE_REPORT.md)
-and [PRODUCT_MARKET_RELEASE_RUNBOOK.md](PRODUCT_MARKET_RELEASE_RUNBOOK.md).
+`M52_PRODUCT_MARKET_RELEASE_EVIDENCE_REPORT.md`
+and `PRODUCT_MARKET_RELEASE_RUNBOOK.md`.
 
 ## Verified M53 product-owned SKU and hardware geometry guard
 
@@ -1699,8 +1699,8 @@ the production-security padded App is 1,441,792 bytes with SHA-256
 `08ac8ea4ff77324b5e9813b496af505e981c85cec8e8bc52f9d262eb6066ae19`.
 Internal-static headroom is 236,752 and 236,640 bytes respectively. No board was
 available, no physical qualification ran and no `MARKET_RELEASE_PASS` exists.
-See [M53_PRODUCT_SKU_HARDWARE_GUARD_REPORT.md](M53_PRODUCT_SKU_HARDWARE_GUARD_REPORT.md)
-and [PRODUCT_SKU_PORTING_GUIDE.md](PRODUCT_SKU_PORTING_GUIDE.md).
+See `M53_PRODUCT_SKU_HARDWARE_GUARD_REPORT.md`
+and ](../PRODUCT_SKU_PORTING_GUIDE.md).
 
 ## Verified M54 factory-authenticated, reset-stable SKU identity
 
@@ -1736,8 +1736,8 @@ Cross-device replay fails through the base MAC; same-device replay is currently
 bounded only by the compiled minimum record version. No real eFuse/NVS/board or
 factory station was available, no v4 production receipt was issued and no
 `MARKET_RELEASE_PASS` exists. See
-[M54_FACTORY_AUTHENTICATED_SKU_IDENTITY_REPORT.md](M54_FACTORY_AUTHENTICATED_SKU_IDENTITY_REPORT.md)
-and [FACTORY_IDENTITY_RUNBOOK.md](FACTORY_IDENTITY_RUNBOOK.md).
+`M54_FACTORY_AUTHENTICATED_SKU_IDENTITY_REPORT.md`
+and `FACTORY_IDENTITY_RUNBOOK.md`.
 
 ## Verified M55 per-unit factory encrypted-flash manifest
 
@@ -1772,8 +1772,8 @@ the production-security padded App remains 1,441,792 bytes with SHA-256
 The end-to-end gate uses file copies as simulated readbacks; no board, eFuse or
 production station was available. No real v4 receipt or `MARKET_RELEASE_PASS`
 exists. See
-[M55_PER_UNIT_FACTORY_FLASH_MANIFEST_REPORT.md](M55_PER_UNIT_FACTORY_FLASH_MANIFEST_REPORT.md)
-and [FACTORY_FLASH_MANIFEST_RUNBOOK.md](FACTORY_FLASH_MANIFEST_RUNBOOK.md).
+`M55_PER_UNIT_FACTORY_FLASH_MANIFEST_REPORT.md`
+and `FACTORY_FLASH_MANIFEST_RUNBOOK.md`.
 
 ## Verified M56 signed physical flash observation contract
 
@@ -1808,9 +1808,9 @@ the production-security padded App remains 1,441,792 bytes with SHA-256
 No board or serial port was available, no production readback authority signed
 an observation, and no final eFuse/v4 receipt or `MARKET_RELEASE_PASS` exists.
 See
-[M56_SIGNED_PHYSICAL_FLASH_OBSERVATION_REPORT.md](M56_SIGNED_PHYSICAL_FLASH_OBSERVATION_REPORT.md)
+`M56_SIGNED_PHYSICAL_FLASH_OBSERVATION_REPORT.md`
 and
-[FACTORY_PHYSICAL_READBACK_RUNBOOK.md](FACTORY_PHYSICAL_READBACK_RUNBOOK.md).
+`FACTORY_PHYSICAL_READBACK_RUNBOOK.md`.
 
 ## Verified M57 real-tool virtual eFuse lifecycle
 
@@ -1834,9 +1834,9 @@ The virtual image, XTS/HMAC secrets and public-key files are ephemeral;
 Secure Boot private keys never leave memory. This proves the official tool
 path and irreversible ordering only. No board, production key, physical eFuse,
 factory receipt v4 or `MARKET_RELEASE_PASS` exists. See
-[M57_VIRTUAL_EFUSE_REHEARSAL_REPORT.md](M57_VIRTUAL_EFUSE_REHEARSAL_REPORT.md)
+`M57_VIRTUAL_EFUSE_REHEARSAL_REPORT.md`
 and
-[VIRTUAL_EFUSE_REHEARSAL_RUNBOOK.md](VIRTUAL_EFUSE_REHEARSAL_RUNBOOK.md).
+`VIRTUAL_EFUSE_REHEARSAL_RUNBOOK.md`.
 
 The full regression passes 27 C host suites, 7 gateway-contract tests, 47
 factory tests, 286 tooling/policy tests, 5 generation-state tests, Companion
@@ -1872,9 +1872,9 @@ flash or protects a block. A synthetic current-release flow using real
 `espefuse 5.3.1 --virt` and an ephemeral untrusted signer passes, including a
 validly re-signed cross-release negative test. No physical board, production
 authorization key, station executor or market evidence was used. See
-[M58_SACRIFICIAL_PROVISIONING_AUTHORIZATION_REPORT.md](M58_SACRIFICIAL_PROVISIONING_AUTHORIZATION_REPORT.md)
+`M58_SACRIFICIAL_PROVISIONING_AUTHORIZATION_REPORT.md`
 and
-[SACRIFICIAL_PROVISIONING_AUTHORIZATION_RUNBOOK.md](SACRIFICIAL_PROVISIONING_AUTHORIZATION_RUNBOOK.md).
+`SACRIFICIAL_PROVISIONING_AUTHORIZATION_RUNBOOK.md`.
 
 The full regression passes 27 C host suites, 7 gateway-contract tests, 57
 factory tests, 287 tooling/policy tests, 5 generation-state tests, Companion
@@ -1904,9 +1904,9 @@ deletion API and no production-inventory eligibility. This is a local
 single-station boundary; it does not claim multi-station uniqueness, privileged
 administrator resistance, network-filesystem/WORM semantics or power-cut
 qualification. See
-[M59_SACRIFICIAL_ATTEMPT_LEDGER_REPORT.md](M59_SACRIFICIAL_ATTEMPT_LEDGER_REPORT.md)
+`M59_SACRIFICIAL_ATTEMPT_LEDGER_REPORT.md`
 and
-[SACRIFICIAL_ATTEMPT_LEDGER_RUNBOOK.md](SACRIFICIAL_ATTEMPT_LEDGER_RUNBOOK.md).
+`SACRIFICIAL_ATTEMPT_LEDGER_RUNBOOK.md`.
 
 The full regression passes 27 C host suites, 7 gateway-contract tests, 65
 factory tests, 288 tooling/policy tests, 5 generation-state tests, Companion
@@ -1936,9 +1936,9 @@ wrong signing/TLS pins fail before a final record is created. The full
 regression passes 27 C host suites, 7 gateway-contract tests, 69 factory tests,
 289 tooling/policy tests, 5 generation-state tests, Companion
 dependency/privacy and 25 scenarios, plus the Go normal/vet/race gates. See
-[M60_SACRIFICIAL_TRUSTED_TIME_REPORT.md](M60_SACRIFICIAL_TRUSTED_TIME_REPORT.md)
+`M60_SACRIFICIAL_TRUSTED_TIME_REPORT.md`
 and
-[SACRIFICIAL_TRUSTED_TIME_RUNBOOK.md](SACRIFICIAL_TRUSTED_TIME_RUNBOOK.md).
+`SACRIFICIAL_TRUSTED_TIME_RUNBOOK.md`.
 
 The time server/key/CA in tests are ephemeral and untrusted. No production
 endpoint, HSM/KMS signer, nonce database, hardware executor or physical board
@@ -1960,9 +1960,9 @@ is committed before external signing, so a failed signer cannot revive a
 nonce. A Go handler receipt passes the existing independent Python M60 verifier.
 The included two-store, 16-caller live PostgreSQL gate requires exactly one
 winner but was not run here because no PostgreSQL service is available. See
-[M61_FACTORY_TRUSTED_TIME_AUTHORITY_REPORT.md](M61_FACTORY_TRUSTED_TIME_AUTHORITY_REPORT.md)
+`M61_FACTORY_TRUSTED_TIME_AUTHORITY_REPORT.md`
 and
-[FACTORY_TRUSTED_TIME_AUTHORITY_RUNBOOK.md](FACTORY_TRUSTED_TIME_AUTHORITY_RUNBOOK.md).
+`FACTORY_TRUSTED_TIME_AUTHORITY_RUNBOOK.md`.
 
 M61 intentionally stops before a provider-specific HSM/KMS adapter and service
 binary. There is still no production endpoint, TLS identity, signer, database,
@@ -1998,9 +1998,9 @@ factory tests, 302 tooling/policy tests, 5 generation-state tests, Companion
 dependency/privacy and 25 scenarios, plus Go normal/vet/race. No production
 signer, live PostgreSQL, cluster, physical board or market-release evidence was
 used. See
-[M62_FACTORY_TRUSTED_TIME_SERVICE_REPORT.md](M62_FACTORY_TRUSTED_TIME_SERVICE_REPORT.md)
+`M62_FACTORY_TRUSTED_TIME_SERVICE_REPORT.md`
 and
-[FACTORY_TRUSTED_TIME_AUTHORITY_RUNBOOK.md](FACTORY_TRUSTED_TIME_AUTHORITY_RUNBOOK.md).
+`FACTORY_TRUSTED_TIME_AUTHORITY_RUNBOOK.md`.
 
 ## Verified M63 factory trusted-time signer enforcement
 
@@ -2021,9 +2021,9 @@ smoke remain reproducible; the complete regression passes 309 tooling/policy
 tests plus all prior C, factory, Companion and Go normal/vet/race gates. No
 production backend, key, PostgreSQL instance, signer image, cluster or physical
 board was used. See
-[M63_FACTORY_TRUSTED_TIME_SIGNER_ENFORCEMENT_REPORT.md](M63_FACTORY_TRUSTED_TIME_SIGNER_ENFORCEMENT_REPORT.md)
+`M63_FACTORY_TRUSTED_TIME_SIGNER_ENFORCEMENT_REPORT.md`
 and
-[FACTORY_TRUSTED_TIME_SIGNER_RUNBOOK.md](FACTORY_TRUSTED_TIME_SIGNER_RUNBOOK.md).
+`FACTORY_TRUSTED_TIME_SIGNER_RUNBOOK.md`.
 
 ## Verified M64 BOX-3 visible Agent action adapter
 
@@ -2057,9 +2057,9 @@ generation-state tests, Companion gates and all Go packages/vet.
 This is code and compile evidence, not board qualification. No BOX-3, signed
 mobile App, production account service/database or `MARKET_RELEASE_PASS` was
 available. See
-[M64_BOX3_VISIBLE_AGENT_ACTION_REPORT.md](M64_BOX3_VISIBLE_AGENT_ACTION_REPORT.md),
-[AGENT_ACTION_CONSENT_RUNBOOK.md](AGENT_ACTION_CONSENT_RUNBOOK.md), and
-[AGENT_CAPABILITY_SECURITY_RUNBOOK.md](AGENT_CAPABILITY_SECURITY_RUNBOOK.md).
+](../M64_BOX3_VISIBLE_AGENT_ACTION_REPORT.md),
+`AGENT_ACTION_CONSENT_RUNBOOK.md`, and
+`AGENT_CAPABILITY_SECURITY_RUNBOOK.md`.
 
 ## Verified M65 Companion just-in-time consent access
 
@@ -2084,9 +2084,9 @@ policy checks, targeted Go tests/vet, explicit SwiftUI warnings-as-errors
 compilation, and 29 Companion scenarios under normal execution and Thread
 Sanitizer. This remains a software integration boundary: no selected IdP,
 deployed BFF, live database, signed App or physical-device evidence exists. See
-[M65_COMPANION_JIT_CONSENT_ACCESS_REPORT.md](M65_COMPANION_JIT_CONSENT_ACCESS_REPORT.md)
+`M65_COMPANION_JIT_CONSENT_ACCESS_REPORT.md`
 and
-[COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md](COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md).
+`COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md`.
 
 The complete M65 regression passes 27 C host suites, 7 gateway-contract tests,
 70 factory tests, 316 tooling/policy tests, 5 generation-state tests, all
@@ -2118,9 +2118,9 @@ warnings-as-errors SwiftUI compilation, and 32 Companion scenarios under normal
 execution and Thread Sanitizer. No APNs/FCM adapter, installation registry,
 provider credential, deployed notifier, signed App or live PostgreSQL evidence
 exists. See
-[M66_WAKE_ONLY_NOTIFICATION_REPORT.md](M66_WAKE_ONLY_NOTIFICATION_REPORT.md),
-[AGENT_ACTION_CONSENT_RUNBOOK.md](AGENT_ACTION_CONSENT_RUNBOOK.md), and
-[COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md](COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md).
+`M66_WAKE_ONLY_NOTIFICATION_REPORT.md`,
+`AGENT_ACTION_CONSENT_RUNBOOK.md`, and
+`COMPANION_ACCOUNT_AUTHORIZATION_RUNBOOK.md`.
 
 The complete M66 regression passes 27 C host suites, 7 gateway-contract tests,
 70 factory tests, 318 tooling/policy tests, 5 generation-state tests, all
@@ -2152,7 +2152,7 @@ per request and retains neither the ticket nor provider token. Focused evidence
 passes Go tests/vet/race, local TLS/HTTP2 provider exchanges, and 36 Companion
 scenarios normally and under Thread Sanitizer. No live APNs/FCM credential,
 signed App, mounted private dispatch or live PostgreSQL evidence exists. See
-[M67_PUSH_DELIVERY_SOFTWARE_REPORT.md](M67_PUSH_DELIVERY_SOFTWARE_REPORT.md).
+`M67_PUSH_DELIVERY_SOFTWARE_REPORT.md`.
 
 The complete M67 regression passes 27 C host suites, 7 gateway-contract tests,
 70 factory tests, 323 tooling/policy tests, 5 generation-state tests, all
@@ -2184,7 +2184,7 @@ Sanitizer, all Go test/vet, changed-package race tests and the signed Kubernetes
 deployment gate. No production APNs/FCM credential, live PostgreSQL,
 cluster admission/CNI evidence, signed App, physical device or market-release
 approval exists. See
-[M68_PUSH_CREDENTIAL_WIRING_REPORT.md](M68_PUSH_CREDENTIAL_WIRING_REPORT.md).
+`M68_PUSH_CREDENTIAL_WIRING_REPORT.md`.
 
 ## Verified M69 signed push-provider qualification boundary
 
@@ -2204,8 +2204,8 @@ resilience and a signed App receipt exist. Product market release now requires
 exactly 15 evidence types, including the broader `push_provider_delivery` WORM
 aggregate. No live provider credentials were used here, so shipping remains
 NO-GO. See
-[PUSH_PROVIDER_QUALIFICATION_RUNBOOK.md](PUSH_PROVIDER_QUALIFICATION_RUNBOOK.md)
-and [M69_PUSH_PROVIDER_QUALIFICATION_REPORT.md](M69_PUSH_PROVIDER_QUALIFICATION_REPORT.md).
+`PUSH_PROVIDER_QUALIFICATION_RUNBOOK.md`
+and `M69_PUSH_PROVIDER_QUALIFICATION_REPORT.md`.
 
 ## M70 signed-App delivery qualification boundary implemented
 
@@ -2225,8 +2225,8 @@ rejected by `--require-live`; live evidence would emit
 `LIVE_SIGNED_APP_FLOW_PASS` but remains `production_ready: false` while mTLS,
 managed PostgreSQL and old-credential revocation gates are open. No signed App,
 Apple App Attest or iPhone is available here, so market release remains NO-GO.
-See [APP_DELIVERY_QUALIFICATION_RUNBOOK.md](APP_DELIVERY_QUALIFICATION_RUNBOOK.md)
-and [M70_APP_DELIVERY_QUALIFICATION_REPORT.md](M70_APP_DELIVERY_QUALIFICATION_REPORT.md).
+See `APP_DELIVERY_QUALIFICATION_RUNBOOK.md`
+and `M70_APP_DELIVERY_QUALIFICATION_REPORT.md`.
 
 The dedicated M70 fixture gate and M69 compatibility gate pass. The complete
 regression passes 27 C host suites, 7 gateway-contract tests, 70 factory tests,
@@ -2257,8 +2257,8 @@ The M71 deployment review also fixed the accountauthorization Secret projection
 so the already-required push token keyring, APNs key and FCM service account are
 actually mounted in the Pod. No kube-apiserver, mounted rotation identities or
 live App/provider evidence exists in this workspace, so shipping remains NO-GO.
-See [MTLS_DISPATCH_QUALIFICATION_RUNBOOK.md](MTLS_DISPATCH_QUALIFICATION_RUNBOOK.md)
-and [M71_MTLS_DISPATCH_QUALIFICATION_REPORT.md](M71_MTLS_DISPATCH_QUALIFICATION_REPORT.md).
+See `MTLS_DISPATCH_QUALIFICATION_RUNBOOK.md`
+and `M71_MTLS_DISPATCH_QUALIFICATION_REPORT.md`.
 
 The dedicated M71, M69 and M70 gates pass. The complete regression passes 27 C
 host suites, 7 gateway-contract tests, 70 factory tests, 340 tooling/policy
@@ -2285,8 +2285,8 @@ evidence can emit `LIVE_PROVIDER_CREDENTIAL_REVOCATION_PASS`.
 No Apple/Google credentials or console access exists here. Even a live M72 pass
 would retain `managed_database_failover`, and every receipt remains
 `production_ready: false`; shipping is therefore still NO-GO. See
-[PROVIDER_CREDENTIAL_REVOCATION_RUNBOOK.md](PROVIDER_CREDENTIAL_REVOCATION_RUNBOOK.md)
-and [M72_PROVIDER_CREDENTIAL_REVOCATION_REPORT.md](M72_PROVIDER_CREDENTIAL_REVOCATION_REPORT.md).
+`PROVIDER_CREDENTIAL_REVOCATION_RUNBOOK.md`
+and `M72_PROVIDER_CREDENTIAL_REVOCATION_REPORT.md`.
 
 The dedicated M69 through M74 gates pass. The complete M74 regression passes 27
 C host suites, 7 gateway-contract tests, 70 factory tests, 358 tooling/policy
@@ -2320,8 +2320,8 @@ fixed 15-domain release, physical hardware, production App/provider/cluster,
 legal evidence and `MARKET_RELEASE_PASS` are still required. No live managed
 PostgreSQL or provider control plane is available here, so shipping remains
 NO-GO. See
-[MANAGED_DATABASE_RESILIENCE_RUNBOOK.md](MANAGED_DATABASE_RESILIENCE_RUNBOOK.md)
-and [M73_MANAGED_DATABASE_RESILIENCE_REPORT.md](M73_MANAGED_DATABASE_RESILIENCE_REPORT.md).
+`MANAGED_DATABASE_RESILIENCE_RUNBOOK.md`
+and `M73_MANAGED_DATABASE_RESILIENCE_REPORT.md`.
 
 ## M74 distributed runtime coordination software boundary implemented
 
@@ -2343,8 +2343,8 @@ the exact Gateway database egress previously missing.
 The focused test/race/vet/deployment gate passes. Its live-required mode rejects
 missing database input. No live PostgreSQL or Kubernetes environment exists
 here, so horizontal production rollout and shipping remain NO-GO. See
-[RUNTIME_COORDINATION_RUNBOOK.md](RUNTIME_COORDINATION_RUNBOOK.md) and
-[M74_DISTRIBUTED_RUNTIME_COORDINATION_REPORT.md](M74_DISTRIBUTED_RUNTIME_COORDINATION_REPORT.md).
+`RUNTIME_COORDINATION_RUNBOOK.md` and
+`M74_DISTRIBUTED_RUNTIME_COORDINATION_REPORT.md`.
 
 ## M75 private speech workload identity software boundary implemented
 
@@ -2363,8 +2363,8 @@ Secret while retaining exactly seven workloads and the existing speech:443
 egress scope. The focused Go test/race/vet and deployment-policy gate passes.
 No live provider, rotation, Kubernetes, hardware or market evidence exists
 here, so shipping remains NO-GO. See
-[SPEECH_WORKLOAD_IDENTITY_RUNBOOK.md](SPEECH_WORKLOAD_IDENTITY_RUNBOOK.md) and
-[M75_SPEECH_WORKLOAD_IDENTITY_REPORT.md](M75_SPEECH_WORKLOAD_IDENTITY_REPORT.md).
+`SPEECH_WORKLOAD_IDENTITY_RUNBOOK.md` and
+`M75_SPEECH_WORKLOAD_IDENTITY_REPORT.md`.
 
 ## M76 managed bearer-token key rotation software boundary implemented
 
@@ -2384,8 +2384,8 @@ receives only opaque short-lived tokens. The focused Go test/race/vet and 18-tes
 deployment-policy gate passes. No live secret-manager rotation, cluster rollout,
 forward-only rollback, hardware or market evidence exists here, so shipping
 remains NO-GO. See
-[MANAGED_TOKEN_KEY_ROTATION_RUNBOOK.md](MANAGED_TOKEN_KEY_ROTATION_RUNBOOK.md) and
-[M76_MANAGED_TOKEN_KEY_ROTATION_REPORT.md](M76_MANAGED_TOKEN_KEY_ROTATION_REPORT.md).
+`MANAGED_TOKEN_KEY_ROTATION_RUNBOOK.md` and
+`M76_MANAGED_TOKEN_KEY_ROTATION_REPORT.md`.
 
 ## M77 managed-token transition preflight implemented
 
@@ -2401,8 +2401,8 @@ cover a future cutover plus the full configured TTL and skew.
 revisions, active key IDs and matching rollback floors. Its exclusive-create,
 canonical 0444 receipt contains only nonsecret metadata and is explicitly
 `software_only:true`; it cannot claim secret-manager or cluster evidence. See
-[M77_MANAGED_TOKEN_TRANSITION_PREFLIGHT_REPORT.md](M77_MANAGED_TOKEN_TRANSITION_PREFLIGHT_REPORT.md)
-and [MANAGED_TOKEN_KEY_ROTATION_RUNBOOK.md](MANAGED_TOKEN_KEY_ROTATION_RUNBOOK.md).
+`M77_MANAGED_TOKEN_TRANSITION_PREFLIGHT_REPORT.md`
+and `MANAGED_TOKEN_KEY_ROTATION_RUNBOOK.md`.
 
 ## M78 content-free telemetry and backend SLO boundary implemented
 
@@ -2425,9 +2425,9 @@ The canonical 28-day SLO policy and independently signed aggregate observation
 validator fail on insufficient volume, availability/p99 misses, arithmetic
 drift, unknown operations/attributes or any export loss. Local tests do not
 create a live SLO result. See
-[CONTENT_FREE_TELEMETRY_SLO_RUNBOOK.md](CONTENT_FREE_TELEMETRY_SLO_RUNBOOK.md)
+`CONTENT_FREE_TELEMETRY_SLO_RUNBOOK.md`
 and
-[M78_CONTENT_FREE_TELEMETRY_SLO_REPORT.md](M78_CONTENT_FREE_TELEMETRY_SLO_REPORT.md).
+`M78_CONTENT_FREE_TELEMETRY_SLO_REPORT.md`.
 
 ## M79 backend SLO bound into final market release
 
@@ -2453,8 +2453,8 @@ The product release gate now runs 20 focused product/SLO tests.
 No deployed collector observation, production SLO authority, final 15-domain
 evidence set or release key is available here, so this is a verified contract,
 not a market approval, and no `MARKET_RELEASE_PASS` was created. See
-[M79_BACKEND_SLO_MARKET_RELEASE_BINDING_REPORT.md](M79_BACKEND_SLO_MARKET_RELEASE_BINDING_REPORT.md)
-and [PRODUCT_MARKET_RELEASE_RUNBOOK.md](PRODUCT_MARKET_RELEASE_RUNBOOK.md).
+`M79_BACKEND_SLO_MARKET_RELEASE_BINDING_REPORT.md`
+and `PRODUCT_MARKET_RELEASE_RUNBOOK.md`.
 
 ## M80 Companion App source supply chain implemented
 
@@ -2481,8 +2481,8 @@ No full Xcode distribution archive, Apple developer identity, App Store
 submission, App Attest/iPhone evidence or Android implementation is available,
 so M80 is only the source-supply-chain part of `companion_apps`; it does not
 create market evidence or `MARKET_RELEASE_PASS`. See
-[COMPANION_APP_SUPPLY_CHAIN_RUNBOOK.md](COMPANION_APP_SUPPLY_CHAIN_RUNBOOK.md)
-and [M80_COMPANION_APP_SUPPLY_CHAIN_REPORT.md](M80_COMPANION_APP_SUPPLY_CHAIN_REPORT.md).
+`COMPANION_APP_SUPPLY_CHAIN_RUNBOOK.md`
+and `M80_COMPANION_APP_SUPPLY_CHAIN_REPORT.md`.
 
 ## M81 Agent usage budget implemented
 
@@ -2508,8 +2508,8 @@ The example price is deliberately non-production. No live provider contract,
 bill, traffic, PostgreSQL/cluster reconciliation, ASR/TTS cost or finance/legal
 approval is available, so M81 is not a complete COGS result and creates no
 `MARKET_RELEASE_PASS`. See
-[AGENT_USAGE_BUDGET_RUNBOOK.md](AGENT_USAGE_BUDGET_RUNBOOK.md) and
-[M81_AGENT_USAGE_BUDGET_REPORT.md](M81_AGENT_USAGE_BUDGET_REPORT.md).
+`AGENT_USAGE_BUDGET_RUNBOOK.md` and
+`M81_AGENT_USAGE_BUDGET_REPORT.md`.
 
 ## M82 speech usage budget implemented
 
@@ -2541,8 +2541,8 @@ output-audio or hybrid pricing. Providers with connection/request/minimum fees
 or other billing units require a new contract and qualification. No live price,
 invoice, speech traffic, PostgreSQL/cluster, hardware or finance/legal evidence
 exists, so M82 remains NO-GO and creates no `MARKET_RELEASE_PASS`. See
-[SPEECH_USAGE_BUDGET_RUNBOOK.md](SPEECH_USAGE_BUDGET_RUNBOOK.md) and
-[M82_SPEECH_USAGE_BUDGET_REPORT.md](M82_SPEECH_USAGE_BUDGET_REPORT.md).
+`SPEECH_USAGE_BUDGET_RUNBOOK.md` and
+`M82_SPEECH_USAGE_BUDGET_REPORT.md`.
 
 ## M83 Voice／Agent service entitlement implemented
 
@@ -2565,8 +2565,8 @@ This is a provider-neutral software boundary, not a billing integration. No
 real billing／App Store provider, IdP, managed PostgreSQL, signed App, target
 cluster, ESP32 hardware cancellation/grace flow or WORM audit evidence exists,
 so M83 remains NO-GO and creates no `MARKET_RELEASE_PASS`. See
-[SERVICE_ENTITLEMENT_RUNBOOK.md](SERVICE_ENTITLEMENT_RUNBOOK.md) and
-[M83_SERVICE_ENTITLEMENT_REPORT.md](M83_SERVICE_ENTITLEMENT_REPORT.md).
+`SERVICE_ENTITLEMENT_RUNBOOK.md` and
+`M83_SERVICE_ENTITLEMENT_REPORT.md`.
 
 ## M84 signed entitlement ingestion boundary implemented
 
@@ -2591,8 +2591,8 @@ workloads, 44 Kubernetes resources and 30 value-free prerequisites.
 This still does not select or qualify a real billing/App Store provider, IdP,
 managed PostgreSQL, target cluster, signed App or ESP32 hardware flow. M84 is
 therefore NO-GO for market release and creates no `MARKET_RELEASE_PASS`. See
-[SIGNED_ENTITLEMENT_INGESTION_RUNBOOK.md](SIGNED_ENTITLEMENT_INGESTION_RUNBOOK.md)
-and [M84_SIGNED_ENTITLEMENT_INGESTION_REPORT.md](M84_SIGNED_ENTITLEMENT_INGESTION_REPORT.md).
+`SIGNED_ENTITLEMENT_INGESTION_RUNBOOK.md`
+and `M84_SIGNED_ENTITLEMENT_INGESTION_REPORT.md`.
 
 ## M85 provider-neutral entitlement adapter SDK implemented
 
@@ -2614,7 +2614,7 @@ resources and 30 prerequisites.
 No real provider, IdP, HSM/KMS, managed PostgreSQL, target cluster, signed App
 or ESP32 flow is qualified. M85 therefore remains NO-GO for market release and
 creates no `MARKET_RELEASE_PASS`. See
-[ENTITLEMENT_ADAPTER_CONFORMANCE_RUNBOOK.md](ENTITLEMENT_ADAPTER_CONFORMANCE_RUNBOOK.md).
+`ENTITLEMENT_ADAPTER_CONFORMANCE_RUNBOOK.md`.
 
 ## M87 product launch-lane decision boundary implemented
 
@@ -2635,7 +2635,7 @@ market-release contract remains 15 domains.
 
 The checked-in profile is only PROPOSED and `--require-approved` fails closed.
 M87 therefore creates no market decision or `MARKET_RELEASE_PASS`. See
-[PRODUCT_LAUNCH_LANES.md](PRODUCT_LAUNCH_LANES.md).
+](../PRODUCT_LAUNCH_LANES.md).
 
 ## M86 external-consumable entitlement adapter SDK implemented
 
@@ -2658,7 +2658,7 @@ The deployment remains schema v7 with seven workloads, 44 resources and 30
 prerequisites. No real provider, published module, HSM/KMS, IdP, production
 database/cluster, signed App or ESP32 flow is qualified, so M86 remains NO-GO
 and creates no `MARKET_RELEASE_PASS`. See
-[ENTITLEMENT_ADAPTER_CONFORMANCE_RUNBOOK.md](ENTITLEMENT_ADAPTER_CONFORMANCE_RUNBOOK.md).
+`ENTITLEMENT_ADAPTER_CONFORMANCE_RUNBOOK.md`.
 
 ## M88 international individual-developer launch contract implemented
 
@@ -2686,10 +2686,10 @@ Billing provider, merchant legal entity, IdP, HSM/KMS, SDK distribution owner,
 legal reviewer and decision owner remain `UNSELECTED`; all six markets remain
 NO-GO. The checked-in profile is deliberately `PROPOSED` and
 `--require-approved` fails closed, so M88 creates no `MARKET_RELEASE_PASS`. See
-[INTERNATIONAL_DEVELOPER_KIT_LAUNCH.md](INTERNATIONAL_DEVELOPER_KIT_LAUNCH.md)
-and [WEB_BILLING_ADAPTER_CONTRACT.md](WEB_BILLING_ADAPTER_CONTRACT.md). The
+](../INTERNATIONAL_DEVELOPER_KIT_LAUNCH.md)
+and `WEB_BILLING_ADAPTER_CONTRACT.md`. The
 qualification summary is in
-[M88_INTERNATIONAL_DEVELOPER_LAUNCH_REPORT.md](M88_INTERNATIONAL_DEVELOPER_LAUNCH_REPORT.md).
+`M88_INTERNATIONAL_DEVELOPER_LAUNCH_REPORT.md`.
 
 ## Host verification
 
@@ -2738,7 +2738,7 @@ storage, without using routable service endpoints:
 
 This gate deliberately uses `.example.invalid`; never flash, sign, publish, or
 ship that image. Real release configuration and physical-presence ownership are
-defined in [PRODUCT_RUNTIME_RUNBOOK.md](PRODUCT_RUNTIME_RUNBOOK.md).
+defined in `PRODUCT_RUNTIME_RUNBOOK.md`.
 
 For release-candidate builds that require an already factory-provisioned slot
 4 NVS HMAC key:
@@ -2762,7 +2762,7 @@ This gate also runs the independent three-root signing flow with disposable
 test keys, then deletes them. Its build output is still unsigned and must never
 be flashed, ad-hoc signed, promoted, or shipped. The HSM, per-device encryption,
 and irreversible factory sequence are defined in
-[PRODUCTION_BOOT_SECURITY_RUNBOOK.md](PRODUCTION_BOOT_SECURITY_RUNBOOK.md).
+`PRODUCTION_BOOT_SECURITY_RUNBOOK.md`.
 
 To generate and independently verify the release-specific App/bootloader SBOM
 bundle after the production-security build:
@@ -2774,13 +2774,13 @@ export FIRMWARE_SBOM_TOOL=/controlled/path/esp-idf-sbom
 
 The output name must not already exist. Tool/environment pinning, license
 review and release-day vulnerability gates are defined in
-[FIRMWARE_SBOM_RELEASE_RUNBOOK.md](FIRMWARE_SBOM_RELEASE_RUNBOOK.md).
+`FIRMWARE_SBOM_RELEASE_RUNBOOK.md`.
 
 Release signing, immutable publication, independent verification, key rotation,
 health confirmation, and rollback procedures are in
-[OTA_RELEASE_RUNBOOK.md](OTA_RELEASE_RUNBOOK.md).
+`OTA_RELEASE_RUNBOOK.md`.
 
-See [XIAOZHI_INTEGRATION.md](XIAOZHI_INTEGRATION.md) for the exact pinned-source
+See ](../XIAOZHI_INTEGRATION.md) for the exact pinned-source
 hook points. Hardware measurements remain required before the BOX-3 audio path
 can be accepted for release.
 

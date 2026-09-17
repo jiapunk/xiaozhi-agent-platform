@@ -49,7 +49,7 @@ store 與法律結論。
 Lane B 的 billing provider 仍未選定。選型必須同時涵蓋實體硬體、週期數位 service、稅、
 退款／chargeback、原生簽章事件、API re-fetch、reconciliation 與 Wave 1 merchant entity，
 不能因單一 checkout demo 成功就決定供應商。事件到產品權益的固定邊界見
-[Web Billing Adapter Contract](WEB_BILLING_ADAPTER_CONTRACT.md)。
+`Web Billing Adapter Contract`。
 
 ## 市場法規入口
 
